@@ -1,0 +1,27 @@
+# Node / Expo / React Native
+node_modules/
+.expo/
+.expo-shared/
+.android/
+.ios/
+.eas/
+dist/
+web-build/
+
+# npm caches created during install workarounds
+.npm-cache/
+.npm-cache-*/
+
+# Logs & env files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+.env
+.env.*
+
+# macOS & editor cruft
+.DS_Store
+.vscode/
+
+
