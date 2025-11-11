@@ -19,16 +19,18 @@ export async function getCompletedSubtopics(): Promise<string[]> {
   }
 }
 
-export async function markSubtopicCompleted(subtopicSlug: string) {
+export async function markSubtopicCompleted(subtopicSlug: string): Promise<boolean> {
   try {
     const existing = await getCompletedSubtopics();
     if (existing.includes(subtopicSlug)) {
-      return;
+      return false;
     }
     const next = [...existing, subtopicSlug];
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    return true;
   } catch (error) {
     console.warn('Tamamlanan deseni kaydetme başarısız', error);
+    return false;
   }
 }
 
