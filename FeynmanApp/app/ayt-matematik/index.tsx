@@ -1,39 +1,62 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
-import { trigSubtopics } from './subtopics';
+import { topicSubtopicsEntries } from './subtopics';
+import { getCompletedSubtopics } from '@/lib/completion-storage';
 
 export default function AYTMatematikScreen() {
   const router = useRouter();
   const [openTopic, setOpenTopic] = useState<string | null>(null);
+  const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
 
-  const topics = [
-    'Trigonometri',
-    'Logaritma & Diziler',
-    'Limit & Süreklilik',
-    'Türev',
-    'İntegral',
-  ];
+  const topics = topicSubtopicsEntries.map(([name, subtopics]) => ({
+    name,
+    subtopics,
+  }));
 
   const toggleTopic = (topic: string) => {
     setOpenTopic((current) => (current === topic ? null : topic));
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadCompleted = async () => {
+        const stored = await getCompletedSubtopics();
+        if (!isActive) return;
+        setCompletedSubtopics(stored);
+      };
+
+      loadCompleted();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>{'<'} Geri</Text>
-        </Pressable>
+        <View style={styles.navRow}>
+          <Pressable style={styles.backButton} onPress={() => router.back()}>
+            <Text style={styles.backButtonText}>{'<'} Geri</Text>
+          </Pressable>
+          <Pressable style={styles.homeButton} onPress={() => router.push('/')}>
+            <Text style={styles.homeButtonText}>Ana Sayfa</Text>
+          </Pressable>
+        </View>
+
+        <Text style={styles.headline}>AYT Matematik</Text>
 
         <Image
-          source={require('@/assets/images/react-logo.png')}
+          source={require('@/assets/images/aytmath_logo.png')}
           style={styles.visual}
           resizeMode="contain"
         />
-
-        <Text style={styles.headline}>AYT Matematik</Text>
 
         <View style={styles.detailRow}>
           <View style={styles.detailCard}>
@@ -53,34 +76,48 @@ export default function AYTMatematikScreen() {
         </View>
         <View style={styles.topicList}>
           {topics.map((topic) => {
-            const isOpen = openTopic === topic;
+            const isOpen = openTopic === topic.name;
+            const totalSubtopics = topic.subtopics.length;
+            const completedCount = topic.subtopics.filter((subtopic) =>
+              completedSubtopics.includes(subtopic.slug),
+            ).length;
+            const topicTitle =
+              totalSubtopics > 0
+                ? `${topic.name} (${completedCount} / ${totalSubtopics} tamamlandı)`
+                : topic.name;
             return (
-              <View key={topic} style={[styles.topicCard, isOpen && styles.topicCardOpen]}>
+              <View key={topic.name} style={[styles.topicCard, isOpen && styles.topicCardOpen]}>
                 <Pressable
                   style={({ pressed }) => [
                     styles.topicHeader,
                     pressed && styles.topicHeaderPressed,
                   ]}
-                  onPress={() => toggleTopic(topic)}>
-                  <Text style={styles.topicTitle}>{topic}</Text>
+                  onPress={() => toggleTopic(topic.name)}>
+                  <Text style={styles.topicTitle}>{topicTitle}</Text>
                   <Text style={[styles.topicChevron, isOpen && styles.topicChevronOpen]}>⌄</Text>
                 </Pressable>
                 {isOpen && (
                   <View style={styles.topicBody}>
-                    {topic === 'Trigonometri'
-                      ? trigSubtopics.map((subtopic) => (
-                          <Pressable
-                            key={subtopic.slug}
-                            style={({ pressed }) => [
-                              styles.subtopicItem,
-                              pressed && styles.subtopicItemPressed,
-                            ]}
-                            onPress={() => router.push(`/ayt-matematik/${subtopic.slug}`)}>
-                            <Text style={styles.subtopicText}>{subtopic.title}</Text>
-                            <Text style={styles.subtopicArrow}>›</Text>
-                          </Pressable>
-                        ))
-                      : null}
+                    {topic.subtopics.length > 0 ? (
+                      topic.subtopics.map((subtopic) => (
+                        <Pressable
+                          key={subtopic.slug}
+                          style={({ pressed }) => [
+                            styles.subtopicItem,
+                            pressed && styles.subtopicItemPressed,
+                            completedSubtopics.includes(subtopic.slug) &&
+                              styles.subtopicItemCompleted,
+                          ]}
+                          onPress={() => router.push(`/ayt-matematik/${subtopic.slug}`)}>
+                          <Text style={styles.subtopicText}>{subtopic.title}</Text>
+                          <Text style={styles.subtopicArrow}>›</Text>
+                        </Pressable>
+                      ))
+                    ) : (
+                      <Text style={styles.emptySubtopicText}>
+                        Bu konu için öğeler yakında eklenecek.
+                      </Text>
+                    )}
                   </View>
                 )}
               </View>
@@ -104,6 +141,10 @@ const styles = StyleSheet.create({
     gap: 24,
     backgroundColor: '#ffffff',
   },
+  navRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
   backButton: {
     alignSelf: 'flex-start',
     paddingVertical: 10,
@@ -119,6 +160,20 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     color: '#1f2937',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  homeButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#2563eb',
+    backgroundColor: '#f8fafc',
+  },
+  homeButtonText: {
+    fontSize: 16,
+    color: '#2563eb',
     fontFamily: 'Montserrat_700Bold',
   },
   visual: {
@@ -236,6 +291,11 @@ const styles = StyleSheet.create({
   subtopicItemPressed: {
     backgroundColor: '#eff6ff',
   },
+  subtopicItemCompleted: {
+    backgroundColor: '#dcfce7',
+    borderWidth: 2,
+    borderColor: '#16a34a',
+  },
   subtopicText: {
     fontSize: 16,
     color: '#1f2937',
@@ -244,6 +304,11 @@ const styles = StyleSheet.create({
   subtopicArrow: {
     fontSize: 24,
     color: '#2563eb',
+  },
+  emptySubtopicText: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontFamily: 'Montserrat_700Bold',
   },
 });
 

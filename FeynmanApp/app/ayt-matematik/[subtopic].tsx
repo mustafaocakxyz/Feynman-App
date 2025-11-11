@@ -6,11 +6,12 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, useSegments } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import Svg, { Line, Polygon, Text as SvgText } from 'react-native-svg';
 
 import { subtopicTitleBySlug } from './subtopics';
+import { markSubtopicCompleted } from '@/lib/completion-storage';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five';
 
@@ -30,11 +31,11 @@ type QuizPage = {
   correctChoiceId: string;
   diagram?: DiagramKind;
   hint?: string;
-  isTerminal?: boolean;
 };
 type PlaceholderPage = { type: 'placeholder'; id: string; message?: string };
+type CompletionPage = { type: 'completion'; id: string; message?: string };
 
-type LessonPage = TeachingPage | QuizPage | PlaceholderPage;
+type LessonPage = TeachingPage | QuizPage | PlaceholderPage | CompletionPage;
 
 type LessonDefinition = {
   title: string;
@@ -64,6 +65,10 @@ const lessons: Record<string, LessonDefinition> = {
         correctChoiceId: 'sina',
         diagram: 'unit-triangle',
         hint: 'İpucu: sin a = karşı kenar / hipotenüs',
+      },
+      {
+        type: 'completion',
+        id: 'birim-ucgen-complete',
       },
     ],
   },
@@ -123,7 +128,66 @@ const lessons: Record<string, LessonDefinition> = {
           { id: 'one', label: '1' },
         ],
         correctChoiceId: 'three-four',
-        isTerminal: true,
+      },
+      {
+        type: 'completion',
+        id: 'sin-cos-ve-tan-complete',
+      },
+    ],
+  },
+  'logaritma-dummy': {
+    title: 'Dummy Subtopic',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'dummy-logaritma',
+        body: 'Bu sayfa yer tutucu bir sayfadır.',
+      },
+      {
+        type: 'completion',
+        id: 'logaritma-dummy-complete',
+      },
+    ],
+  },
+  'limit-dummy': {
+    title: 'Dummy Subtopic',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'dummy-limit',
+        body: 'Bu sayfa yer tutucu bir sayfadır.',
+      },
+      {
+        type: 'completion',
+        id: 'limit-dummy-complete',
+      },
+    ],
+  },
+  'turev-dummy': {
+    title: 'Dummy Subtopic',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'dummy-turev',
+        body: 'Bu sayfa yer tutucu bir sayfadır.',
+      },
+      {
+        type: 'completion',
+        id: 'turev-dummy-complete',
+      },
+    ],
+  },
+  'integral-dummy': {
+    title: 'Dummy Subtopic',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'dummy-integral',
+        body: 'Bu sayfa yer tutucu bir sayfadır.',
+      },
+      {
+        type: 'completion',
+        id: 'integral-dummy-complete',
       },
     ],
   },
@@ -131,6 +195,8 @@ const lessons: Record<string, LessonDefinition> = {
 
 const defaultPlaceholderMessage =
   'Bu sayfa yakında. İçerik için hazırlık devam ediyor.';
+
+const defaultCompletionMessage = 'Desen Tamamlandı!';
 
 function getPageDiagram(page?: LessonPage): DiagramKind | undefined {
   if (!page) return undefined;
@@ -141,6 +207,10 @@ function getPageDiagram(page?: LessonPage): DiagramKind | undefined {
 
 function getPlaceholderMessage(page: PlaceholderPage) {
   return page.message ?? defaultPlaceholderMessage;
+}
+
+function getCompletionMessage(page: CompletionPage) {
+  return page.message ?? defaultCompletionMessage;
 }
 
 function renderDiagramByKind(kind?: DiagramKind) {
@@ -285,6 +355,9 @@ function getChoiceVisualState(
 export default function AYTSubtopicScreen() {
   const router = useRouter();
   const { subtopic } = useLocalSearchParams<{ subtopic?: string }>();
+  const segments = useSegments();
+  const parentPath = segments.slice(0, Math.max(segments.length - 1, 0)).join('/');
+  const completionTarget = parentPath ? `/${parentPath}` : '/';
 
   const lesson = useMemo(() => {
     if (!subtopic) return null;
@@ -310,7 +383,7 @@ export default function AYTSubtopicScreen() {
     if (!lesson) return;
     const nextIndex = pageIndex + 1;
     if (nextIndex >= lesson.pages.length) {
-      router.push('/ayt-matematik');
+      router.replace(completionTarget as never);
       return;
     }
     setPageIndex(nextIndex);
@@ -321,16 +394,18 @@ export default function AYTSubtopicScreen() {
     setIsChoiceCorrect(choiceId === page.correctChoiceId);
   };
 
-  const isLastPage = lesson ? pageIndex >= lesson.pages.length - 1 : true;
-  const isTerminalQuiz =
-    currentPage?.type === 'quiz' && currentPage.isTerminal === true;
+  const handleCompletionPress = async () => {
+    if (typeof subtopic === 'string') {
+      await markSubtopicCompleted(subtopic);
+    }
+    router.replace(completionTarget as never);
+  };
 
+  const isLastPage = lesson ? pageIndex >= lesson.pages.length - 1 : true;
   const showAdvanceButton =
     lesson &&
     ((currentPage?.type !== 'quiz' && !isLastPage) ||
-      (currentPage?.type === 'quiz' &&
-        isChoiceCorrect === true &&
-        (!isTerminalQuiz || isLastPage)));
+      (currentPage?.type === 'quiz' && isChoiceCorrect === true));
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -426,6 +501,19 @@ export default function AYTSubtopicScreen() {
             <Text style={styles.bodyTextMuted}>
               {getPlaceholderMessage(currentPage)}
             </Text>
+          </View>
+        )}
+
+        {lesson && currentPage?.type === 'completion' && (
+          <View style={styles.pageCard}>
+            <Text style={styles.completionTitle}>
+              {getCompletionMessage(currentPage)}
+            </Text>
+            <Pressable
+              style={styles.primaryButton}
+              onPress={handleCompletionPress}>
+              <Text style={styles.primaryButtonText}>Bitir</Text>
+            </Pressable>
           </View>
         )}
 
@@ -608,6 +696,12 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     fontSize: 16,
     color: '#b91c1c',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  completionTitle: {
+    fontSize: 28,
+    textAlign: 'center',
+    color: '#111827',
     fontFamily: 'Montserrat_700Bold',
   },
 });

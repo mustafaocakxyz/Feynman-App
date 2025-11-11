@@ -13,24 +13,31 @@ import {
   View,
 } from 'react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { getCompletedSubtopics } from '@/lib/completion-storage';
+import { topicSubtopicsEntries } from '@/app/ayt-matematik/subtopics';
 import { useRouter } from 'expo-router';
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const totalTopics = topicSubtopicsEntries.length;
+
   const modules = useMemo(
     () => [
       {
         id: 'ayt',
         name: 'AYT Matematik',
         currentEpisode: 0,
-        totalEpisodes: 5,
+        totalEpisodes: topicSubtopicsEntries.reduce(
+          (acc, [, list]) => acc + list.length,
+          0,
+        ),
         visual: require('@/assets/images/aytmath_logo.png'),
       },
       {
         id: 'tyt',
         name: 'TYT Matematik',
         currentEpisode: 0,
-        totalEpisodes: 5,
+        totalEpisodes: 0,
         visual: require('@/assets/images/partial-react-logo.png'),
       },
     ],
@@ -39,6 +46,10 @@ export default function WelcomeScreen() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const screenWidth = Dimensions.get('window').width;
+  const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
+  useEffect(() => {
+    getCompletedSubtopics().then(setCompletedSubtopics);
+  }, []);
   const headerAnim = useRef(new Animated.Value(0)).current;
   const metricsAnim = useRef(new Animated.Value(0)).current;
   const modulesAnim = useRef(new Animated.Value(0)).current;
@@ -128,19 +139,45 @@ export default function WelcomeScreen() {
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             onMomentumScrollEnd={handleMomentumEnd}
-            renderItem={({ item }) => {
-              const itemProgress = item.currentEpisode / item.totalEpisodes;
+          renderItem={({ item }) => {
+            const totalSubtopics =
+              item.id === 'ayt'
+                ? topicSubtopicsEntries.reduce(
+                    (acc, [, list]) => acc + list.length,
+                    0,
+                  )
+                : 0;
+            const completedDesenCount =
+              item.id === 'ayt' ? completedSubtopics.length : 0;
+            const progressRatio =
+              totalSubtopics > 0 ? completedDesenCount / totalSubtopics : 0;
+
+            const completedTopics =
+              item.id === 'ayt'
+                ? topicSubtopicsEntries.filter(([, list]) =>
+                    list.every((subtopic) =>
+                      completedSubtopics.includes(subtopic.slug),
+                    ),
+                  ).length
+                : 0;
               return (
                 <View style={[styles.moduleCard, { width: screenWidth - 48 }]}> 
                   <Text style={styles.moduleName}>{item.name}</Text>
-                  <Text style={styles.episodeLabel}>İlerlenen Bölüm</Text>
-                  <Text style={styles.episodeValue}>{item.currentEpisode}</Text>
+                <Text style={styles.episodeLabel}>Tamamlanan Konu</Text>
+                <Text style={styles.episodeValue}>
+                  {completedTopics} / {totalTopics}
+                </Text>
                   <Image source={item.visual} style={styles.visual} resizeMode="contain" />
                   <View style={styles.progressBarTrack}>
-                    <View style={[styles.progressBarFill, { width: `${itemProgress * 100}%` }]} />
+                  <View
+                    style={[
+                      styles.progressBarFill,
+                      { width: `${progressRatio * 100}%` },
+                    ]}
+                  />
                   </View>
                   <Text style={styles.progressText}>
-                    {item.currentEpisode} / {item.totalEpisodes}
+                  {completedDesenCount} / {totalSubtopics} desen tamamlandı
                   </Text>
                   <Pressable
                     style={({ pressed }) => [
