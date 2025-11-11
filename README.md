@@ -10,10 +10,14 @@
 <img width="501" height="664" alt="Screenshot 2025-11-10 at 12 33 29" src="https://github.com/user-attachments/assets/46c21ab1-7b48-453b-8316-11d8b73b809d" />
 <img width="498" height="541" alt="Screenshot 2025-11-10 at 12 33 46" src="https://github.com/user-attachments/assets/2a177ccc-1660-4d81-8771-80867875ff05" />
 
-
 ### Gün #3 | 10 Kasım | Uygulama versiyon kontrolüne uygun hale getirildi ve GitHub'a yüklendi.
 
 ### Gün #4 | 11 Kasım | Uygulama artık kaç konu ve desen bitirildiğini takip ediyor ve bunları gösteriyor.
 
 <img width="498" height="747" alt="Screenshot 2025-11-11 at 15 41 24" src="https://github.com/user-attachments/assets/ef083aa3-1d84-471d-98eb-b719686e445b" />
 <img width="489" height="553" alt="Screenshot 2025-11-11 at 15 42 11" src="https://github.com/user-attachments/assets/14fd1eb1-467d-420e-b9e9-e258f231bc7e" />
+
+### Gün #4 | 11 Kasım | Uygulamanın gün serisi ve XP fonksiyonları implemente edildi.
+
+<img width="381" height="196" alt="Screenshot 2025-11-11 at 23 27 35" src="https://github.com/user-attachments/assets/68c2cd87-08b4-4177-8836-9eb9d4598318" />
+<img width="365" height="805" alt="Screenshot 2025-11-11 at 23 29 05" src="https://github.com/user-attachments/assets/dc44a46a-f455-444a-b65f-471acbbdd57b" />
