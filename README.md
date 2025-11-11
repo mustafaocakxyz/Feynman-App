@@ -11,3 +11,8 @@ Gün #2 | AYT Matematik dersi içerisine iki adet interaktif modül eklendi. Uyg
 
 
 Gün #3 | Uygulama versiyon kontrolüne uygun hale getirildi ve GitHub'a yüklendi.
+
+Gün #4 | Uygulama artık kaç konu ve desen bitirildiğini takip ediyor ve bunları gösteriyor.
+
+<img width="498" height="747" alt="Screenshot 2025-11-11 at 15 41 24" src="https://github.com/user-attachments/assets/ef083aa3-1d84-471d-98eb-b719686e445b" />
+<img width="489" height="553" alt="Screenshot 2025-11-11 at 15 42 11" src="https://github.com/user-attachments/assets/14fd1eb1-467d-420e-b9e9-e258f231bc7e" />
