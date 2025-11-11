@@ -12,6 +12,9 @@ import Svg, { Line, Polygon, Text as SvgText } from 'react-native-svg';
 
 import { subtopicTitleBySlug } from './subtopics';
 import { markSubtopicCompleted } from '@/lib/completion-storage';
+import { recordStreakActivity } from '@/lib/streak-storage';
+import { addXp } from '@/lib/xp-storage';
+import { useXpFeedback } from '@/components/xp-feedback-provider';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five';
 
@@ -358,6 +361,7 @@ export default function AYTSubtopicScreen() {
   const segments = useSegments();
   const parentPath = segments.slice(0, Math.max(segments.length - 1, 0)).join('/');
   const completionTarget = parentPath ? `/${parentPath}` : '/';
+  const { showXp } = useXpFeedback();
 
   const lesson = useMemo(() => {
     if (!subtopic) return null;
@@ -367,6 +371,7 @@ export default function AYTSubtopicScreen() {
   const [pageIndex, setPageIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [isChoiceCorrect, setIsChoiceCorrect] = useState<boolean | null>(null);
+  const [completionAwarded, setCompletionAwarded] = useState(false);
 
   const effectiveTitle =
     lesson?.title ?? subtopicTitleBySlug[subtopic ?? ''] ?? 'Alt Konu';
@@ -377,6 +382,7 @@ export default function AYTSubtopicScreen() {
   useEffect(() => {
     setSelectedChoice(null);
     setIsChoiceCorrect(null);
+    setCompletionAwarded(false);
   }, [pageIndex, currentPage?.id]);
 
   const handleAdvance = () => {
@@ -389,21 +395,58 @@ export default function AYTSubtopicScreen() {
     setPageIndex(nextIndex);
   };
 
-  const handleChoiceSelect = (choiceId: string, page: QuizPage) => {
+  const handleChoiceSelect = async (choiceId: string, page: QuizPage) => {
+    const wasCorrect = isChoiceCorrect === true;
     setSelectedChoice(choiceId);
-    setIsChoiceCorrect(choiceId === page.correctChoiceId);
+    const isCorrectNow = choiceId === page.correctChoiceId;
+    setIsChoiceCorrect(isCorrectNow);
+    if (isCorrectNow && !wasCorrect) {
+      await addXp(10);
+      showXp(10);
+    }
   };
 
   const handleCompletionPress = async () => {
-    if (typeof subtopic === 'string') {
-      await markSubtopicCompleted(subtopic);
-    }
     router.replace(completionTarget as never);
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    const maybeAwardCompletionXp = async () => {
+      if (
+        completionAwarded ||
+        !lesson ||
+        currentPage?.type !== 'completion'
+      ) {
+        return;
+      }
+
+      let xpAmount = 0;
+      if (typeof subtopic === 'string') {
+        const isNew = await markSubtopicCompleted(subtopic);
+        xpAmount = isNew ? 20 : 5;
+      }
+      await recordStreakActivity();
+      if (xpAmount > 0) {
+        await addXp(xpAmount);
+        showXp(xpAmount);
+      }
+      if (!cancelled) {
+        setCompletionAwarded(true);
+      }
+    };
+
+    maybeAwardCompletionXp();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, showXp, subtopic]);
 
   const isLastPage = lesson ? pageIndex >= lesson.pages.length - 1 : true;
   const showAdvanceButton =
     lesson &&
+    currentPage?.type !== 'completion' &&
     ((currentPage?.type !== 'quiz' && !isLastPage) ||
       (currentPage?.type === 'quiz' && isChoiceCorrect === true));
 
@@ -468,9 +511,9 @@ export default function AYTSubtopicScreen() {
                       isIncorrectSelection && styles.choiceButtonIncorrect,
                       pressed && !isSelected && styles.choiceButtonPressed,
                     ]}
-                    onPress={() =>
-                      handleChoiceSelect(choice.id, currentPage)
-                    }>
+                    onPress={() => {
+                      void handleChoiceSelect(choice.id, currentPage);
+                    }}>
                     <Text
                       style={[
                         styles.choiceText,

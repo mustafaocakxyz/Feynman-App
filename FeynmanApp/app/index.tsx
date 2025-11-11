@@ -12,8 +12,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
+import { getStreakState } from '@/lib/streak-storage';
+import { getXpState } from '@/lib/xp-storage';
 import { topicSubtopicsEntries } from '@/app/ayt-matematik/subtopics';
 import { useRouter } from 'expo-router';
 
@@ -47,9 +50,28 @@ export default function WelcomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const screenWidth = Dimensions.get('window').width;
   const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
-  useEffect(() => {
-    getCompletedSubtopics().then(setCompletedSubtopics);
-  }, []);
+  const [streak, setStreak] = useState(0);
+  const [xp, setXp] = useState(0);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      const load = async () => {
+        const [completed, streakState, xpState] = await Promise.all([
+          getCompletedSubtopics(),
+          getStreakState(),
+          getXpState(),
+        ]);
+        if (!isActive) return;
+        setCompletedSubtopics(completed);
+        setStreak(streakState.count);
+        setXp(xpState.total);
+      };
+      load();
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
   const headerAnim = useRef(new Animated.Value(0)).current;
   const metricsAnim = useRef(new Animated.Value(0)).current;
   const modulesAnim = useRef(new Animated.Value(0)).current;
@@ -119,14 +141,14 @@ export default function WelcomeScreen() {
             <Text style={styles.metricIcon}>🔥</Text>
             <View>
               <Text style={styles.metricLabel}>Gün Serisi</Text>
-              <Text style={styles.metricValue}>7</Text>
+              <Text style={styles.metricValue}>{streak}</Text>
             </View>
           </View>
           <View style={styles.metricCard}>
             <Text style={styles.metricIcon}>⭐️</Text>
             <View>
               <Text style={styles.metricLabel}>XP</Text>
-              <Text style={styles.metricValue}>150</Text>
+              <Text style={styles.metricValue}>{xp}</Text>
             </View>
           </View>
         </Animated.View>
@@ -328,7 +350,7 @@ const styles = StyleSheet.create({
   visual: {
     marginTop: 24,
     width: '100%',
-    height: 350,
+    height: 280,
   },
   progressBarTrack: {
     marginTop: 24,
