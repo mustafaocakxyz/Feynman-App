@@ -21,3 +21,5 @@
 
 <img width="381" height="196" alt="Screenshot 2025-11-11 at 23 27 35" src="https://github.com/user-attachments/assets/68c2cd87-08b4-4177-8836-9eb9d4598318" />
 <img width="365" height="805" alt="Screenshot 2025-11-11 at 23 29 05" src="https://github.com/user-attachments/assets/dc44a46a-f455-444a-b65f-471acbbdd57b" />
+
+### Gün #5 | 12 Kasım | Uygulama ses efektleriyle zenginleştirildi.
