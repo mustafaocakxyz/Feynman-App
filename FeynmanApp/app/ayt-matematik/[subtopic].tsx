@@ -15,6 +15,7 @@ import { markSubtopicCompleted } from '@/lib/completion-storage';
 import { recordStreakActivity } from '@/lib/streak-storage';
 import { addXp } from '@/lib/xp-storage';
 import { useXpFeedback } from '@/components/xp-feedback-provider';
+import { useSoundEffects } from '@/hooks/use-sound-effects';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five';
 
@@ -362,6 +363,7 @@ export default function AYTSubtopicScreen() {
   const parentPath = segments.slice(0, Math.max(segments.length - 1, 0)).join('/');
   const completionTarget = parentPath ? `/${parentPath}` : '/';
   const { showXp } = useXpFeedback();
+  const { playPositive, playNegative } = useSoundEffects();
 
   const lesson = useMemo(() => {
     if (!subtopic) return null;
@@ -403,6 +405,9 @@ export default function AYTSubtopicScreen() {
     if (isCorrectNow && !wasCorrect) {
       await addXp(10);
       showXp(10);
+      await playPositive();
+    } else if (!isCorrectNow) {
+      await playNegative();
     }
   };
 
@@ -430,6 +435,7 @@ export default function AYTSubtopicScreen() {
       if (xpAmount > 0) {
         await addXp(xpAmount);
         showXp(xpAmount);
+        await playPositive();
       }
       if (!cancelled) {
         setCompletionAwarded(true);
@@ -441,7 +447,7 @@ export default function AYTSubtopicScreen() {
     return () => {
       cancelled = true;
     };
-  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, showXp, subtopic]);
+  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, playPositive, showXp, subtopic]);
 
   const isLastPage = lesson ? pageIndex >= lesson.pages.length - 1 : true;
   const showAdvanceButton =
