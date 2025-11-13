@@ -16,22 +16,40 @@ import { recordStreakActivity } from '@/lib/streak-storage';
 import { addXp } from '@/lib/xp-storage';
 import { useXpFeedback } from '@/components/xp-feedback-provider';
 import { useSoundEffects } from '@/hooks/use-sound-effects';
+import { MathText } from '@/components/MathText';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five';
+
+type TeachingBlock =
+  | { kind: 'text'; content: string }
+  | {
+      kind: 'formula';
+      content: string;
+      widthFactor?: number;
+      fontSize?: number;
+      textAlign?: 'left' | 'center' | 'right';
+    }
+  | { kind: 'diagram'; diagram: DiagramKind }
+  | {
+      kind: 'hint';
+      content: string;
+      widthFactor?: number;
+      fontSize?: number;
+      textAlign?: 'left' | 'center' | 'right';
+    };
 
 type TeachingPage = {
   type: 'teaching';
   id: string;
-  body?: string;
-  diagram?: DiagramKind;
-  formula?: string;
+  blocks: TeachingBlock[];
 };
 type QuizChoice = { id: string; label: string };
+type MathQuizChoice = { id: string; label: string; isMath: true };
 type QuizPage = {
   type: 'quiz';
   id: string;
   question: string;
-  choices: QuizChoice[];
+  choices: Array<QuizChoice | MathQuizChoice>;
   correctChoiceId: string;
   diagram?: DiagramKind;
   hint?: string;
@@ -53,9 +71,14 @@ const lessons: Record<string, LessonDefinition> = {
       {
         type: 'teaching',
         id: 'intro-triangle',
-        diagram: 'unit-triangle',
-        body:
-          'Birim üçgende hipotenüs 1 birimdir. Komşu kenar cos a, karşı kenar ise sin a olarak adlandırılır.',
+        blocks: [
+          { kind: 'diagram', diagram: 'unit-triangle' },
+          {
+            kind: 'text',
+            content:
+              'Birim üçgende hipotenüs 1 birimdir. Komşu kenar cos a, karşı kenar ise sin a olarak adlandırılır.',
+          },
+        ],
       },
       {
         type: 'quiz',
@@ -82,7 +105,7 @@ const lessons: Record<string, LessonDefinition> = {
       {
         type: 'teaching',
         id: 'intro-sin-definition',
-        formula: 'sin a = karşı kenar / hipotenüs',
+        blocks: [{ kind: 'formula', content: 'sin a = karşı kenar / hipotenüs' }],
       },
       {
         type: 'quiz',
@@ -100,7 +123,7 @@ const lessons: Record<string, LessonDefinition> = {
       {
         type: 'teaching',
         id: 'cos-definition',
-        formula: 'cos a = komşu kenar / hipotenüs',
+        blocks: [{ kind: 'formula', content: 'cos a = komşu kenar / hipotenüs' }],
       },
       {
         type: 'quiz',
@@ -118,7 +141,7 @@ const lessons: Record<string, LessonDefinition> = {
       {
         type: 'teaching',
         id: 'tan-definition',
-        formula: 'tan a = karşı kenar / komşu kenar',
+        blocks: [{ kind: 'formula', content: 'tan a = karşı kenar / komşu kenar' }],
       },
       {
         type: 'quiz',
@@ -139,13 +162,124 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
+  'sin2-cos2-1': {
+    title: 'sin^2 + cos^2 = 1',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'identity-intro',
+        blocks: [
+          { kind: 'diagram', diagram: 'unit-triangle' },
+          {
+            kind: 'text',
+            content:
+              "Birim üçgen'i hatırlayalım: hipotenüsü 1'e eşit olan ve kenarları sin a ve cos a olan bir dik üçgen. Bu üçgene Pisagor teoremini uygularsak ne olur?",
+          },
+          {
+            kind: 'hint',
+            content: '\\text{Pisagor Teoremi: } a^2 + b^2 = c^2',
+            widthFactor: 0.7,
+            fontSize: 18,
+            textAlign: 'left',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'identity-quiz',
+        question:
+          'Yukarıdaki üçgene Pisagor teoremini uygularsak hangi denklemi elde ederiz?',
+        diagram: 'unit-triangle',
+        hint: '\\text{Pisagor teoremi: } a^2 + b^2 = c^2',
+        choices: [
+          { id: 'identity-correct', label: '\\sin^2(a) + \\cos^2(a) = 1', isMath: true },
+          { id: 'identity-wrong', label: '\\sin(a) - \\cos(a) = 3', isMath: true },
+        ],
+        correctChoiceId: 'identity-correct',
+      },
+      {
+        type: 'teaching',
+        id: 'identity-practice',
+        blocks: [
+          { kind: 'formula', content: '\\sin^2(a) + \\cos^2(a) = 1' },
+          {
+            kind: 'text',
+            content:
+              'Yukarıdaki eşitliği çokça kullanacaksın. Örneğin sorular senden aşağıdakine benzer denklemleri sadeleştirmeni isteyecek:',
+          },
+          { kind: 'formula', content: '\\frac{3\\sin^2(a) + 3\\cos^2(a)}{3}' },
+          {
+            kind: 'text',
+            content:
+              'Başta karmaşık görünse de öğrendiğin eşitliği kullanarak bunun 1 olduğunu görebilirsin.',
+          },
+          { kind: 'formula', content: '\\frac{3(\\sin^2(a) + \\cos^2(a))}{3}' },
+          { kind: 'formula', content: '\\frac{3 \\cdot 1}{3} = 1' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'identity-rearrange',
+        blocks: [
+          {
+            kind: 'text',
+            content:
+              'Bu formül ilk haliyle faydalı olsa da sorularda karşına ilk haliyle çıkmayabilir.',
+          },
+          {
+            kind: 'text',
+            content:
+              'Örneğin sadece sin^2(a) veya 1 görürsen ne yapmalısın?\n\nÇok basit, formüldeki terimleri diğer tarafa at ve soruda gördüğüne benzer terimi elde etmeye çalış.',
+          },
+          { kind: 'formula', content: '\\sin^2(a) = 1 - \\cos^2(a)' },
+          { kind: 'formula', content: '\\cos^2(a) = 1 - \\sin^2(a)' },
+          { kind: 'formula', content: '1 = \\sin^2(a) + \\cos^2(a)' },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'identity-complete',
+      },
+    ],
+  },
+  'logaritma-nedir': {
+    title: 'Logaritma nedir?',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'logaritma-giris',
+        blocks: [
+          { kind: 'text', content: 'Üslü sayıları hatırlayalım:' },
+          { kind: 'formula', content: '2^3 = 2 \\times 2 \\times 2 = 8' },
+          { kind: 'formula', content: '3^2 = 3 \\times 3 = 9' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'logaritma-giris-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Logaritma üslü sayılara benzer özel bir fonksiyondur. Birkaç örnek:',
+          },
+          { kind: 'formula', content: '\\log_2 8 = 3' },
+          { kind: 'formula', content: '2^3 = 8' },
+          { kind: 'text', content: "Üslü sayılardaki 'üs' ve 'sonuç' yer değiştiriyor!" },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'logaritma-nedir-complete',
+      },
+    ],
+  },
   'logaritma-dummy': {
     title: 'Dummy Subtopic',
     pages: [
       {
         type: 'teaching',
         id: 'dummy-logaritma',
-        body: 'Bu sayfa yer tutucu bir sayfadır.',
+        blocks: [{ kind: 'text', content: 'Bu sayfa yer tutucu bir sayfadır.' }],
       },
       {
         type: 'completion',
@@ -159,7 +293,7 @@ const lessons: Record<string, LessonDefinition> = {
       {
         type: 'teaching',
         id: 'dummy-limit',
-        body: 'Bu sayfa yer tutucu bir sayfadır.',
+        blocks: [{ kind: 'text', content: 'Bu sayfa yer tutucu bir sayfadır.' }],
       },
       {
         type: 'completion',
@@ -173,7 +307,7 @@ const lessons: Record<string, LessonDefinition> = {
       {
         type: 'teaching',
         id: 'dummy-turev',
-        body: 'Bu sayfa yer tutucu bir sayfadır.',
+        blocks: [{ kind: 'text', content: 'Bu sayfa yer tutucu bir sayfadır.' }],
       },
       {
         type: 'completion',
@@ -187,7 +321,7 @@ const lessons: Record<string, LessonDefinition> = {
       {
         type: 'teaching',
         id: 'dummy-integral',
-        body: 'Bu sayfa yer tutucu bir sayfadır.',
+        blocks: [{ kind: 'text', content: 'Bu sayfa yer tutucu bir sayfadır.' }],
       },
       {
         type: 'completion',
@@ -204,7 +338,6 @@ const defaultCompletionMessage = 'Desen Tamamlandı!';
 
 function getPageDiagram(page?: LessonPage): DiagramKind | undefined {
   if (!page) return undefined;
-  if (page.type === 'teaching') return page.diagram;
   if (page.type === 'quiz') return page.diagram;
   return undefined;
 }
@@ -332,6 +465,47 @@ function renderDiagramByKind(kind?: DiagramKind) {
 function renderDiagram(kind?: DiagramKind) {
   if (!kind) return null;
   return <View style={styles.diagramCard}>{renderDiagramByKind(kind)}</View>;
+}
+
+function renderTeachingBlock(block: TeachingBlock, index: number) {
+  switch (block.kind) {
+    case 'diagram':
+      return (
+        <View key={`diagram-${block.diagram}-${index}`} style={styles.diagramCard}>
+          {renderDiagramByKind(block.diagram)}
+        </View>
+      );
+    case 'text':
+      return (
+        <Text key={`text-${index}`} style={styles.bodyText}>
+          {block.content}
+        </Text>
+      );
+    case 'formula':
+      return (
+        <View key={`formula-${index}`} style={styles.formulaCard}>
+          <MathText
+            latex={block.content}
+            widthFactor={block.widthFactor ?? 0.75}
+            fontSize={block.fontSize ?? 20}
+            textAlign={block.textAlign ?? 'center'}
+          />
+        </View>
+      );
+    case 'hint':
+      return (
+        <View key={`hint-${index}`} style={styles.hintCard}>
+          <MathText
+            latex={block.content}
+            widthFactor={block.widthFactor ?? 0.7}
+            fontSize={block.fontSize ?? 18}
+            textAlign={block.textAlign ?? 'left'}
+          />
+        </View>
+      );
+    default:
+      return null;
+  }
 }
 
 function normalizeChoiceLabel(choiceId: string, label: string) {
@@ -476,14 +650,8 @@ export default function AYTSubtopicScreen() {
 
         {lesson && currentPage?.type === 'teaching' && (
           <View style={styles.pageCard}>
-            {renderDiagram(getPageDiagram(currentPage))}
-            {currentPage.formula && (
-              <View style={styles.formulaCard}>
-                <Text style={styles.formulaText}>{currentPage.formula}</Text>
-              </View>
-            )}
-            {currentPage.body && (
-              <Text style={styles.bodyText}>{currentPage.body}</Text>
+            {currentPage.blocks.map((block, index) =>
+              renderTeachingBlock(block, index),
             )}
           </View>
         )}
@@ -493,7 +661,9 @@ export default function AYTSubtopicScreen() {
             {renderDiagram(getPageDiagram(currentPage))}
             <Text style={styles.bodyText}>{currentPage.question}</Text>
             {currentPage.hint && (
-              <Text style={styles.hintText}>{currentPage.hint}</Text>
+              <View style={styles.hintCard}>
+                <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
+              </View>
             )}
             <View style={styles.quizChoices}>
               {currentPage.choices.map((choice) => {
@@ -520,14 +690,18 @@ export default function AYTSubtopicScreen() {
                     onPress={() => {
                       void handleChoiceSelect(choice.id, currentPage);
                     }}>
-                    <Text
-                      style={[
-                        styles.choiceText,
-                        isCorrectSelection && styles.choiceTextCorrect,
-                        isIncorrectSelection && styles.choiceTextIncorrect,
-                      ]}>
-                      {normalizeChoiceLabel(choice.id, choice.label)}
-                    </Text>
+                    {('isMath' in choice && choice.isMath) || choice.label.includes('\\') ? (
+                      <MathText latex={choice.label} widthFactor={0.85} fontSize={24} />
+                    ) : (
+                      <Text
+                        style={[
+                          styles.choiceText,
+                          isCorrectSelection && styles.choiceTextCorrect,
+                          isIncorrectSelection && styles.choiceTextIncorrect,
+                        ]}>
+                        {normalizeChoiceLabel(choice.id, choice.label)}
+                      </Text>
+                    )}
                   </Pressable>
                 );
               })}
@@ -670,6 +844,15 @@ const styles = StyleSheet.create({
     color: '#2563eb',
     fontFamily: 'Montserrat_700Bold',
   },
+  hintCard: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    backgroundColor: '#dbeafe',
+    borderWidth: 1,
+    borderColor: '#bfdbfe',
+    alignSelf: 'stretch',
+  },
   quizChoices: {
     gap: 12,
   },
@@ -754,5 +937,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_700Bold',
   },
 });
+
 
 

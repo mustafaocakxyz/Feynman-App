@@ -7,16 +7,16 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
   [
     'Trigonometri',
     [
-      { title: 'Birim Üçgen', slug: 'birim-ucgen' },
-      { title: 'Birim Çember', slug: 'birim-cember' },
       { title: 'Sin, Cos ve Tan', slug: 'sin-cos-ve-tan' },
+      { title: 'Birim Üçgen', slug: 'birim-ucgen' },
       { title: 'sin^2 + cos^2 = 1', slug: 'sin2-cos2-1' },
+      { title: 'Birim Çember', slug: 'birim-cember' },
     ],
   ],
   [
     'Logaritma & Diziler',
     [
-      { title: 'Dummy Subtopic', slug: 'logaritma-dummy' },
+      { title: 'Logaritma nedir?', slug: 'logaritma-nedir' },
     ],
   ],
   [
