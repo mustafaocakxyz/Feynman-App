@@ -23,3 +23,6 @@
 <img width="365" height="805" alt="Screenshot 2025-11-11 at 23 29 05" src="https://github.com/user-attachments/assets/dc44a46a-f455-444a-b65f-471acbbdd57b" />
 
 ### Gün #5 | 12 Kasım | Uygulama ses efektleriyle zenginleştirildi.
+
+### Gün #6 | 13 Kasım | Uygulama içeriği geliştiriliyor. Yeni desenler ekleniyor.
+<img width="479" height="511" alt="Screenshot 2025-11-13 at 23 14 57" src="https://github.com/user-attachments/assets/ac758bdd-d0b0-4fe2-aa9c-010d90722cd5" />
