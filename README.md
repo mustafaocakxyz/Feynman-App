@@ -26,3 +26,5 @@
 
 ### Gün #6 | 13 Kasım | Uygulama içeriği geliştiriliyor. Yeni desenler ekleniyor.
 <img width="479" height="511" alt="Screenshot 2025-11-13 at 23 14 57" src="https://github.com/user-attachments/assets/ac758bdd-d0b0-4fe2-aa9c-010d90722cd5" />
+
+### Gün #7 | 14 Kasım | Uygulama içeriği geliştiriliyor. Yeni desenler ekleniyor.
