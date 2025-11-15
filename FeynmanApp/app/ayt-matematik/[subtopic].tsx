@@ -53,6 +53,7 @@ type QuizPage = {
   correctChoiceId: string;
   diagram?: DiagramKind;
   hint?: string;
+  formula?: string;
 };
 type PlaceholderPage = { type: 'placeholder'; id: string; message?: string };
 type CompletionPage = { type: 'completion'; id: string; message?: string };
@@ -263,13 +264,333 @@ const lessons: Record<string, LessonDefinition> = {
             content: 'Logaritma üslü sayılara benzer özel bir fonksiyondur. Birkaç örnek:',
           },
           { kind: 'formula', content: '\\log_2 8 = 3' },
+          {
+            kind: 'text',
+            content:
+              "Yukarıda gördüğün ifade 'logaritma 2 tabanında 8' diye okunur. 2'nin kaçıncı kuvvetinin 8'e eşit olduğunun cevabı verir. (Elbette bu cevap 3'tür!)",
+          },
           { kind: 'formula', content: '2^3 = 8' },
           { kind: 'text', content: "Üslü sayılardaki 'üs' ve 'sonuç' yer değiştiriyor!" },
         ],
       },
       {
+        type: 'quiz',
+        id: 'logaritma-quiz-1',
+        formula: '\\log_2(8) = ?',
+        question: 'Yukarıdaki logaritmik ifadenin cevabı nedir?',
+        hint: "2'nin kaçıncı kuvveti 8'e eşittir?",
+        choices: [
+          { id: 'three', label: '3' },
+          { id: 'eleven', label: '11' },
+        ],
+        correctChoiceId: 'three',
+      },
+      {
+        type: 'quiz',
+        id: 'logaritma-quiz-2',
+        formula: '\\log_3(9) = ?',
+        question: 'Yukarıdaki logaritmik ifadenin cevabı nedir?',
+        hint: "3'ün kaçıncı kuvveti 9'a eşittir?",
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'zero', label: '0' },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
         type: 'completion',
         id: 'logaritma-nedir-complete',
+      },
+    ],
+  },
+  'logaritmik-ifadeleri-toplama': {
+    title: 'Logaritmik İfadeleri Toplama',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'logaritma-toplama-giris',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıda iki logaritmik ifadenin toplamını görüyorsun.',
+          },
+          { kind: 'formula', content: '\\log_2(4) + \\log_2(8)' },
+          {
+            kind: 'text',
+            content: 'Bu sorunun cevabı ne olmalı?',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'logaritma-toplama-quiz-1',
+        formula: '\\log_2(4) + \\log_2(8)',
+        question: 'Yukarıdaki ifadelerin toplamı kaça eşittir?',
+        hint: "Bir önceki desende öğrendiklerini kullan!",
+        choices: [
+          { id: 'five', label: '5' },
+          { id: 'minus-two', label: '-2' },
+        ],
+        correctChoiceId: 'five',
+      },
+      {
+        type: 'teaching',
+        id: 'logaritma-toplama-kural',
+        blocks: [
+          {
+            kind: 'text',
+            content:
+              'Logaritmik ifadeler toplam halinde verildiğinde onları tek bir logaritmik ifadede toplayabilir ve içeriklerini çarpabilirsin.',
+          },
+          { kind: 'formula', content: '\\log_2(4) + \\log_2(8)' },
+          { kind: 'formula', content: '\\log_2(4 \\times 8)' },
+          { kind: 'formula', content: '\\log_2(32)' },
+          {
+            kind: 'text',
+            content: 'Peki bu ulaştığımız ifade kaça eşit? Sonuç değişti mi?',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'logaritma-toplama-quiz-2',
+        formula: '\\log_2(32)',
+        question: 'Yukarıdaki logaritmik ifade kaça eşittir?',
+        hint: "2'nin kaçıncı kuvveti 32'ye eşittir?",
+        choices: [
+          { id: 'five', label: '5' },
+          { id: 'minus-three', label: '-3' },
+        ],
+        correctChoiceId: 'five',
+      },
+      {
+        type: 'teaching',
+        id: 'logaritma-toplama-ters',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Evet, sonuç değişmedi!',
+          },
+          { kind: 'formula', content: '\\log_2(4) + \\log_2(8) = \\log_2(32)' },
+          {
+            kind: 'text',
+            content:
+              'Bunun tam tersini de yapabilirsin. Yani tek bir logaritmik ifadeyi birden fazla logaritmik ifadeye parçalayabilirsin.',
+          },
+          { kind: 'formula', content: '\\log_2(16) = \\log_2(2) + \\log_2(8)' },
+          { kind: 'formula', content: '\\log_2(100) = \\log_2(10) + \\log_2(10)' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'logaritma-toplama-quiz-3',
+        formula: '\\log_2(10) + \\log_2(10)',
+        question: 'Yukarıdaki toplam aşağıdakilerden hangisine eşittir?',
+        hint: 'Logaritmaların içindeki sayıları birbiriyle çarp!',
+        choices: [
+          { id: 'log100', label: '\\log_2(100)', isMath: true },
+          { id: 'five', label: '5' },
+          { id: 'two', label: '2' },
+        ],
+        correctChoiceId: 'log100',
+      },
+      {
+        type: 'quiz',
+        id: 'logaritma-toplama-quiz-4',
+        formula: '\\log_2(16)',
+        question: 'Yukarıdaki ifadeyi aşağıdakilerden hangisi gibi parçalayabilirsin?',
+        hint: "Parçaların içindeki sayıların çarpımları 16'ya eşit olmalı!",
+        choices: [
+          { id: 'log4-plus-log4', label: '\\log_2(4) + \\log_2(4)', isMath: true },
+          { id: 'log3-plus-log10', label: '\\log_2(3) + \\log_2(10)', isMath: true },
+        ],
+        correctChoiceId: 'log4-plus-log4',
+      },
+      {
+        type: 'teaching',
+        id: 'logaritma-toplama-uyari',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir uyarıyla bölümü sonlandıralım.',
+          },
+          {
+            kind: 'text',
+            content: '⚠️ TABANLARI AYNI OLMAYAN İFADELER TOPLANAMAZ ⚠️',
+          },
+          { kind: 'formula', content: '\\log_2(8) + \\log_3(8)' },
+          {
+            kind: 'text',
+            content: 'Yukarıda gördüğün ifadeyi tek bir ifadeye ÇEVİREMEZSİN.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu bölümde öğrendiğin kural yalnızca tabanları aynı olan ifadeler için geçerlidir.',
+          },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'logaritmik-ifadeleri-toplama-complete',
+      },
+    ],
+  },
+  'logaritmik-ifadeleri-cikarma': {
+    title: 'Logaritmilk İfadeleri Çıkarma',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'logaritma-cikarma-giris',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıda iki logaritmik ifadenin farkını görüyorsun',
+          },
+          { kind: 'formula', content: '\\log_2(8) - \\log_2(4)' },
+          {
+            kind: 'text',
+            content: 'Bu işlemdeki logaritmik ifadelerin 3 ve 2 olduklarını biliyoruz.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu yüzden cevap da 1 olmalı.',
+          },
+          { kind: 'formula', content: '\\log_2(8) - \\log_2(4) = 1' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'logaritma-cikarma-kural',
+        blocks: [
+          {
+            kind: 'text',
+            content:
+              'Logaritmik ifadeler çıkarma halinde verildiğinde onları tek bir logaritmik ifadede toplayabilir ve içeriklerini bölebilirsin.',
+          },
+          { kind: 'formula', content: '\\log_2(8) - \\log_2(4)' },
+          { kind: 'formula', content: '\\log_2(8 / 4)' },
+          { kind: 'formula', content: '\\log_2(2) = 1' },
+          {
+            kind: 'text',
+            content: 'Gördün mü? Sonuç aynı!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'logaritma-cikarma-quiz-1',
+        formula: '\\log_2(8) - \\log_2(4)',
+        question: 'Yukarıdaki işlemin sonucu nedir?',
+        hint: 'İki ifadenin içeriğini birbirine bölebilirsin!',
+        choices: [
+          { id: 'one', label: '1' },
+          { id: 'log4', label: '\\log_2(4)', isMath: true },
+        ],
+        correctChoiceId: 'one',
+      },
+      {
+        type: 'quiz',
+        id: 'logaritma-cikarma-quiz-2',
+        formula: '\\log_2(20) - \\log_2(5)',
+        question: 'Yukarıdaki işlemin sonucu nedir?',
+        hint: "20'yi 5'e bölersen 4 elde edersin, 2'nin 2. kuvveti!",
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'log10', label: '\\log_2(10)', isMath: true },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
+        type: 'teaching',
+        id: 'logaritma-cikarma-uyari',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir uyarıyla bölümü sonlandıralım.',
+          },
+          {
+            kind: 'text',
+            content: '⚠️ TABANLARI AYNI OLMAYAN İFADELER BİRBİRİNDEN ÇIKARILAMAZ ⚠️',
+          },
+          { kind: 'formula', content: '\\log_2(8) - \\log_3(8)' },
+          {
+            kind: 'text',
+            content: 'Yukarıda gördüğün ifadeyi tek bir ifadeye ÇEVİREMEZSİN.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu bölümde öğrendiğin kural yalnızca tabanları aynı olan ifadeler için geçerlidir.',
+          },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'logaritmik-ifadeleri-cikarma-complete',
+      },
+    ],
+  },
+  'ussu-basa-carpi-olarak-getirme': {
+    title: 'Üssü Başa Çarpı Olarak Getirme',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'ussu-basa-carpi-giris',
+        blocks: [
+          { kind: 'formula', content: '\\log_2(8)' },
+          {
+            kind: 'text',
+            content: "Yukarıdaki ifadede bulunan 8'i başka nasıl ifade edebilirim?",
+          },
+          { kind: 'formula', content: '8 = 2^3' },
+          {
+            kind: 'text',
+            content: 'Öyleyse ifademizi şu şekilde yazabiliriz:',
+          },
+          { kind: 'formula', content: '\\log_2(8) = \\log_2(2^3)' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'ussu-basa-carpi-kural',
+        blocks: [
+          { kind: 'formula', content: '\\log_2(8) = \\log_2(2^3)' },
+          {
+            kind: 'text',
+            content: 'Logaritmik ifadelerde üsleri başa çarpı olarak getirebilirsin.',
+          },
+          { kind: 'formula', content: '\\log_2(2^3) = 3 \\times \\log_2(2)' },
+          {
+            kind: 'text',
+            content: 'Böylece bazı ifadeler çok daha kolay hale gelir!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'ussu-basa-carpi-quiz-1',
+        formula: '\\log_3(9)',
+        question: 'Yukarıdaki ifadenin eşiti aşağıdakilerden hangisidir?',
+        hint: "9'u 3'ün karesi olarak yazabilirsin!",
+        choices: [
+          { id: 'two-times-log3', label: '2 \\times \\log_3(3)', isMath: true },
+          { id: 'log8', label: '\\log_2(8)', isMath: true },
+        ],
+        correctChoiceId: 'two-times-log3',
+      },
+      {
+        type: 'quiz',
+        id: 'ussu-basa-carpi-quiz-2',
+        formula: '\\log_2(8) + \\log_3(9)',
+        question: 'Yukarıdaki ifadenin eşiti aşağıdakilerden hangisidir?',
+        choices: [
+          { id: 'three-times-log2-plus-two-times-log3', label: '3 \\times \\log_2(2) + 2 \\times \\log_3(3)', isMath: true },
+          { id: 'eight-times-log2-plus-nine-times-log3', label: '8 \\times \\log_2(2) + 9 \\times \\log_3(3)', isMath: true },
+        ],
+        correctChoiceId: 'three-times-log2-plus-two-times-log3',
+      },
+      {
+        type: 'completion',
+        id: 'ussu-basa-carpi-olarak-getirme-complete',
       },
     ],
   },
@@ -659,10 +980,24 @@ export default function AYTSubtopicScreen() {
         {lesson && currentPage?.type === 'quiz' && (
           <View style={styles.pageCard}>
             {renderDiagram(getPageDiagram(currentPage))}
+            {currentPage.formula && (
+              <View style={styles.formulaCard}>
+                <MathText
+                  latex={currentPage.formula}
+                  widthFactor={0.75}
+                  fontSize={20}
+                  textAlign="center"
+                />
+              </View>
+            )}
             <Text style={styles.bodyText}>{currentPage.question}</Text>
             {currentPage.hint && (
               <View style={styles.hintCard}>
-                <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
+                {currentPage.hint.includes('\\') ? (
+                  <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
+                ) : (
+                  <Text style={styles.hintText}>{currentPage.hint}</Text>
+                )}
               </View>
             )}
             <View style={styles.quizChoices}>
