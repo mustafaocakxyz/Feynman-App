@@ -17,6 +17,9 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
     'Logaritma & Diziler',
     [
       { title: 'Logaritma nedir?', slug: 'logaritma-nedir' },
+      { title: 'Logaritmik İfadeleri Toplama', slug: 'logaritmik-ifadeleri-toplama' },
+      { title: 'Logaritmilk İfadeleri Çıkarma', slug: 'logaritmik-ifadeleri-cikarma' },
+      { title: 'Üssü Başa Çarpı Olarak Getirme', slug: 'ussu-basa-carpi-olarak-getirme' },
     ],
   ],
   [
