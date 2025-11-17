@@ -30,3 +30,4 @@
 ### Gün #7 | 14 Kasım | Uygulama içeriği geliştiriliyor.
 ### Gün #8 | 15 Kasım | +2 desen eklendi.
 ### Gün #8 | 16 Kasım | +2 desen eklendi.
+### Gün #9 | 17 Kasım | +1 desen eklendi. Logaritma konusu tamamlandı.
