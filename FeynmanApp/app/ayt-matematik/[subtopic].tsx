@@ -594,6 +594,141 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
+  'tanimla-ilgili-kurallar': {
+    title: 'Tanımla İlgili Kurallar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'tanimla-kurallar-giris',
+        blocks: [
+          { kind: 'formula', content: '\\log_a b = x' },
+          {
+            kind: 'text',
+            content: 'Yukarıda logaritmanın en basit halini görüyorsun.',
+          },
+          {
+            kind: 'text',
+            content:
+              'Logaritmanın tabanına veya içeriğine istediğimiz her değeri yazamayız.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu modülde bu sayılara dair kuralları öğreneceksin.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tanimla-kurallar-taban',
+        blocks: [
+          { kind: 'formula', content: '\\log_a b = x' },
+          {
+            kind: 'text',
+            content:
+              'Logaritmanın tabanında bulunan a değeri daima pozitif olmalıdır.',
+          },
+          { kind: 'formula', content: 'a > 0' },
+          {
+            kind: 'text',
+            content:
+              'Eğer bu kural olmasaydı ve a negatif olabilseydi o zaman logaritma fonksiyonu sürekli ve düzgün bir fonksiyon olmazdı (bunu ileride daha detaylı öğreneceğiz.)',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tanimla-kurallar-icerik',
+        blocks: [
+          { kind: 'formula', content: '\\log_a b = x' },
+          {
+            kind: 'text',
+            content:
+              'Tabanda bulunan a değeri daima pozitif olduğu için logaritmanın içeriğinde bulunan b değeri de daima pozitif olmalıdır.',
+          },
+          { kind: 'formula', content: 'b > 0' },
+          {
+            kind: 'text',
+            content: 'Şimdi biraz egzersiz yapalım.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tanimla-kurallar-quiz-1',
+        formula: '\\log_a b = x',
+        question: 'a değeri aşağıdakilerden hangisi olamaz?',
+        choices: [
+          { id: 'three', label: '3' },
+          { id: 'minus-two', label: '-2' },
+          { id: 'five', label: '5' },
+        ],
+        correctChoiceId: 'minus-two',
+      },
+      {
+        type: 'quiz',
+        id: 'tanimla-kurallar-quiz-2',
+        formula: '\\log_a b = x',
+        question: 'b değeri aşağıdakilerden hangisi olamaz?',
+        choices: [
+          { id: 'eight', label: '8' },
+          { id: 'minus-seven', label: '-7' },
+          { id: 'nine', label: '9' },
+        ],
+        correctChoiceId: 'minus-seven',
+      },
+      {
+        type: 'teaching',
+        id: 'tanimla-kurallar-bir-kural',
+        blocks: [
+          { kind: 'formula', content: '\\log_a b = x' },
+          {
+            kind: 'text',
+            content: "Tabandaki a değeri 1'e eşit olmamalıdır.",
+          },
+          { kind: 'formula', content: 'a \\neq 1' },
+          {
+            kind: 'text',
+            content:
+              "Eğer a değeri 1'e eşit olabilseydi o zaman fonksiyonumuzun karşısına istediğimiz değeri yazabilirdik ve bu da fonksiyon tanımına uymazdı.",
+          },
+          { kind: 'formula', content: '\\log_1 1 = 5, \\quad 1^5 = 1' },
+          { kind: 'formula', content: '\\log_1 1 = 100, \\quad 1^{100} = 1' },
+          {
+            kind: 'text',
+            content: "Bu yüzden taban 1'e eşit olmamalıdır.",
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tanimla-kurallar-quiz-3',
+        question: 'Aşağıdakilerden hangisi geçerli bir logaritmik fonksiyon değildir?',
+        hint: 'Şıkların sayısal değerlerini bulmayı dene, ikinci şıkkın imkansız olduğunu göreceksin!',
+        choices: [
+          { id: 'log2-8', label: '\\log_2(8)', isMath: true },
+          { id: 'log1-5', label: '\\log_1(5)', isMath: true },
+        ],
+        correctChoiceId: 'log1-5',
+      },
+      {
+        type: 'quiz',
+        id: 'tanimla-kurallar-quiz-4',
+        formula: '\\log_{(x-2)} b',
+        question: 'Yukarıdaki ifadenin tanımlı olabilmesi için x hangi değeri alabilir?',
+        hint: 'Yerine koyup kurallarımızı ihlal edip etmediğin kontrol et!',
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'three', label: '3' },
+          { id: 'four', label: '4' },
+        ],
+        correctChoiceId: 'four',
+      },
+      {
+        type: 'completion',
+        id: 'tanimla-ilgili-kurallar-complete',
+      },
+    ],
+  },
   'logaritma-dummy': {
     title: 'Dummy Subtopic',
     pages: [

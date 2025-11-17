@@ -20,6 +20,7 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
       { title: 'Logaritmik İfadeleri Toplama', slug: 'logaritmik-ifadeleri-toplama' },
       { title: 'Logaritmilk İfadeleri Çıkarma', slug: 'logaritmik-ifadeleri-cikarma' },
       { title: 'Üssü Başa Çarpı Olarak Getirme', slug: 'ussu-basa-carpi-olarak-getirme' },
+      { title: 'Tanımla İlgili Kurallar', slug: 'tanimla-ilgili-kurallar' },
     ],
   ],
   [
