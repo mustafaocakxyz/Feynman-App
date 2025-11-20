@@ -1,6 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const STORAGE_KEY = '@feynman/streak';
+function getStorageKey(userId: string): string {
+  return `@feynman/streak_${userId}`;
+}
+
 const TIME_ZONE = 'Europe/Istanbul';
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -28,9 +31,10 @@ function diffInDays(from: string, to: string): number {
   return Math.floor((b.getTime() - a.getTime()) / MS_PER_DAY);
 }
 
-async function readState(): Promise<StreakState> {
+async function readState(userId: string): Promise<StreakState> {
   try {
-    const stored = await AsyncStorage.getItem(STORAGE_KEY);
+    const storageKey = getStorageKey(userId);
+    const stored = await AsyncStorage.getItem(storageKey);
     if (!stored) {
       return { count: 0, lastActivityDate: null };
     }
@@ -50,23 +54,24 @@ async function readState(): Promise<StreakState> {
   }
 }
 
-async function writeState(state: StreakState) {
+async function writeState(userId: string, state: StreakState) {
   try {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const storageKey = getStorageKey(userId);
+    await AsyncStorage.setItem(storageKey, JSON.stringify(state));
   } catch (error) {
     console.warn('Streak verisi kaydedilemedi', error);
   }
 }
 
-export async function getStreakState(): Promise<StreakState> {
-  const state = await readState();
+export async function getStreakState(userId: string): Promise<StreakState> {
+  const state = await readState(userId);
   const today = getTodayString();
 
   if (state.lastActivityDate) {
     const diff = diffInDays(state.lastActivityDate, today);
     if (diff > 1) {
       const resetState = { count: 0, lastActivityDate: state.lastActivityDate };
-      await writeState(resetState);
+      await writeState(userId, resetState);
       return resetState;
     }
   }
@@ -74,8 +79,8 @@ export async function getStreakState(): Promise<StreakState> {
   return state;
 }
 
-export async function recordStreakActivity(): Promise<StreakState> {
-  const state = await readState();
+export async function recordStreakActivity(userId: string): Promise<StreakState> {
+  const state = await readState(userId);
   const today = getTodayString();
 
   if (state.lastActivityDate === today) {
@@ -91,7 +96,7 @@ export async function recordStreakActivity(): Promise<StreakState> {
   }
 
   const nextState = { count: nextCount, lastActivityDate: today };
-  await writeState(nextState);
+  await writeState(userId, nextState);
   return nextState;
 }
 

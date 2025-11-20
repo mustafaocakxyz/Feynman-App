@@ -1,10 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const STORAGE_KEY = '@feynman/completed-subtopics';
+function getStorageKey(userId: string): string {
+  return `@feynman/completed-subtopics_${userId}`;
+}
 
-export async function getCompletedSubtopics(): Promise<string[]> {
+export async function getCompletedSubtopics(userId: string): Promise<string[]> {
   try {
-    const stored = await AsyncStorage.getItem(STORAGE_KEY);
+    const storageKey = getStorageKey(userId);
+    const stored = await AsyncStorage.getItem(storageKey);
     if (!stored) {
       return [];
     }
@@ -19,14 +22,18 @@ export async function getCompletedSubtopics(): Promise<string[]> {
   }
 }
 
-export async function markSubtopicCompleted(subtopicSlug: string): Promise<boolean> {
+export async function markSubtopicCompleted(
+  userId: string,
+  subtopicSlug: string,
+): Promise<boolean> {
   try {
-    const existing = await getCompletedSubtopics();
+    const existing = await getCompletedSubtopics(userId);
     if (existing.includes(subtopicSlug)) {
       return false;
     }
     const next = [...existing, subtopicSlug];
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    const storageKey = getStorageKey(userId);
+    await AsyncStorage.setItem(storageKey, JSON.stringify(next));
     return true;
   } catch (error) {
     console.warn('Tamamlanan deseni kaydetme başarısız', error);
