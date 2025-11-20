@@ -32,4 +32,4 @@
 ### Gün #8 | 16 Kasım | +2 desen eklendi.
 ### Gün #9 | 17 Kasım | +1 desen eklendi. Logaritma konusu tamamlandı.
 ### Gün #10 - 11 | 18 - 19 Kasım | Authentication için database düzenleniyor.
-### Gün #12 | 20 Kasım | 
+### Gün #12 | 20 Kasım | Authentication halledildi. Artık kullanıcılar kaydolabilir.
