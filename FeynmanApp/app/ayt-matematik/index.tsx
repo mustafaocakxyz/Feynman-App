@@ -5,9 +5,11 @@ import { useCallback, useState } from 'react';
 
 import { topicSubtopicsEntries } from './subtopics';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function AYTMatematikScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const [openTopic, setOpenTopic] = useState<string | null>(null);
   const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
 
@@ -22,10 +24,11 @@ export default function AYTMatematikScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      if (!user?.id) return;
       let isActive = true;
 
       const loadCompleted = async () => {
-        const stored = await getCompletedSubtopics();
+        const stored = await getCompletedSubtopics(user.id);
         if (!isActive) return;
         setCompletedSubtopics(stored);
       };
@@ -35,7 +38,7 @@ export default function AYTMatematikScreen() {
       return () => {
         isActive = false;
       };
-    }, []),
+    }, [user?.id]),
   );
 
   return (

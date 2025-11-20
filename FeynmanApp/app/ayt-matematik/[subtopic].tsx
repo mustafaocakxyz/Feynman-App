@@ -17,6 +17,7 @@ import { addXp } from '@/lib/xp-storage';
 import { useXpFeedback } from '@/components/xp-feedback-provider';
 import { useSoundEffects } from '@/hooks/use-sound-effects';
 import { MathText } from '@/components/MathText';
+import { useAuth } from '@/contexts/auth-context';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five';
 
@@ -988,6 +989,7 @@ function getChoiceVisualState(
 
 export default function AYTSubtopicScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const { subtopic } = useLocalSearchParams<{ subtopic?: string }>();
   const segments = useSegments();
   const parentPath = segments.slice(0, Math.max(segments.length - 1, 0)).join('/');
@@ -1028,12 +1030,13 @@ export default function AYTSubtopicScreen() {
   };
 
   const handleChoiceSelect = async (choiceId: string, page: QuizPage) => {
+    if (!user?.id) return;
     const wasCorrect = isChoiceCorrect === true;
     setSelectedChoice(choiceId);
     const isCorrectNow = choiceId === page.correctChoiceId;
     setIsChoiceCorrect(isCorrectNow);
     if (isCorrectNow && !wasCorrect) {
-      await addXp(10);
+      await addXp(user.id, 10);
       showXp(10);
       await playPositive();
     } else if (!isCorrectNow) {
@@ -1046,6 +1049,7 @@ export default function AYTSubtopicScreen() {
   };
 
   useEffect(() => {
+    if (!user?.id) return;
     let cancelled = false;
     const maybeAwardCompletionXp = async () => {
       if (
@@ -1058,12 +1062,12 @@ export default function AYTSubtopicScreen() {
 
       let xpAmount = 0;
       if (typeof subtopic === 'string') {
-        const isNew = await markSubtopicCompleted(subtopic);
+        const isNew = await markSubtopicCompleted(user.id, subtopic);
         xpAmount = isNew ? 20 : 5;
       }
-      await recordStreakActivity();
+      await recordStreakActivity(user.id);
       if (xpAmount > 0) {
-        await addXp(xpAmount);
+        await addXp(user.id, xpAmount);
         showXp(xpAmount);
         await playPositive();
       }
@@ -1077,7 +1081,7 @@ export default function AYTSubtopicScreen() {
     return () => {
       cancelled = true;
     };
-  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, playPositive, showXp, subtopic]);
+  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, playPositive, showXp, subtopic, user?.id]);
 
   const isLastPage = lesson ? pageIndex >= lesson.pages.length - 1 : true;
   const showAdvanceButton =

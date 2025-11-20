@@ -1,14 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const STORAGE_KEY = '@feynman/xp';
+function getStorageKey(userId: string): string {
+  return `@feynman/xp_${userId}`;
+}
 
 type XpState = {
   total: number;
 };
 
-async function readState(): Promise<XpState> {
+async function readState(userId: string): Promise<XpState> {
   try {
-    const stored = await AsyncStorage.getItem(STORAGE_KEY);
+    const storageKey = getStorageKey(userId);
+    const stored = await AsyncStorage.getItem(storageKey);
     if (!stored) {
       return { total: 0 };
     }
@@ -22,25 +25,26 @@ async function readState(): Promise<XpState> {
   return { total: 0 };
 }
 
-async function writeState(state: XpState) {
+async function writeState(userId: string, state: XpState) {
   try {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const storageKey = getStorageKey(userId);
+    await AsyncStorage.setItem(storageKey, JSON.stringify(state));
   } catch (error) {
     console.warn('XP verisi kaydedilemedi', error);
   }
 }
 
-export async function getXpState(): Promise<XpState> {
-  return readState();
+export async function getXpState(userId: string): Promise<XpState> {
+  return readState(userId);
 }
 
-export async function addXp(amount: number): Promise<XpState> {
+export async function addXp(userId: string, amount: number): Promise<XpState> {
   if (!Number.isFinite(amount) || amount <= 0) {
-    return readState();
+    return readState(userId);
   }
-  const state = await readState();
+  const state = await readState(userId);
   const next = { total: state.total + Math.round(amount) };
-  await writeState(next);
+  await writeState(userId, next);
   return next;
 }
 

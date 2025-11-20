@@ -1,98 +1,412 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  FlatList,
+  Image,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getCompletedSubtopics } from '@/lib/completion-storage';
+import { getStreakState } from '@/lib/streak-storage';
+import { getXpState } from '@/lib/xp-storage';
+import { topicSubtopicsEntries } from '@/app/ayt-matematik/subtopics';
+import { useRouter } from 'expo-router';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const router = useRouter();
+  const { user } = useAuth();
+  const totalTopics = topicSubtopicsEntries.length;
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const modules = useMemo(
+    () => [
+      {
+        id: 'ayt',
+        name: 'AYT Matematik',
+        currentEpisode: 0,
+        totalEpisodes: topicSubtopicsEntries.reduce(
+          (acc, [, list]) => acc + list.length,
+          0,
+        ),
+        visual: require('@/assets/images/aytmath_logo.png'),
+      },
+      {
+        id: 'tyt',
+        name: 'TYT Matematik',
+        currentEpisode: 0,
+        totalEpisodes: 0,
+        visual: require('@/assets/images/partial-react-logo.png'),
+      },
+    ],
+    [],
+  );
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const screenWidth = Dimensions.get('window').width;
+  const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
+  const [streak, setStreak] = useState(0);
+  const [xp, setXp] = useState(0);
+  useFocusEffect(
+    useCallback(() => {
+      if (!user?.id) return;
+      let isActive = true;
+      const load = async () => {
+        const [completed, streakState, xpState] = await Promise.all([
+          getCompletedSubtopics(user.id),
+          getStreakState(user.id),
+          getXpState(user.id),
+        ]);
+        if (!isActive) return;
+        setCompletedSubtopics(completed);
+        setStreak(streakState.count);
+        setXp(xpState.total);
+      };
+      load();
+      return () => {
+        isActive = false;
+      };
+    }, [user?.id]),
+  );
+  const headerAnim = useRef(new Animated.Value(0)).current;
+  const metricsAnim = useRef(new Animated.Value(0)).current;
+  const modulesAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(headerAnim, {
+        toValue: 1,
+        duration: 450,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(metricsAnim, {
+        toValue: 1,
+        duration: 450,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(modulesAnim, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [headerAnim, metricsAnim, modulesAnim]);
+
+  const makeAnimatedStyle = (animValue: Animated.Value) => ({
+    opacity: animValue,
+    transform: [
+      {
+        translateY: animValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [32, 0],
+        }),
+      },
+    ],
+  });
+
+  const handleMomentumEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / screenWidth);
+    setActiveIndex(index);
+  };
+
+  const handleContinue = (moduleId: string) => {
+    if (moduleId === 'ayt') {
+      router.push('/ayt-matematik');
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Animated.View style={[styles.header, makeAnimatedStyle(headerAnim)]}>
+          <Image
+            source={{ uri: 'https://yt3.googleusercontent.com/SxKRbmKHt7O-JmUe9fQ0ekb7RuB6RyYroxryvH_brt04ZkjNjGkqi3dUjFa3u3VteEf5yfXVkF0=s160-c-k-c0x00ffffff-no-rj' }}
+            style={styles.avatar}
+          />
+          <Text style={styles.welcomeText}>
+            Hoş geldin <Text style={styles.nameText}>Mustafa</Text>
+          </Text>
+        </Animated.View>
+
+        <Animated.View style={[styles.metricsRow, makeAnimatedStyle(metricsAnim)]}>
+          <View style={styles.metricCard}>
+            <Text style={styles.metricIcon}>🔥</Text>
+            <View>
+              <Text style={styles.metricLabel}>Gün Serisi</Text>
+              <Text style={styles.metricValue}>{streak}</Text>
+            </View>
+          </View>
+          <View style={styles.metricCard}>
+            <Text style={styles.metricIcon}>⭐️</Text>
+            <View>
+              <Text style={styles.metricLabel}>XP</Text>
+              <Text style={styles.metricValue}>{xp}</Text>
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View style={makeAnimatedStyle(modulesAnim)}>
+          <FlatList
+            data={modules}
+            keyExtractor={(item) => item.id}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={handleMomentumEnd}
+            renderItem={({ item }) => {
+              const totalSubtopics =
+                item.id === 'ayt'
+                  ? topicSubtopicsEntries.reduce(
+                      (acc, [, list]) => acc + list.length,
+                      0,
+                    )
+                  : 0;
+              const completedDesenCount =
+                item.id === 'ayt' ? completedSubtopics.length : 0;
+              const progressRatio =
+                totalSubtopics > 0 ? completedDesenCount / totalSubtopics : 0;
+
+              const completedTopics =
+                item.id === 'ayt'
+                  ? topicSubtopicsEntries.filter(([, list]) =>
+                      list.every((subtopic) =>
+                        completedSubtopics.includes(subtopic.slug),
+                      ),
+                    ).length
+                  : 0;
+              return (
+                <View style={[styles.moduleCard, { width: screenWidth - 48 }]}>
+                  <Text style={styles.moduleName}>{item.name}</Text>
+                  <Text style={styles.episodeLabel}>Tamamlanan Konu</Text>
+                  <Text style={styles.episodeValue}>
+                    {completedTopics} / {totalTopics}
+                  </Text>
+                  <Image source={item.visual} style={styles.visual} resizeMode="contain" />
+                  <View style={styles.progressBarTrack}>
+                    <View
+                      style={[
+                        styles.progressBarFill,
+                        { width: `${progressRatio * 100}%` },
+                      ]}
+                    />
+                  </View>
+                  <Text style={styles.progressText}>
+                    {completedDesenCount} / {totalSubtopics} desen tamamlandı
+                  </Text>
+                  <Pressable
+                    style={({ pressed }) => [
+                      styles.ctaButton,
+                      item.id !== 'ayt' && styles.ctaButtonDisabled,
+                      pressed && item.id === 'ayt' && styles.ctaButtonPressed,
+                    ]}
+                    onPress={() => handleContinue(item.id)}
+                    disabled={item.id !== 'ayt'}>
+                    <Text
+                      style={[
+                        styles.ctaText,
+                        item.id !== 'ayt' && styles.ctaTextDisabled,
+                      ]}>
+                      Devam Et
+                    </Text>
+                  </Pressable>
+                </View>
+              );
+            }}
+            contentContainerStyle={styles.carouselContent}
+          />
+        </Animated.View>
+
+        <View style={styles.paginationRow}>
+          {modules.map((module, index) => (
+            <View
+              key={module.id}
+              style={[styles.paginationDot, index === activeIndex && styles.paginationDotActive]}
+            />
+          ))}
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 24,
+  },
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 16,
+  },
+  avatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+  },
+  welcomeText: {
+    fontSize: 24,
+    fontWeight: '500',
+    color: '#000000',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  nameText: {
+    color: '#1d4ed8',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    gap: 16,
+    marginTop: 24,
+  },
+  metricCard: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    borderRadius: 16,
+    backgroundColor: '#f3f4f6',
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.14,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
+  },
+  metricIcon: {
+    fontSize: 28,
+    fontFamily: 'Montserrat_700Bold',
+  },
+  metricLabel: {
+    fontSize: 13,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    color: '#6b7280',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  metricValue: {
+    marginTop: 4,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#111827',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  carouselContent: {
+    paddingVertical: 32,
+    gap: 24,
+  },
+  moduleCard: {
+    borderRadius: 24,
+    backgroundColor: '#f5f7fb',
+    padding: 24,
+    marginRight: 24,
+    alignSelf: 'center',
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.18,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 12 },
+    elevation: 10,
+  },
+  moduleName: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#111827',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  episodeLabel: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#6b7280',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  episodeValue: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#111827',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  visual: {
+    marginTop: 24,
+    width: '100%',
+    height: 280,
+  },
+  progressBarTrack: {
+    marginTop: 24,
+    height: 10,
+    backgroundColor: '#e5e7eb',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#2563eb',
+  },
+  progressText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#374151',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  ctaButton: {
+    marginTop: 24,
+    backgroundColor: '#2563eb',
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: 'center',
+    shadowColor: '#1d4ed8',
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+  },
+  ctaButtonDisabled: {
+    backgroundColor: '#93c5fd',
+    shadowOpacity: 0.1,
+  },
+  ctaButtonPressed: {
+    transform: [{ scale: 0.98 }],
+  },
+  ctaText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  ctaTextDisabled: {
+    color: '#e0f2fe',
+  },
+  paginationRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  paginationDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#d1d5db',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  paginationDotActive: {
+    backgroundColor: '#2563eb',
+    width: 18,
   },
 });
