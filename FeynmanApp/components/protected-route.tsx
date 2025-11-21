@@ -24,8 +24,11 @@ export function useProtectedRoute() {
       }
     } else {
       // User is signed in
-      if (inAuthGroup || (!inTabsGroup && segments.length <= 1)) {
-        // On auth screen or root/non-tabs route, redirect to tabs (which shows default tab)
+      const inAYTMatematik = firstSegment === 'ayt-matematik';
+      const isAllowedRoute = inAYTMatematik;
+      
+      if (inAuthGroup || (!inTabsGroup && !isAllowedRoute && segments.length <= 1)) {
+        // On auth screen or root/non-tabs route (except allowed routes like ayt-matematik), redirect to tabs (which shows default tab)
         router.replace('/(tabs)' as never);
       }
     }

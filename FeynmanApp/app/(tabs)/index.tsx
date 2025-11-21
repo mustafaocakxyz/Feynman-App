@@ -8,10 +8,12 @@ import {
   NativeSyntheticEvent,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
@@ -51,9 +53,15 @@ export default function HomeScreen() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const screenWidth = Dimensions.get('window').width;
+  const screenHeight = Dimensions.get('window').height;
+  const insets = useSafeAreaInsets();
   const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
   const [streak, setStreak] = useState(0);
   const [xp, setXp] = useState(0);
+  
+  // Calculate responsive image height (max 280px, but adapts to smaller screens)
+  const availableHeight = screenHeight - insets.top - insets.bottom - 200; // Reserve space for header, metrics, padding, button
+  const imageHeight = Math.min(280, Math.max(180, availableHeight * 0.35));
   useFocusEffect(
     useCallback(() => {
       if (!user?.id) return;
@@ -122,13 +130,20 @@ export default function HomeScreen() {
 
   const handleContinue = (moduleId: string) => {
     if (moduleId === 'ayt') {
-      router.push('/ayt-matematik');
+      router.push('/ayt-matematik' as never);
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: Math.max(insets.bottom, 24) },
+        ]}
+        showsVerticalScrollIndicator={false}
+        bounces={true}>
         <Animated.View style={[styles.header, makeAnimatedStyle(headerAnim)]}>
           <Image
             source={{ uri: 'https://yt3.googleusercontent.com/SxKRbmKHt7O-JmUe9fQ0ekb7RuB6RyYroxryvH_brt04ZkjNjGkqi3dUjFa3u3VteEf5yfXVkF0=s160-c-k-c0x00ffffff-no-rj' }}
@@ -156,7 +171,7 @@ export default function HomeScreen() {
           </View>
         </Animated.View>
 
-        <Animated.View style={makeAnimatedStyle(modulesAnim)}>
+        <Animated.View style={[makeAnimatedStyle(modulesAnim), styles.flatListContainer]}>
           <FlatList
             data={modules}
             keyExtractor={(item) => item.id}
@@ -164,6 +179,9 @@ export default function HomeScreen() {
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             onMomentumScrollEnd={handleMomentumEnd}
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
+            style={styles.flatList}
             renderItem={({ item }) => {
               const totalSubtopics =
                 item.id === 'ayt'
@@ -192,7 +210,11 @@ export default function HomeScreen() {
                   <Text style={styles.episodeValue}>
                     {completedTopics} / {totalTopics}
                   </Text>
-                  <Image source={item.visual} style={styles.visual} resizeMode="contain" />
+                  <Image
+                    source={item.visual}
+                    style={[styles.visual, { height: imageHeight }]}
+                    resizeMode="contain"
+                  />
                   <View style={styles.progressBarTrack}>
                     <View
                       style={[
@@ -235,7 +257,7 @@ export default function HomeScreen() {
             />
           ))}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -245,12 +267,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
-  container: {
+  scrollView: {
     flex: 1,
-    backgroundColor: '#ffffff',
+  },
+  scrollContent: {
+    flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 24,
+    paddingTop: 16,
   },
   header: {
     flexDirection: 'row',
@@ -310,9 +333,16 @@ const styles = StyleSheet.create({
     color: '#111827',
     fontFamily: 'Montserrat_700Bold',
   },
+  flatListContainer: {
+    marginVertical: 8,
+  },
+  flatList: {
+    flexGrow: 0,
+  },
   carouselContent: {
-    paddingVertical: 32,
+    paddingVertical: 24,
     gap: 24,
+    alignItems: 'center',
   },
   moduleCard: {
     borderRadius: 24,
@@ -345,9 +375,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_700Bold',
   },
   visual: {
-    marginTop: 24,
+    marginTop: 16,
     width: '100%',
-    height: 280,
+    maxHeight: 280,
   },
   progressBarTrack: {
     marginTop: 24,
@@ -398,6 +428,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 8,
+    marginTop: 16,
+    marginBottom: 8,
   },
   paginationDot: {
     width: 8,
