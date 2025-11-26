@@ -26,7 +26,7 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
   [
     'Limit & Süreklilik',
     [
-      { title: 'Dummy Subtopic', slug: 'limit-dummy' },
+      { title: 'Limit nedir?', slug: 'limit-nedir' },
     ],
   ],
   [

@@ -18,6 +18,7 @@ import { useXpFeedback } from '@/components/xp-feedback-provider';
 import { useSoundEffects } from '@/hooks/use-sound-effects';
 import { MathText } from '@/components/MathText';
 import { useAuth } from '@/contexts/auth-context';
+import { FunctionGraph, GraphConfig } from '@/components/FunctionGraph';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five';
 
@@ -37,7 +38,8 @@ type TeachingBlock =
       widthFactor?: number;
       fontSize?: number;
       textAlign?: 'left' | 'center' | 'right';
-    };
+    }
+  | { kind: 'graph'; config: GraphConfig };
 
 type TeachingPage = {
   type: 'teaching';
@@ -53,6 +55,7 @@ type QuizPage = {
   choices: Array<QuizChoice | MathQuizChoice>;
   correctChoiceId: string;
   diagram?: DiagramKind;
+  graph?: GraphConfig;
   hint?: string;
   formula?: string;
 };
@@ -744,17 +747,129 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
-  'limit-dummy': {
-    title: 'Dummy Subtopic',
+  'limit-nedir': {
+    title: 'Limit nedir?',
     pages: [
       {
         type: 'teaching',
-        id: 'dummy-limit',
-        blocks: [{ kind: 'text', content: 'Bu sayfa yer tutucu bir sayfadır.' }],
+        id: 'limit-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Limit kavramı bir grafikte "yaklaşılan noktayı" ifade etmek için kullanılır.',
+          },
+          { kind: 'text', content: 'Aşağıdaki grafiği inceleyelim.' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^2 + 1', color: '#2563eb' }],
+              xDomain: [0, 2],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+              highlightPoints: [{ x: 1, y: 2, color: '#f97316' }],
+              approach: {
+                x: 1,
+                direction: 'both',
+                showArrows: true,
+                highlightSegment: true,
+                arrowColor: '#f97316',
+                highlightColor: '#f97316',
+                label: 'x → 1',
+              },
+            },
+          },
+          {
+            kind: 'text',
+            content: "x değerimiz 1'e yaklaştıkça y değerimiz de 2'ye yaklaşıyor.",
+          },
+          {
+            kind: 'text',
+            content: "Öyleyse bu fonksiyonun 1 noktasındaki limiti 2'ye eşittir.",
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'limit-second-example',
+        blocks: [
+          { kind: 'text', content: 'Bir başka grafiğe bakalım.' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x', color: '#2563eb' }],
+              xDomain: [0, 5],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+              highlightPoints: [{ x: 3, y: 3, color: '#f97316' }],
+              approach: {
+                x: 3,
+                direction: 'both',
+                showArrows: true,
+                highlightSegment: true,
+                arrowColor: '#f97316',
+                highlightColor: '#f97316',
+                label: 'x → 3',
+              },
+            },
+          },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyon x = 3 noktasında 3 değerine yaklaşıyor.',
+          },
+          {
+            kind: 'text',
+            content:
+              'Bunu Türkçe değil de matematiksel olarak ifade etmek istersek şöyle diyoruz:',
+          },
+          {
+            kind: 'formula',
+            content: '\\lim_{x \\to 3} f(x) = 3',
+          },
+          {
+            kind: 'text',
+            content:
+              'Yukarıdaki ifadenin Türkçesi şudur: "x değeri 3\'e yaklaşırken f(x) fonksiyonu 3\'e yaklaşır."',
+          },
+          {
+            kind: 'text',
+            content:
+              'Veya şöyle diyebiliriz: "f(x) fonksiyonunun x = 3 noktasındaki limiti 3\'tür."',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'limit-quiz-1',
+        graph: {
+          functions: [{ formula: 'x', color: '#2563eb' }],
+          xDomain: [0, 5],
+          yDomain: [0, 5],
+          showGrid: true,
+          showAxes: true,
+          highlightPoints: [{ x: 2, y: 2, color: '#f97316' }],
+          approach: {
+            x: 2,
+            direction: 'both',
+            showArrows: true,
+            highlightSegment: true,
+            arrowColor: '#f97316',
+            highlightColor: '#f97316',
+            label: 'x → 2',
+          },
+        },
+        formula: '\\lim_{x \\to 2} f(x) = ?',
+        question: 'Yukarıdaki fonksiyonun x = 2 noktasındaki limiti nedir?',
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'thirteen', label: '13' },
+        ],
+        correctChoiceId: 'two',
       },
       {
         type: 'completion',
-        id: 'limit-dummy-complete',
+        id: 'limit-nedir-complete',
       },
     ],
   },
@@ -960,6 +1075,12 @@ function renderTeachingBlock(block: TeachingBlock, index: number) {
           />
         </View>
       );
+    case 'graph':
+      return (
+        <View key={`graph-${index}`} style={styles.diagramCard}>
+          <FunctionGraph config={block.config} />
+        </View>
+      );
     default:
       return null;
   }
@@ -1119,6 +1240,11 @@ export default function AYTSubtopicScreen() {
         {lesson && currentPage?.type === 'quiz' && (
           <View style={styles.pageCard}>
             {renderDiagram(getPageDiagram(currentPage))}
+            {currentPage.graph && (
+              <View style={styles.diagramCard}>
+                <FunctionGraph config={currentPage.graph} />
+              </View>
+            )}
             {currentPage.formula && (
               <View style={styles.formulaCard}>
                 <MathText
