@@ -34,4 +34,12 @@
 ### Gün #10 - 11 | 18 - 19 Kasım | Authentication için database düzenleniyor.
 ### Gün #12 | 20 Kasım | Authentication halledildi. Artık kullanıcılar kaydolabilir.
 
-## Gün #13 - 14 | 21 - 22 Kasım | Uygulama Deploy Edildi. Artık Uygulama herkese açık kullanılabilir. Yolculuk başlıyor.
+### Gün #13 - 14 | 21 - 22 Kasım | Uygulama Deploy Edildi. Artık Uygulama herkese açık kullanılabilir. Yolculuk başlıyor.
+
+### Gün #15 | 23 Kasım | Test Ekibi Oluşturma için süreç hazırlandı. 
+
+### Gün #16 | 24 Kasım | Modüller implemente ediliyor.
+
+### Gün #17 | 25 Kasım | Uygulama için bir avatar farklı pozlarda ve animasyonlarda tasarlandı.
+
+### Gün #18 | 26 Kasım | Müfredat tasarımında yapay zeka aktif olarak kullanılıyor. 5+ modül tasarlandı.
