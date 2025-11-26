@@ -5,6 +5,20 @@ export type Subtopic = {
 
 export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
   [
+    'Fonksiyonlar',
+    [
+      { title: 'Fonksiyon nedir?', slug: 'fonksiyon-nedir' },
+      { title: 'Tanım ve Görüntü kümesi', slug: 'tanim-ve-goruntu-kumesi' },
+      { title: 'f(x) Yazmadığında Değer Bulma', slug: 'deger-bulma' },
+      { title: 'Fonksiyon Çeşitleri (Sabit ve Birim)', slug: 'fonksiyon-cesitleri' },
+      { title: 'Fonksiyon Çeşitleri 2 (Birebir ve Örten)', slug: 'fonksiyon-cesitleri-2' },
+      { title: 'Fonksiyon Çeşitleri 3 (Tek ve Çift)', slug: 'fonksiyon-cesitleri-3' },
+      { title: 'Fonksiyon Grafikleri', slug: 'fonksiyon-grafikleri' },
+      { title: 'Bileşke Fonksiyon', slug: 'bileske-fonksiyon' },
+      { title: 'Ters Fonksiyon', slug: 'ters-fonksiyon' },
+    ],
+  ],
+  [
     'Trigonometri',
     [
       { title: 'Sin, Cos ve Tan', slug: 'sin-cos-ve-tan' },
