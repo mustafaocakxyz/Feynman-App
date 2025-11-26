@@ -170,10 +170,10 @@ const lessons: Record<string, LessonDefinition> = {
           { kind: 'formula', content: 'f(3) = ?' },
         ],
         choices: [
-          { id: 'eleven', label: '11' },
+          { id: 'eight', label: '8' },
           { id: 'seven', label: '7' },
         ],
-        correctChoiceId: 'eleven',
+        correctChoiceId: 'eight',
       },
       {
         type: 'completion',
