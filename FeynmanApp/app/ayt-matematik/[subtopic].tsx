@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter, useSegments } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import Svg, { Line, Polygon, Text as SvgText } from 'react-native-svg';
+import Svg, { Line, Polygon, Rect, Ellipse, Text as SvgText, Defs, Marker, Polyline } from 'react-native-svg';
 
 import { subtopicTitleBySlug } from './subtopics';
 import { markSubtopicCompleted } from '@/lib/completion-storage';
@@ -20,7 +20,7 @@ import { MathText } from '@/components/MathText';
 import { useAuth } from '@/contexts/auth-context';
 import { FunctionGraph, GraphConfig } from '@/components/FunctionGraph';
 
-type DiagramKind = 'unit-triangle' | 'three-four-five';
+type DiagramKind = 'unit-triangle' | 'three-four-five' | 'function-machine' | 'domain-range-mapping';
 
 type TeachingBlock =
   | { kind: 'text'; content: string }
@@ -51,9 +51,12 @@ type MathQuizChoice = { id: string; label: string; isMath: true };
 type QuizPage = {
   type: 'quiz';
   id: string;
-  question: string;
   choices: Array<QuizChoice | MathQuizChoice>;
   correctChoiceId: string;
+  // New block-based rendering (preferred)
+  blocks?: TeachingBlock[];
+  // Legacy fields (for backward compatibility)
+  question?: string;
   diagram?: DiagramKind;
   graph?: GraphConfig;
   hint?: string;
@@ -70,6 +73,475 @@ type LessonDefinition = {
 };
 
 const lessons: Record<string, LessonDefinition> = {
+  'fonksiyon-nedir': {
+    title: 'Fonksiyon nedir?',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content:
+              'Fonksiyonları bir "Makine" gibi düşünebilirsin. Bir taraftan hammadde girer, içeride işlenir, diğer taraftan ürün olarak çıkar.',
+          },
+          { kind: 'diagram', diagram: 'function-machine' },
+          {
+            kind: 'text',
+            content:
+              'Bu makinenin kuralı "Gelen sayıyı 5 ile çarp" şeklindedir. 3 girdi, 5 ile çarpıldı ve 15 olarak çıktı.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-formula',
+        blocks: [
+          {
+            kind: 'text',
+            content:
+              'Az önceki şekli çizmek uzun zaman aldığı için bunu matematiksel olarak şöyle ifade edebiliriz:',
+          },
+          { kind: 'formula', content: 'f(x) = 5x' },
+          {
+            kind: 'text',
+            content: 'Bu ifade şu anlama gelir: "f makinesi, içine giren x sayısını 5 ile çarpar."',
+          },
+          {
+            kind: 'text',
+            content: 'Yani x yerine ne gelirse, makine onu 5 katına çıkarır.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi başka bir fonksiyona bakalım. Kuralımız giren sayının 3 fazlasını almak olsun.',
+          },
+          { kind: 'formula', content: 'f(x) = x + 3' },
+          {
+            kind: 'text',
+            content: 'Fonksiyona 4 sayısını atarsak ne olur? x gördüğümüz yere 4 yazarız.',
+          },
+          { kind: 'formula', content: 'f(4) = 4 + 3 = 7' },
+          {
+            kind: 'text',
+            content: 'Gördün mü? x yerine 4 yazdık, sonuç 7 çıktı.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sıra sende! Aşağıdaki fonksiyon makinesi giren sayıyı 10 ile çarpıyor.',
+          },
+          { kind: 'formula', content: 'f(x) = 10x' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyona 5 sayısı girerse ne olur?',
+          },
+          { kind: 'formula', content: 'f(5) = ?' },
+        ],
+        choices: [
+          { id: 'fifty', label: '50' },
+          { id: 'fifteen', label: '15' },
+        ],
+        correctChoiceId: 'fifty',
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi kuralımız biraz daha detaylı. Önce çarp, sonra çıkar.',
+          },
+          { kind: 'formula', content: 'f(x) = 3x - 1' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyona 3 sayısını koyarsak ne olur?',
+          },
+          { kind: 'formula', content: 'f(3) = ?' },
+        ],
+        choices: [
+          { id: 'eleven', label: '11' },
+          { id: 'seven', label: '7' },
+        ],
+        correctChoiceId: 'eleven',
+      },
+      {
+        type: 'completion',
+        id: 'fonksiyon-nedir-complete',
+      },
+    ],
+  },
+  'tanim-ve-goruntu-kumesi': {
+    title: 'Tanım ve Görüntü kümesi',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'tanim-goruntu-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonlar iki küme arasında çalışır.',
+          },
+          { kind: 'diagram', diagram: 'domain-range-mapping' },
+          {
+            kind: 'text',
+            content: 'Sol taraftaki A kümesi, fonksiyon makinesine atacağımız sayılardır. Buna "Tanım Kümesi" denir.',
+          },
+          {
+            kind: 'text',
+            content: 'Sağ taraftaki B kümesi ise ulaşabileceğimiz hedeflerdir. Okların gittiği elemanlar "Görüntü Kümesini" oluşturur.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tanim-goruntu-notasyon',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Matematikte bu durumu şöyle gösteririz: A\'dan B\'ye tanımlı f fonksiyonu.',
+          },
+          { kind: 'formula', content: 'f: A \\rightarrow B' },
+          {
+            kind: 'text',
+            content: 'Burada A kümesi (Girdiler) Tanım Kümesi, B kümesi (Olası Çıktılar) Değer Kümesidir.',
+          },
+          {
+            kind: 'text',
+            content: 'Fonksiyon A\'daki elemanları alır, B\'deki elemanlarla eşleştirir.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tanim-goruntu-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki A kümesi bizim tanım kümemiz olsun.',
+          },
+          { kind: 'formula', content: 'A = \\{1, 2\\}' },
+          {
+            kind: 'text',
+            content: 'Fonksiyonumuz da aşağıdaki olsun:',
+          },
+          { kind: 'formula', content: 'f(x) = x + 3' },
+          {
+            kind: 'text',
+            content: 'Şimdi A kümesinin elemanları olan 1 ve 2\'yi fonksiyonumuzun içine koyarak görüntü kümemizi bulalım.',
+          },
+          { kind: 'formula', content: 'f(1) = 1 + 3 = 4' },
+          { kind: 'formula', content: 'f(2) = 2 + 3 = 5' },
+          {
+            kind: 'text',
+            content: 'Çıkan sonuçlar (yani 4 ve 5) bizim görüntü kümemizdir.',
+          },
+          { kind: 'formula', content: 'B = \\{4, 5\\}' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tanim-goruntu-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Tanım kümemiz A = {2, 3} olsun. Fonksiyonumuz ise aşağıdaki fonksiyon olsun.',
+          },
+          { kind: 'formula', content: 'f(x) = x^2' },
+          {
+            kind: 'text',
+            content: 'Görüntü kümesi (sonuçlar) ne olur?',
+          },
+        ],
+        choices: [
+          { id: 'four-nine', label: '\\{4, 9\\}', isMath: true },
+          { id: 'two-three', label: '\\{2, 3\\}', isMath: true },
+        ],
+        correctChoiceId: 'four-nine',
+      },
+      {
+        type: 'completion',
+        id: 'tanim-ve-goruntu-kumesi-complete',
+      },
+    ],
+  },
+  'deger-bulma': {
+    title: 'f(x) Yazmadığında Değer Bulma',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'deger-bulma-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Kurallarını bildiğimiz fonksiyonların içine sayılar koyup değerlerini bulabiliyoruz. Örneğin aşağıdaki fonksiyona bakalım.',
+          },
+          { kind: 'formula', content: 'f(x) = x + 4' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonun 5 için değerini bulmak istersem x yerine 5 yazmam yeterlidir.',
+          },
+          { kind: 'formula', content: 'f(5) = 5 + 4 = 9' },
+          {
+            kind: 'text',
+            content: 'Peki ya soru bana f(x) yerine f(x + 3) gibi bir şey sorarsa?',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'deger-bulma-karmasik',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bazen fonksiyon makinesinin girişi sadece "x" olmaz, yanında başka sayılar da olabilir.',
+          },
+          { kind: 'formula', content: 'f(x+2) = 3x' },
+          {
+            kind: 'text',
+            content: 'Soru bizden f(5)\'i isterse ne yapacağız? x yerine direkt 5 yazamayız! Çünkü içeride "x" değil "x+2" var.',
+          },
+          {
+            kind: 'text',
+            content: '✓ Amacımız parantezin içini 5 yapmak.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'deger-bulma-x-bulma',
+        blocks: [
+          { kind: 'formula', content: 'f(x+2) = 3x' },
+          {
+            kind: 'text',
+            content: 'İçerisinin 5 olmasını istiyoruz. O zaman basit bir denklem kurarak x\'i bulalım.',
+          },
+          { kind: 'formula', content: 'x + 2 = 5' },
+          {
+            kind: 'text',
+            content: 'Bu denkleme göre x = 3 olmalıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Yani makineye 3 atarsak, içerisi (3+2) olur ve f(5)\'i elde ederiz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'deger-bulma-sonuc',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi bulduğumuz x=3 değerini fonksiyonun kuralında (karşı tarafta) yerine yazalım.',
+          },
+          { kind: 'formula', content: 'f(x+2) = 3x' },
+          { kind: 'formula', content: 'f(3+2) = 3 \\cdot 3' },
+          { kind: 'formula', content: 'f(5) = 9' },
+          {
+            kind: 'text',
+            content: 'Sol taraf f(5) oldu. Sağ tarafı hesaplayalım: 3 * 3 = 9.',
+          },
+          {
+            kind: 'text',
+            content: 'Tebrikler! f(5) = 9 sonucuna ulaştık. 🎉',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'deger-bulma-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyona bak.',
+          },
+          { kind: 'formula', content: 'f(x-3) = 2x + 5' },
+          {
+            kind: 'text',
+            content: 'f(4)\'ü bulmak için x yerine hangi sayıyı yazmalısın?',
+          },
+          { kind: 'formula', content: 'x - 3 = 4 \\quad \\Rightarrow \\quad x = ?' },
+        ],
+        choices: [
+          { id: 'seven', label: '7' },
+          { id: 'four', label: '4' },
+        ],
+        correctChoiceId: 'seven',
+      },
+      {
+        type: 'quiz',
+        id: 'deger-bulma-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Harika, x yerine 7 yazmalıyız!',
+          },
+          {
+            kind: 'text',
+            content: 'Şimdi sonucu da bulalım. Aşağıdaki fonksiyonda x yerine 7 yazdığında sağ taraf (yani sonuç) ne çıkacaktır?',
+          },
+          { kind: 'formula', content: 'f(x-3) = 2x + 5' },
+        ],
+        choices: [
+          { id: 'nineteen', label: '19' },
+          { id: 'eight', label: '8' },
+        ],
+        correctChoiceId: 'nineteen',
+      },
+      {
+        type: 'quiz',
+        id: 'deger-bulma-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir tane daha yapalım. Aşağıdaki fonksiyona bak:',
+          },
+          { kind: 'formula', content: 'f(2x) = x + 7' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonda f(4) kaça eşittir?',
+          },
+        ],
+        hint: 'x yerine ne yazarsan fonksiyonun içi 4 olur? Sağ tarafta o değeri kullan, 4\'ü değil!',
+        choices: [
+          { id: 'nine', label: '9' },
+          { id: 'eleven', label: '11' },
+        ],
+        correctChoiceId: 'nine',
+      },
+      {
+        type: 'completion',
+        id: 'deger-bulma-complete',
+      },
+    ],
+  },
+  'fonksiyon-cesitleri': {
+    title: 'Fonksiyon Çeşitleri',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonların çeşitleri vardır.',
+          },
+          {
+            kind: 'text',
+            content: 'Birebir, örten, sabit, birim, doğrusal, tek ve çift gibi pek çok farklı özellikte fonksiyonlar vardır.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu modülde bu fonksiyon çeşitlerini ve özelliklerini öğreneceğiz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-sabit',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'En kolay fonksiyon çeşidiyle başlayalım: Sabit Fonksiyon.',
+          },
+          {
+            kind: 'text',
+            content: 'Sabit fonksiyonların içine ne koyarsan koy sonuç aynıdır.',
+          },
+          { kind: 'formula', content: 'f(x) = 3' },
+          {
+            kind: 'text',
+            content: 'x yerine ne koyarsan koy cevap 3 çıkacaktır.',
+          },
+          {
+            kind: 'text',
+            content: 'Çünkü sağ tarafta (sonuç kısmında) x\'e bağlı hiçbir terim yoktur.',
+          },
+          { kind: 'formula', content: 'f(0) = 3' },
+          { kind: 'formula', content: 'f(5) = 3' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cesitleri-quiz-1',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = 10' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki fonksiyonda x yerine 1 yazıldığında sonuç ne olur?',
+          },
+          { kind: 'formula', content: 'f(1) = ?' },
+        ],
+        choices: [
+          { id: 'ten', label: '10' },
+          { id: 'seven', label: '7' },
+        ],
+        correctChoiceId: 'ten',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-birim',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sırada "Birim Fonksiyon" var.',
+          },
+          {
+            kind: 'text',
+            content: 'Birim fonksiyon, içine ne atarsan dışarı aynısını çıkarır. Değiştirmez, dönüştürmez.',
+          },
+          {
+            kind: 'text',
+            content: 'Genellikle sorularda "f(x) birim fonksiyondur" der.',
+          },
+          { kind: 'formula', content: 'f(x) = x' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-birim-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Mantık çok basit: Parantezin içinde ne görüyorsan, eşittirin karşısında da aynısını görmelisin.',
+          },
+          { kind: 'formula', content: 'f(5) = 5' },
+          { kind: 'formula', content: 'f(x+2) = x+2' },
+          {
+            kind: 'text',
+            content: 'Gördün mü? İçeride ne varsa dışarıda da o var. Hiçbir katsayı veya ekleme çıkarma yapılamaz.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cesitleri-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'f fonksiyonu birim fonksiyondur. Buna göre aşağıdaki işlemin sonucu kaçtır?',
+          },
+          { kind: 'formula', content: 'f(2024) = ?' },
+        ],
+        choices: [
+          { id: 'twenty-twenty-four', label: '2024' },
+          { id: 'one', label: '1' },
+        ],
+        correctChoiceId: 'twenty-twenty-four',
+      },
+    ],
+  },
   'birim-ucgen': {
     title: 'Birim Üçgen',
     pages: [
@@ -1031,6 +1503,246 @@ function renderDiagramByKind(kind?: DiagramKind) {
     );
   }
 
+  if (kind === 'function-machine') {
+    return (
+      <Svg viewBox="0 0 400 150" width="100%" height="100%">
+        <Defs>
+          <Marker
+            id="arrowhead-function"
+            markerWidth="10"
+            markerHeight="10"
+            refX="9"
+            refY="3"
+            orient="auto">
+            <Polyline points="0,0 10,3 0,6" fill="#0f172a" stroke="#0f172a" strokeWidth={0.5} />
+          </Marker>
+        </Defs>
+        
+        {/* Input box */}
+        <Polygon
+          points="30,50 70,50 70,100 30,100"
+          fill="none"
+          stroke="#0f172a"
+          strokeWidth={3}
+        />
+        <SvgText
+          x="50"
+          y="75"
+          fill="#0f172a"
+          fontSize="24"
+          fontWeight="bold"
+          textAnchor="middle">
+          3
+        </SvgText>
+        
+        {/* Arrow from input to machine */}
+        <Line
+          x1="70"
+          y1="75"
+          x2="130"
+          y2="75"
+          stroke="#0f172a"
+          strokeWidth={3}
+          markerEnd="url(#arrowhead-function)"
+        />
+        
+        {/* Function machine box */}
+        <Rect
+          x="130"
+          y="40"
+          width="140"
+          height="70"
+          fill="#e0f2fe"
+          stroke="#1d4ed8"
+          strokeWidth={3}
+          rx="5"
+        />
+        <SvgText
+          x="200"
+          y="80"
+          fill="#1d4ed8"
+          fontSize="18"
+          fontWeight="bold"
+          textAnchor="middle">
+          5 × x
+        </SvgText>
+        
+        {/* Arrow from machine to output */}
+        <Line
+          x1="270"
+          y1="75"
+          x2="330"
+          y2="75"
+          stroke="#0f172a"
+          strokeWidth={3}
+          markerEnd="url(#arrowhead-function)"
+        />
+        
+        {/* Output box */}
+        <Polygon
+          points="330,50 370,50 370,100 330,100"
+          fill="none"
+          stroke="#0f172a"
+          strokeWidth={3}
+        />
+        <SvgText
+          x="350"
+          y="75"
+          fill="#0f172a"
+          fontSize="24"
+          fontWeight="bold"
+          textAnchor="middle">
+          15
+        </SvgText>
+      </Svg>
+    );
+  }
+
+  if (kind === 'domain-range-mapping') {
+    return (
+      <Svg viewBox="0 0 400 200" width="100%" height="100%">
+        <Defs>
+          <Marker
+            id="arrowhead-mapping"
+            markerWidth="10"
+            markerHeight="10"
+            refX="9"
+            refY="3"
+            orient="auto">
+            <Polyline points="0,0 10,3 0,6" fill="#0f172a" stroke="#0f172a" strokeWidth={0.5} />
+          </Marker>
+        </Defs>
+        
+        {/* Left oval - Set A */}
+        <Ellipse
+          cx="100"
+          cy="100"
+          rx="60"
+          ry="80"
+          fill="none"
+          stroke="#2563eb"
+          strokeWidth={3}
+        />
+        <SvgText
+          x="100"
+          y="30"
+          fill="#1e40af"
+          fontSize="18"
+          fontWeight="bold"
+          textAnchor="middle">
+          A
+        </SvgText>
+        
+        {/* Elements in Set A */}
+        <SvgText
+          x="100"
+          y="70"
+          fill="#0f172a"
+          fontSize="16"
+          fontWeight="bold"
+          textAnchor="middle">
+          a
+        </SvgText>
+        <SvgText
+          x="100"
+          y="100"
+          fill="#0f172a"
+          fontSize="16"
+          fontWeight="bold"
+          textAnchor="middle">
+          b
+        </SvgText>
+        <SvgText
+          x="100"
+          y="130"
+          fill="#0f172a"
+          fontSize="16"
+          fontWeight="bold"
+          textAnchor="middle">
+          c
+        </SvgText>
+        
+        {/* Right oval - Set B */}
+        <Ellipse
+          cx="300"
+          cy="100"
+          rx="60"
+          ry="80"
+          fill="none"
+          stroke="#dc2626"
+          strokeWidth={3}
+        />
+        <SvgText
+          x="300"
+          y="30"
+          fill="#991b1b"
+          fontSize="18"
+          fontWeight="bold"
+          textAnchor="middle">
+          B
+        </SvgText>
+        
+        {/* Elements in Set B */}
+        <SvgText
+          x="300"
+          y="70"
+          fill="#0f172a"
+          fontSize="16"
+          fontWeight="bold"
+          textAnchor="middle">
+          1
+        </SvgText>
+        <SvgText
+          x="300"
+          y="100"
+          fill="#0f172a"
+          fontSize="16"
+          fontWeight="bold"
+          textAnchor="middle">
+          2
+        </SvgText>
+        <SvgText
+          x="300"
+          y="130"
+          fill="#0f172a"
+          fontSize="16"
+          fontWeight="bold"
+          textAnchor="middle">
+          3
+        </SvgText>
+        
+        {/* Arrows from A to B */}
+        <Line
+          x1="160"
+          y1="70"
+          x2="240"
+          y2="70"
+          stroke="#0f172a"
+          strokeWidth={2}
+          markerEnd="url(#arrowhead-mapping)"
+        />
+        <Line
+          x1="160"
+          y1="100"
+          x2="240"
+          y2="100"
+          stroke="#0f172a"
+          strokeWidth={2}
+          markerEnd="url(#arrowhead-mapping)"
+        />
+        <Line
+          x1="160"
+          y1="130"
+          x2="240"
+          y2="130"
+          stroke="#0f172a"
+          strokeWidth={2}
+          markerEnd="url(#arrowhead-mapping)"
+        />
+      </Svg>
+    );
+  }
+
   return null;
 }
 
@@ -1239,31 +1951,54 @@ export default function AYTSubtopicScreen() {
 
         {lesson && currentPage?.type === 'quiz' && (
           <View style={styles.pageCard}>
-            {renderDiagram(getPageDiagram(currentPage))}
-            {currentPage.graph && (
-              <View style={styles.diagramCard}>
-                <FunctionGraph config={currentPage.graph} />
-              </View>
-            )}
-            {currentPage.formula && (
-              <View style={styles.formulaCard}>
-                <MathText
-                  latex={currentPage.formula}
-                  widthFactor={0.75}
-                  fontSize={20}
-                  textAlign="center"
-                />
-              </View>
-            )}
-            <Text style={styles.bodyText}>{currentPage.question}</Text>
-            {currentPage.hint && (
-              <View style={styles.hintCard}>
-                {currentPage.hint.includes('\\') ? (
-                  <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
-                ) : (
-                  <Text style={styles.hintText}>{currentPage.hint}</Text>
+            {currentPage.blocks ? (
+              // New block-based rendering
+              <>
+                {currentPage.blocks.map((block, index) =>
+                  renderTeachingBlock(block, index),
                 )}
-              </View>
+                {currentPage.hint && (
+                  <View style={styles.hintCard}>
+                    {currentPage.hint.includes('\\') ? (
+                      <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
+                    ) : (
+                      <Text style={styles.hintText}>{currentPage.hint}</Text>
+                    )}
+                  </View>
+                )}
+              </>
+            ) : (
+              // Legacy rendering (backward compatibility)
+              <>
+                {renderDiagram(getPageDiagram(currentPage))}
+                {currentPage.graph && (
+                  <View style={styles.diagramCard}>
+                    <FunctionGraph config={currentPage.graph} />
+                  </View>
+                )}
+                {currentPage.formula && (
+                  <View style={styles.formulaCard}>
+                    <MathText
+                      latex={currentPage.formula}
+                      widthFactor={0.75}
+                      fontSize={20}
+                      textAlign="center"
+                    />
+                  </View>
+                )}
+                {currentPage.question && (
+                  <Text style={styles.bodyText}>{currentPage.question}</Text>
+                )}
+                {currentPage.hint && (
+                  <View style={styles.hintCard}>
+                    {currentPage.hint.includes('\\') ? (
+                      <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
+                    ) : (
+                      <Text style={styles.hintText}>{currentPage.hint}</Text>
+                    )}
+                  </View>
+                )}
+              </>
             )}
             <View style={styles.quizChoices}>
               {currentPage.choices.map((choice) => {
