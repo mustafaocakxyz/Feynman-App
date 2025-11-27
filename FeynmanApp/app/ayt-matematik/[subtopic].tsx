@@ -48,10 +48,11 @@ type TeachingPage = {
 };
 type QuizChoice = { id: string; label: string };
 type MathQuizChoice = { id: string; label: string; isMath: true };
+type GraphQuizChoice = { id: string; label: string; graph: GraphConfig };
 type QuizPage = {
   type: 'quiz';
   id: string;
-  choices: Array<QuizChoice | MathQuizChoice>;
+  choices: Array<QuizChoice | MathQuizChoice | GraphQuizChoice>;
   correctChoiceId: string;
   // New block-based rendering (preferred)
   blocks?: TeachingBlock[];
@@ -539,6 +540,512 @@ const lessons: Record<string, LessonDefinition> = {
           { id: 'one', label: '1' },
         ],
         correctChoiceId: 'twenty-twenty-four',
+      },
+      {
+        type: 'completion',
+        id: 'fonksiyon-cesitleri-complete',
+      },
+    ],
+  },
+  'fonksiyon-cesitleri-3': {
+    title: 'Çift Fonksiyonlar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'fonksiyon-tek-cift-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonların bazıları çift bazıları tektir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonları tanımanın üç yolu vardır.',
+          },
+          {
+            kind: 'text',
+            content: 'İlk olarak çift fonksiyonlardan başlayalım.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-yol-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonları tanımanın birinci yolu içeriye negatif sayı koymaktır.',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer bir fonksiyona x ve -x koyduğunda sonuç değişmiyorsa o fonksiyon çifttir.',
+          },
+          { kind: 'formula', content: 'f(x) = f(-x)' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f fonksiyonu ne gibi bir fonksiyon olabilir?',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-1',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = f(-x)' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f fonksiyonu ne gibi bir fonksiyon olabilir?',
+          },
+        ],
+        hint: 'Şıklardaki fonksiyonların yerine 2 ve -2 koy, sonuçların değişip değişmediğine bak!',
+        choices: [
+          { id: 'x-squared', label: 'x^2', isMath: true },
+          { id: 'x-plus-one', label: 'x + 1', isMath: true },
+        ],
+        correctChoiceId: 'x-squared',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-yol-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Az önceki soruda çift fonksiyonları tanımanın bir diğer yolunu öğrendin.',
+          },
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonlarda x\'li terimlerin kuvvetleri daima çifttir (0, 2, 4...)',
+          },
+          { kind: 'formula', content: 'f(x) = 5x^4 + x^2' },
+          { kind: 'formula', content: 'f(x) = 2x^8 + 3x^2' },
+          {
+            kind: 'text',
+            content: 'Üslü sayıları öğrenirken negatif sayıların üsleri çift olduğunda sonucun pozitif olduğunu öğrenmiştin.',
+          },
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonlar da bu yüzden 2 ve -2 için aynı sonucu verir çünkü fonksiyondaki terimlerin kuvvetleri çifttir.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi çift fonksiyon DEĞİLDİR?',
+          },
+        ],
+        choices: [
+          { id: 'x-squared-only', label: 'x^2', isMath: true },
+          { id: 'x-cubed-plus-3x', label: 'x^3 + 3x', isMath: true },
+        ],
+        correctChoiceId: 'x-cubed-plus-3x',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-sabit-terim',
+        blocks: [
+          {
+            kind: 'text',
+            content: '⚠️ Çift fonksiyonlarda sabit terimler de bulunabilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Yani fonksiyonda 5 veya -3 gibi tek başına sayılar görürsen bu çiftliği bozmaz.',
+          },
+          {
+            kind: 'text',
+            content: 'Çünkü bu sayıların yanında gizli bir x^0 vardır ve bu da 1\'e eşittir!',
+          },
+          { kind: 'formula', content: 'f(x) = x^2 + 5' },
+          { kind: 'formula', content: 'f(x) = x^2 + 5 \\cdot x^0' },
+          {
+            kind: 'text',
+            content: 'Bir şeyin 0. kuvveti 1\'e eşit olduğundan bu terimi yazmayabiliriz.',
+          },
+          { kind: 'formula', content: 'f(x) = x^2 + 5' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi f(2) ve f(-2) için aynı sonucu verir?',
+          },
+        ],
+        hint: 'Soru "Hangisi çift fonksiyondur?" diye de sorulabilirdi, değil mi?',
+        choices: [
+          { id: 'x-cubed-plus-2x', label: 'x^3 + 2x', isMath: true },
+          { id: 'x-squared-plus-5', label: 'x^2 + 5', isMath: true },
+        ],
+        correctChoiceId: 'x-squared-plus-5',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-yol-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonları tanımanın 3. yolu ise grafiklerine bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(x) = x^2 + 1' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^2 + 1', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki fonksiyon "y eksenine göre simetriktir". Yani y-ekseninin sağında ve solunda aynı görüntü vardır.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-4',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki grafiklerden hangisi bir çift fonksiyona aittir?',
+          },
+        ],
+        choices: [
+          {
+            id: 'x-cubed-graph',
+            label: 'x^3 grafiği',
+            graph: {
+              functions: [{ formula: 'x^3', color: '#dc2626' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            id: 'x-squared-plus-one-graph',
+            label: 'x^2 + 1 grafiği (y eksenine simetrik)',
+            graph: {
+              functions: [{ formula: 'x^2 + 1', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+        correctChoiceId: 'x-squared-plus-one-graph',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-ozet',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Modülün sonuna geldik!',
+          },
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonları tanımanın 3 yolunu tekrarlayıp bitirelim:',
+          },
+          {
+            kind: 'text',
+            content: '1. yol: Çift fonksiyonlar x ve -x için aynı sonucu verir.',
+          },
+          { kind: 'formula', content: 'f(x) = f(-x)' },
+          {
+            kind: 'text',
+            content: '2. yol: Çift fonksiyonlar içlerinde sadece çift üslü terimler barındırır.',
+          },
+          { kind: 'formula', content: 'f(x) = x^4 + 2x^2 + 4' },
+          {
+            kind: 'text',
+            content: '3. yol: Çift fonksiyonların grafikleri y-eksenine göre simetriktir.',
+          },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^2 + 1', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'fonksiyon-cesitleri-3-complete',
+      },
+    ],
+  },
+  'tek-fonksiyonlar': {
+    title: 'Tek Fonksiyonlar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sıra tek fonksiyonlarda.',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer bir fonksiyonun içine -x koyduğunuzda cevap da - ile çarpılıyorsa bu fonksiyon tektir.',
+          },
+          { kind: 'formula', content: 'f(-x) = -f(x)' },
+          {
+            kind: 'text',
+            content: 'Şimdi de bir tek fonksiyon örneği görelim.',
+          },
+          { kind: 'formula', content: 'f(x) = x^3' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonun içine sırasıyla 2 ve -2 koyalım, sonuçlar ne olur?',
+          },
+          { kind: 'formula', content: 'f(2) = 2^3 = 8' },
+          { kind: 'formula', content: 'f(-2) = (-2)^3 = -8' },
+          {
+            kind: 'text',
+            content: 'İçeriyi (-) ile çarparsak sonuç da (-) ile çarpılıyor!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-fonksiyon-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi tek fonksiyondur?',
+          },
+        ],
+        hint: 'Fonksiyonlardan hangisi 2 ve -2 için FARKLI sonuçlar verir?',
+        choices: [
+          { id: 'x-squared', label: 'x^2', isMath: true },
+          { id: 'x-cubed-plus-x', label: 'x^3 + x', isMath: true },
+        ],
+        correctChoiceId: 'x-cubed-plus-x',
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-usler',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonlara benzer şekilde tek fonksiyonları da terimlerine ve üslerine bakarak tanıyabilirsin.',
+          },
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonların bütün terimlerinin üsleri tek olmalıdır (1, 3, 5...)',
+          },
+          { kind: 'formula', content: 'f(x) = x^5 + 3x^3 + x' },
+          {
+            kind: 'text',
+            content: '⚠️ x\'i tek başına gördüğünde üzerinde 1 olduğunu unutma!',
+          },
+          { kind: 'formula', content: 'x = x^1' },
+          {
+            kind: 'text',
+            content: 'Yani tek fonksiyonlarda tek başına x görebiliriz.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-fonksiyon-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi TEK fonksiyondur?',
+          },
+        ],
+        choices: [
+          { id: 'x-squared-plus-5', label: 'f(x) = x^2 + 5', isMath: true },
+          { id: 'x-cubed-plus-3x', label: 'f(x) = x^3 + 3x', isMath: true },
+        ],
+        correctChoiceId: 'x-cubed-plus-3x',
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-ozet-2-yol',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonları tanımanın iki yolunu öğrendik.',
+          },
+          {
+            kind: 'text',
+            content: '1. yol içeriye (-x) koyup cevabın değişip değişmediğine bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(-x) = -f(x)' },
+          {
+            kind: 'text',
+            content: '2. yol ise terimlerin üslerinin tek olup olmadığına bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(x) = x^5 + 3x^3 + 5x' },
+          {
+            kind: 'text',
+            content: 'Bir sonraki modülde de grafik yolunu öğreneceğiz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-grafik-yol',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonlar ORİJİNE GÖRE SİMETRİKtir.',
+          },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            kind: 'text',
+            content: 'Orijin (0, 0) noktası demektir. Fonksiyonumuz bu noktaya göre simetriktir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bunu çaprazlamasına bir simetri gibi düşünebilirsin.',
+          },
+          {
+            kind: 'text',
+            content: 'Birkaç örnek görerek pekiştirelim.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-ornek-1',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x', color: '#2563eb' }],
+              xDomain: [-4, 4],
+              yDomain: [-4, 4],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            kind: 'text',
+            content: 'Parmağını orijin (0, 0) noktasına koyarak simetriyi görebilirsin.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-ornek-2',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x^3' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-fonksiyon-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi TEK fonksiyon grafiği olabilir?',
+          },
+        ],
+        choices: [
+          {
+            id: 'x-squared-plus-2-graph',
+            label: 'x^2 + 2 grafiği',
+            graph: {
+              functions: [{ formula: 'x^2 + 2', color: '#dc2626' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 6],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            id: 'x-cubed-graph',
+            label: 'x^3 grafiği',
+            graph: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+        correctChoiceId: 'x-cubed-graph',
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-final-ozet',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Modülün sonuna geldik!',
+          },
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonları tanımanın yollarını tekrar edip bitirelim:',
+          },
+          {
+            kind: 'text',
+            content: '1. yol, içeriye (-) koyup sonucun da (-) ile çarpılıp çarpılmadığına bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(-x) = -f(x)' },
+          {
+            kind: 'text',
+            content: '2. yol terimlere ve üslerine bakmaktır. Hepsi tek ise fonksiyonumuz da tektir.',
+          },
+          { kind: 'formula', content: 'f(x) = x^5 + 3x^3 + 5x' },
+          {
+            kind: 'text',
+            content: '3. yol ise fonksiyonun grafiğinin ORİJİNE GÖRE simetrik olmasıdır.',
+          },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'tek-fonksiyonlar-complete',
       },
     ],
   },
@@ -2025,7 +2532,21 @@ export default function AYTSubtopicScreen() {
                     onPress={() => {
                       void handleChoiceSelect(choice.id, currentPage);
                     }}>
-                    {('isMath' in choice && choice.isMath) || choice.label.includes('\\') ? (
+                    {'graph' in choice ? (
+                      <View style={styles.choiceGraphContainer}>
+                        <Text
+                          style={[
+                            styles.choiceLabel,
+                            isCorrectSelection && styles.choiceTextCorrect,
+                            isIncorrectSelection && styles.choiceTextIncorrect,
+                          ]}>
+                          {choice.label}
+                        </Text>
+                        <View style={styles.choiceGraph}>
+                          <FunctionGraph config={choice.graph} />
+                        </View>
+                      </View>
+                    ) : ('isMath' in choice && choice.isMath) || choice.label.includes('\\') ? (
                       <MathText latex={choice.label} widthFactor={0.85} fontSize={24} />
                     ) : (
                       <Text
@@ -2224,6 +2745,21 @@ const styles = StyleSheet.create({
   },
   choiceTextIncorrect: {
     color: '#991b1b',
+  },
+  choiceGraphContainer: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  choiceLabel: {
+    fontSize: 14,
+    color: '#1f2937',
+    fontFamily: 'Montserrat_700Bold',
+    textAlign: 'center',
+  },
+  choiceGraph: {
+    width: '100%',
+    height: 200,
+    minHeight: 200,
   },
   bodyTextMuted: {
     fontSize: 16,
