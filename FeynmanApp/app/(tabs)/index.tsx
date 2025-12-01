@@ -16,12 +16,15 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Image as ExpoImage } from 'expo-image';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
 import { getStreakState } from '@/lib/streak-storage';
 import { getXpState } from '@/lib/xp-storage';
+import { getProfile, getAvatarSource, type AvatarId } from '@/lib/profile-storage';
 import { topicSubtopicsEntries } from '@/app/ayt-matematik/subtopics';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/auth-context';
+import { Colors } from '@/constants/theme';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -58,6 +61,8 @@ export default function HomeScreen() {
   const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
   const [streak, setStreak] = useState(0);
   const [xp, setXp] = useState(0);
+  const [userName, setUserName] = useState('');
+  const [userAvatarId, setUserAvatarId] = useState<AvatarId | null>(null);
   
   // Calculate responsive image height (max 280px, but adapts to smaller screens)
   const availableHeight = screenHeight - insets.top - insets.bottom - 200; // Reserve space for header, metrics, padding, button
@@ -67,21 +72,24 @@ export default function HomeScreen() {
       if (!user?.id) return;
       let isActive = true;
       const load = async () => {
-        const [completed, streakState, xpState] = await Promise.all([
+        const [completed, streakState, xpState, profile] = await Promise.all([
           getCompletedSubtopics(user.id),
           getStreakState(user.id),
           getXpState(user.id),
+          getProfile(user.id),
         ]);
         if (!isActive) return;
         setCompletedSubtopics(completed);
         setStreak(streakState.count);
         setXp(xpState.total);
+        setUserName(profile.name || user.user_metadata?.name || '');
+        setUserAvatarId(profile.avatarId);
       };
       load();
       return () => {
         isActive = false;
       };
-    }, [user?.id]),
+    }, [user?.id, user?.user_metadata?.name]),
   );
   const headerAnim = useRef(new Animated.Value(0)).current;
   const metricsAnim = useRef(new Animated.Value(0)).current;
@@ -145,13 +153,30 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         bounces={true}>
         <Animated.View style={[styles.header, makeAnimatedStyle(headerAnim)]}>
-          <Image
-            source={{ uri: 'https://yt3.googleusercontent.com/SxKRbmKHt7O-JmUe9fQ0ekb7RuB6RyYroxryvH_brt04ZkjNjGkqi3dUjFa3u3VteEf5yfXVkF0=s160-c-k-c0x00ffffff-no-rj' }}
-            style={styles.avatar}
-          />
-          <Text style={styles.welcomeText}>
-            Hoş geldin <Text style={styles.nameText}>Mustafa</Text>
-          </Text>
+          {(() => {
+            const avatarSource = userAvatarId ? getAvatarSource(userAvatarId) : null;
+            const displayName = userName || user?.user_metadata?.name || 'Kullanıcı';
+            const displayInitial = displayName.charAt(0).toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U';
+            
+            return (
+              <>
+                {avatarSource ? (
+                  <ExpoImage
+                    source={avatarSource}
+                    style={styles.avatar}
+                    contentFit="cover"
+                  />
+                ) : (
+                  <View style={styles.avatarPlaceholder}>
+                    <Text style={styles.avatarPlaceholderText}>{displayInitial}</Text>
+                  </View>
+                )}
+                <Text style={styles.welcomeText}>
+                  Hoş geldin <Text style={styles.nameText}>{displayName}</Text>
+                </Text>
+              </>
+            );
+          })()}
         </Animated.View>
 
         <Animated.View style={[styles.metricsRow, makeAnimatedStyle(metricsAnim)]}>
@@ -284,6 +309,19 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
+  },
+  avatarPlaceholder: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.light.tint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarPlaceholderText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   welcomeText: {
     fontSize: 24,

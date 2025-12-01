@@ -79,6 +79,19 @@ export async function getStreakState(userId: string): Promise<StreakState> {
   return state;
 }
 
+/**
+ * Trigger sync in background (non-blocking)
+ */
+async function triggerSync(userId: string) {
+  // Use dynamic import to avoid circular dependencies
+  import('./sync-service')
+    .then(({ pushProgress }) => pushProgress(userId))
+    .catch((error) => {
+      // Errors are handled by sync-service (queuing), just log here
+      console.warn('[Streak Storage] Background sync failed:', error);
+    });
+}
+
 export async function recordStreakActivity(userId: string): Promise<StreakState> {
   const state = await readState(userId);
   const today = getTodayString();
@@ -97,7 +110,19 @@ export async function recordStreakActivity(userId: string): Promise<StreakState>
 
   const nextState = { count: nextCount, lastActivityDate: today };
   await writeState(userId, nextState);
+  
+  // Trigger sync in background (fire-and-forget)
+  triggerSync(userId);
+  
   return nextState;
+}
+
+/**
+ * Set streak state directly (used for sync operations)
+ * This bypasses the date checking logic and sets the state as-is
+ */
+export async function setStreakState(userId: string, state: StreakState): Promise<void> {
+  await writeState(userId, state);
 }
 
 
