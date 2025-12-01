@@ -10,6 +10,7 @@ import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { XpFeedbackProvider } from '@/components/xp-feedback-provider';
 import { AuthProvider } from '@/contexts/auth-context';
 import { ProtectedRouteProvider } from '@/components/protected-route';
+import { SyncProvider } from '@/components/SyncProvider';
 
 function RootLayoutNav() {
   return (
@@ -39,12 +40,14 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <XpFeedbackProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <RootLayoutNav />
-            <StatusBar style="auto" />
-          </ThemeProvider>
-        </XpFeedbackProvider>
+        <SyncProvider>
+          <XpFeedbackProvider>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <RootLayoutNav />
+              <StatusBar style="auto" />
+            </ThemeProvider>
+          </XpFeedbackProvider>
+        </SyncProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

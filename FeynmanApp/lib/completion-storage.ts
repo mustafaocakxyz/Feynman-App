@@ -22,6 +22,19 @@ export async function getCompletedSubtopics(userId: string): Promise<string[]> {
   }
 }
 
+/**
+ * Trigger sync in background (non-blocking)
+ */
+async function triggerSync(userId: string) {
+  // Use dynamic import to avoid circular dependencies
+  import('./sync-service')
+    .then(({ pushProgress }) => pushProgress(userId))
+    .catch((error) => {
+      // Errors are handled by sync-service (queuing), just log here
+      console.warn('[Completion Storage] Background sync failed:', error);
+    });
+}
+
 export async function markSubtopicCompleted(
   userId: string,
   subtopicSlug: string,
@@ -34,6 +47,10 @@ export async function markSubtopicCompleted(
     const next = [...existing, subtopicSlug];
     const storageKey = getStorageKey(userId);
     await AsyncStorage.setItem(storageKey, JSON.stringify(next));
+    
+    // Trigger sync in background (fire-and-forget)
+    triggerSync(userId);
+    
     return true;
   } catch (error) {
     console.warn('Tamamlanan deseni kaydetme başarısız', error);
