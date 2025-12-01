@@ -46,4 +46,7 @@
 
 ### Gün #19 - 22 | 27 - 30 Kasım | Avatar Tasarlandı. Test Ekibi ve İstek Listesi (Building in Public). TYT Matematik için altyapı hazırlanıyor.
 
-### Gün #23 | 1 Aralık | ???
+### Gün #23 | 1 Aralık | Kullanıcıya özel fonksiyonlar geliştirildi.
+
+✅ Uygulama offline kullanılabiliyor ve internete bağlanınca cloud ile sync oluyor.
+✅ Uygulama gerçek kullanıcı verileri (isim, avatar, xp, ilerleme) ile çalışmaya başladı.
