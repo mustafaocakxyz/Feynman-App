@@ -43,3 +43,7 @@
 ### Gün #17 | 25 Kasım | Uygulama için bir avatar farklı pozlarda ve animasyonlarda tasarlandı.
 
 ### Gün #18 | 26 Kasım | Müfredat tasarımında yapay zeka aktif olarak kullanılıyor. 5+ modül tasarlandı.
+
+### Gün #19 - 22 | 27 - 30 Kasım | Avatar Tasarlandı. Test Ekibi ve İstek Listesi (Building in Public). TYT Matematik için altyapı hazırlanıyor.
+
+### Gün #23 | 1 Aralık | ???
