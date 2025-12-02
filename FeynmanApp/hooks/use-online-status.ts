@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 
 /**
@@ -9,40 +9,10 @@ export function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(true);
   const [isChecking, setIsChecking] = useState(false);
 
-  useEffect(() => {
-    // Initial check
-    checkOnlineStatus();
-
-    // Listen to online/offline events (web)
-    if (typeof window !== 'undefined') {
-      const handleOnline = () => {
-        // Verify with actual network request
-        checkOnlineStatus();
-      };
-      const handleOffline = () => {
-        setIsOnline(false);
-      };
-
-      window.addEventListener('online', handleOnline);
-      window.addEventListener('offline', handleOffline);
-
-      // Periodic check (every 30 seconds) to verify real connectivity
-      const interval = setInterval(() => {
-        checkOnlineStatus();
-      }, 30000);
-
-      return () => {
-        window.removeEventListener('online', handleOnline);
-        window.removeEventListener('offline', handleOffline);
-        clearInterval(interval);
-      };
-    }
-  }, []);
-
   /**
    * Check if we're actually online by attempting a lightweight Supabase operation
    */
-  const checkOnlineStatus = async () => {
+  const checkOnlineStatus = useCallback(async () => {
     // Quick check: navigator.onLine (web only, may not be reliable)
     if (typeof navigator !== 'undefined' && navigator.onLine === false) {
       setIsOnline(false);
@@ -73,7 +43,37 @@ export function useOnlineStatus() {
     } finally {
       setIsChecking(false);
     }
-  };
+  }, []); // No dependencies - this function is stable
+
+  useEffect(() => {
+    // Initial check
+    checkOnlineStatus();
+
+    // Listen to online/offline events (web)
+    if (typeof window !== 'undefined') {
+      const handleOnline = () => {
+        // Verify with actual network request
+        checkOnlineStatus();
+      };
+      const handleOffline = () => {
+        setIsOnline(false);
+      };
+
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+
+      // Periodic check (every 30 seconds) to verify real connectivity
+      const interval = setInterval(() => {
+        checkOnlineStatus();
+      }, 30000);
+
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+        clearInterval(interval);
+      };
+    }
+  }, [checkOnlineStatus]); // Now it's safe to include in dependencies
 
   return {
     isOnline,
