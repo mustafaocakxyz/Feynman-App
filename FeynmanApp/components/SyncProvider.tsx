@@ -7,6 +7,7 @@ import { useSync } from '@/hooks/use-sync';
  */
 export function SyncProvider({ children }: { children: ReactNode }) {
   // This hook handles all sync logic (initial sync, periodic sync, queue processing)
+  // Hooks must be called unconditionally - the hook itself is defensive
   useSync();
 
   return <>{children}</>;

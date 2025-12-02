@@ -75,10 +75,14 @@ export function useOnlineStatus() {
     }
   }, [checkOnlineStatus]); // Now it's safe to include in dependencies
 
+  // Ensure we always return a valid object with all expected properties
   return {
-    isOnline,
-    isChecking,
-    checkOnlineStatus,
+    isOnline: isOnline ?? true,
+    isChecking: isChecking ?? false,
+    checkOnlineStatus: checkOnlineStatus ?? (async () => {
+      // Fallback no-op function if checkOnlineStatus is somehow undefined
+      console.warn('[useOnlineStatus] checkOnlineStatus is undefined, using fallback');
+    }),
   };
 }
 

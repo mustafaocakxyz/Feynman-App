@@ -25,7 +25,15 @@ const getAppState = (): AppStateStatus => {
  */
 export function useSync() {
   const { user } = useAuth();
-  const { isOnline, checkOnlineStatus } = useOnlineStatus();
+  
+  // Hooks must be called unconditionally - can't wrap in try-catch
+  // If useOnlineStatus fails, it will throw and ErrorBoundary will catch it
+  const onlineStatusResult = useOnlineStatus();
+  
+  // Defensive: Extract with defaults in case of partial return
+  const isOnline = onlineStatusResult?.isOnline ?? true;
+  const checkOnlineStatus = onlineStatusResult?.checkOnlineStatus;
+  
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const appStateRef = useRef<AppStateStatus>(getAppState());
   const lastSyncRef = useRef<number>(0);
