@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/auth-context';
-import { Colors } from '@/constants/theme';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -75,7 +74,7 @@ export default function RegisterScreen() {
                 setError(null);
               }}
               placeholder="İsminiz"
-              placeholderTextColor={Colors.light.icon}
+              placeholderTextColor="#9ca3af"
               autoCapitalize="words"
               autoCorrect={false}
               editable={!loading}
@@ -92,7 +91,7 @@ export default function RegisterScreen() {
                 setError(null);
               }}
               placeholder="ornek@email.com"
-              placeholderTextColor={Colors.light.icon}
+              placeholderTextColor="#9ca3af"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -110,7 +109,7 @@ export default function RegisterScreen() {
                 setError(null);
               }}
               placeholder="En az 6 karakter"
-              placeholderTextColor={Colors.light.icon}
+              placeholderTextColor="#9ca3af"
               secureTextEntry
               autoCapitalize="none"
               autoCorrect={false}
@@ -150,7 +149,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
+    backgroundColor: '#ffffff',
   },
   content: {
     flex: 1,
@@ -160,13 +159,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: Colors.light.text,
+    color: '#111827',
     marginBottom: 8,
+    fontFamily: 'Montserrat_700Bold',
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.light.icon,
+    color: '#6b7280',
     marginBottom: 32,
+    fontFamily: 'Montserrat_700Bold',
   },
   errorContainer: {
     backgroundColor: '#fee',
@@ -179,6 +180,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#c33',
     fontSize: 14,
+    fontFamily: 'Montserrat_700Bold',
   },
   form: {
     gap: 20,
@@ -189,44 +191,54 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.light.text,
+    color: '#111827',
+    fontFamily: 'Montserrat_700Bold',
   },
   input: {
     borderWidth: 1,
-    borderColor: Colors.light.icon,
-    borderRadius: 8,
+    borderColor: '#d1d5db',
+    borderRadius: 12,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     fontSize: 16,
-    color: Colors.light.text,
-    backgroundColor: Colors.light.background,
+    color: '#111827',
+    backgroundColor: '#ffffff',
+    fontFamily: 'Montserrat_700Bold',
   },
   button: {
-    backgroundColor: Colors.light.tint,
-    paddingVertical: 16,
-    borderRadius: 12,
+    backgroundColor: '#2563eb',
+    paddingVertical: 14,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
+    shadowColor: '#1d4ed8',
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
   },
   buttonPressed: {
-    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
   },
   buttonDisabled: {
-    opacity: 0.5,
+    backgroundColor: '#93c5fd',
+    shadowOpacity: 0.1,
   },
   buttonText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: 'Montserrat_700Bold',
   },
   linkButton: {
     marginTop: 24,
     alignItems: 'center',
   },
   linkText: {
-    color: Colors.light.tint,
+    color: '#2563eb',
     fontSize: 14,
+    fontFamily: 'Montserrat_700Bold',
   },
 });
 

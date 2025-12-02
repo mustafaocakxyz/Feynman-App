@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View, Pressable, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Pressable, SafeAreaView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors } from '@/constants/theme';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -8,8 +7,14 @@ export default function WelcomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Feynman App'e Hoş Geldin!</Text>
+        <Text style={styles.title}>Feyn App'e Hoş Geldin!</Text>
         <Text style={styles.subtitle}>Öğrenmeye başlamak için giriş yap veya kayıt ol</Text>
+
+        <Image
+          source={require('@/assets/images/greet.png')}
+          style={styles.image}
+          resizeMode="contain"
+        />
 
         <View style={styles.buttonContainer}>
           <Pressable
@@ -42,58 +47,73 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
+    backgroundColor: '#E6F4FE',
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,
+    backgroundColor: '#E6F4FE',
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: Colors.light.text,
+    color: '#111827',
     textAlign: 'center',
     marginBottom: 16,
+    fontFamily: 'Montserrat_700Bold',
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.light.icon,
+    color: '#6b7280',
     textAlign: 'center',
-    marginBottom: 48,
+    marginBottom: 32,
+    fontFamily: 'Montserrat_700Bold',
+  },
+  image: {
+    width: '100%',
+    maxWidth: 450,
+    height: 450,
+    marginBottom: 32,
   },
   buttonContainer: {
     width: '100%',
     gap: 16,
   },
   button: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 16,
+    paddingVertical: 14,
   },
   primaryButton: {
-    backgroundColor: Colors.light.tint,
+    backgroundColor: '#2563eb',
+    shadowColor: '#1d4ed8',
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
   },
   secondaryButton: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.light.tint,
+    borderColor: '#2563eb',
   },
   buttonPressed: {
-    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
   },
   primaryButtonText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: 'Montserrat_700Bold',
   },
   secondaryButtonText: {
-    color: Colors.light.tint,
+    color: '#2563eb',
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: 'Montserrat_700Bold',
   },
 });
 
