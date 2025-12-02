@@ -41,10 +41,14 @@ export function useSync() {
 
     if (!isOnline) {
       // Check again in case status is stale
-      await checkOnlineStatus();
-      if (!isOnline) {
-        return;
+      // Defensive check: ensure checkOnlineStatus exists
+      if (checkOnlineStatus && typeof checkOnlineStatus === 'function') {
+        await checkOnlineStatus();
+        // Note: isOnline might still be false after async check, but that's okay
+        // The next sync will retry
       }
+      // If still offline after check, skip sync
+      return;
     }
 
     isSyncingRef.current = true;
@@ -92,22 +96,58 @@ export function useSync() {
       };
     } else {
       // Native: Use AppState
-      const subscription = AppState.addEventListener('change', (nextAppState) => {
-        if (
-          appStateRef.current.match(/inactive|background/) &&
-          nextAppState === 'active'
-        ) {
-          // App came to foreground - sync if online
-          if (isOnline && user?.id) {
-            performSync();
-          }
-        }
-        appStateRef.current = nextAppState;
-      });
+      // Wrap in try-catch to handle any AppState API issues gracefully
+      try {
+        // Check if addEventListener exists (newer API) or use addListener (older API)
+        if (AppState && typeof AppState.addEventListener === 'function') {
+          // New API (React Native 0.65+)
+          const subscription = AppState.addEventListener('change', (nextAppState) => {
+            if (
+              appStateRef.current.match(/inactive|background/) &&
+              nextAppState === 'active'
+            ) {
+              // App came to foreground - sync if online
+              if (isOnline && user?.id) {
+                performSync();
+              }
+            }
+            appStateRef.current = nextAppState;
+          });
 
-      return () => {
-        subscription.remove();
-      };
+          return () => {
+            if (subscription && typeof subscription.remove === 'function') {
+              subscription.remove();
+            }
+          };
+        } else if (AppState && typeof AppState.addListener === 'function') {
+          // Fallback to old API (React Native < 0.65)
+          const subscription = AppState.addListener('change', (nextAppState) => {
+            if (
+              appStateRef.current.match(/inactive|background/) &&
+              nextAppState === 'active'
+            ) {
+              // App came to foreground - sync if online
+              if (isOnline && user?.id) {
+                performSync();
+              }
+            }
+            appStateRef.current = nextAppState;
+          });
+
+          return () => {
+            if (subscription && typeof subscription.remove === 'function') {
+              subscription.remove();
+            }
+          };
+        } else {
+          // AppState not available - log warning but don't crash
+          console.warn('[Sync Hook] AppState API not available, skipping foreground sync');
+          return () => {}; // No-op cleanup
+        }
+      } catch (error) {
+        console.warn('[Sync Hook] Failed to set up AppState listener:', error);
+        return () => {}; // No-op cleanup on error
+      }
     }
   }, [isOnline, user?.id, performSync]);
 

@@ -31,41 +31,37 @@ function RootLayoutNav() {
 export default function RootLayout() {
   console.log('[RootLayout] Starting app initialization...');
   
-  try {
-    const colorScheme = useColorScheme();
-    console.log('[RootLayout] Color scheme loaded');
-    
-    const [fontsLoaded, fontError] = useFonts({
-      Montserrat_700Bold,
-    });
-    
-    console.log('[RootLayout] Fonts loaded:', fontsLoaded, fontError);
+  // Hooks must be called unconditionally at the top level
+  const colorScheme = useColorScheme();
+  console.log('[RootLayout] Color scheme loaded');
+  
+  const [fontsLoaded, fontError] = useFonts({
+    Montserrat_700Bold,
+  });
+  
+  console.log('[RootLayout] Fonts loaded:', fontsLoaded, fontError);
 
-    if (!fontsLoaded) {
-      console.log('[RootLayout] Waiting for fonts...');
-      return null;
-    }
-
-    console.log('[RootLayout] All initializations complete, rendering app');
-
-    return (
-      <ErrorBoundary>
-        <SafeAreaProvider>
-          <AuthProvider>
-            <SyncProvider>
-              <XpFeedbackProvider>
-                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                  <RootLayoutNav />
-                  <StatusBar style="auto" />
-                </ThemeProvider>
-              </XpFeedbackProvider>
-            </SyncProvider>
-          </AuthProvider>
-        </SafeAreaProvider>
-      </ErrorBoundary>
-    );
-  } catch (error) {
-    console.error('[RootLayout] FATAL ERROR during initialization:', error);
-    throw error; // Let ErrorBoundary handle it
+  if (!fontsLoaded) {
+    console.log('[RootLayout] Waiting for fonts...');
+    return null;
   }
+
+  console.log('[RootLayout] All initializations complete, rendering app');
+
+  return (
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <AuthProvider>
+          <SyncProvider>
+            <XpFeedbackProvider>
+              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <RootLayoutNav />
+                <StatusBar style="auto" />
+              </ThemeProvider>
+            </XpFeedbackProvider>
+          </SyncProvider>
+        </AuthProvider>
+      </SafeAreaProvider>
+    </ErrorBoundary>
+  );
 }
