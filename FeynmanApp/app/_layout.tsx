@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
@@ -10,6 +11,7 @@ import { XpFeedbackProvider } from '@/components/xp-feedback-provider';
 import { AuthProvider } from '@/contexts/auth-context';
 import { ProtectedRouteProvider } from '@/components/protected-route';
 import { SyncProvider } from '@/components/SyncProvider';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 function RootLayoutNav() {
   return (
@@ -27,27 +29,43 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [fontsLoaded] = useFonts({
-    Montserrat_700Bold,
-  });
+  console.log('[RootLayout] Starting app initialization...');
+  
+  try {
+    const colorScheme = useColorScheme();
+    console.log('[RootLayout] Color scheme loaded');
+    
+    const [fontsLoaded, fontError] = useFonts({
+      Montserrat_700Bold,
+    });
+    
+    console.log('[RootLayout] Fonts loaded:', fontsLoaded, fontError);
 
-  if (!fontsLoaded) {
-    return null;
+    if (!fontsLoaded) {
+      console.log('[RootLayout] Waiting for fonts...');
+      return null;
+    }
+
+    console.log('[RootLayout] All initializations complete, rendering app');
+
+    return (
+      <ErrorBoundary>
+        <SafeAreaProvider>
+          <AuthProvider>
+            <SyncProvider>
+              <XpFeedbackProvider>
+                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                  <RootLayoutNav />
+                  <StatusBar style="auto" />
+                </ThemeProvider>
+              </XpFeedbackProvider>
+            </SyncProvider>
+          </AuthProvider>
+        </SafeAreaProvider>
+      </ErrorBoundary>
+    );
+  } catch (error) {
+    console.error('[RootLayout] FATAL ERROR during initialization:', error);
+    throw error; // Let ErrorBoundary handle it
   }
-
-  return (
-    <SafeAreaProvider>
-      <AuthProvider>
-        <SyncProvider>
-          <XpFeedbackProvider>
-            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <RootLayoutNav />
-              <StatusBar style="auto" />
-            </ThemeProvider>
-          </XpFeedbackProvider>
-        </SyncProvider>
-      </AuthProvider>
-    </SafeAreaProvider>
-  );
 }

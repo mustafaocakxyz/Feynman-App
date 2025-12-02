@@ -23,37 +23,81 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    console.log('[AuthProvider] Initializing...');
+    
+    try {
+      // Get initial session
+      supabase.auth.getSession()
+        .then(async ({ data: { session }, error }) => {
+          console.log('[AuthProvider] Session loaded:', !!session, error?.message);
+          
+          if (error) {
+            console.error('[AuthProvider] Session error:', error);
+            // Continue anyway - allow app to work offline
+          }
+          
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+          setInitialized(true);
+
+          // Sync profile and progress on initial session load
+          if (session?.user?.id) {
+            syncUserProfile(session.user.id).catch((err) => {
+              console.warn('[AuthProvider] Profile sync failed:', err);
+            });
+            syncUserProgress(session.user.id).catch((err) => {
+              console.warn('[AuthProvider] Progress sync failed:', err);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('[AuthProvider] FATAL: getSession failed:', error);
+          // Set initialized anyway to allow app to continue
+          setLoading(false);
+          setInitialized(true);
+        });
+
+      // Listen for auth state changes
+      let subscription: ReturnType<typeof supabase.auth.onAuthStateChange>['data']['subscription'];
+      
+      try {
+        const {
+          data: { subscription: authSubscription },
+        } = supabase.auth.onAuthStateChange(async (_event, session) => {
+          console.log('[AuthProvider] Auth state changed:', _event);
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+          setInitialized(true);
+
+          // Sync profile and progress on auth state change (login/logout)
+          if (session?.user?.id) {
+            syncUserProfile(session.user.id).catch((err) => {
+              console.warn('[AuthProvider] Profile sync failed:', err);
+            });
+            syncUserProgress(session.user.id).catch((err) => {
+              console.warn('[AuthProvider] Progress sync failed:', err);
+            });
+          }
+        });
+        subscription = authSubscription;
+      } catch (error) {
+        console.error('[AuthProvider] FATAL: onAuthStateChange failed:', error);
+        // Continue without auth listener - app can still work
+      }
+
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      };
+    } catch (error) {
+      console.error('[AuthProvider] FATAL: Initialization failed:', error);
+      // Set initialized to allow app to continue without auth
       setLoading(false);
       setInitialized(true);
-
-      // Sync profile and progress on initial session load
-      if (session?.user?.id) {
-        syncUserProfile(session.user.id).catch(console.error);
-        syncUserProgress(session.user.id).catch(console.error);
-      }
-    });
-
-    // Listen for auth state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-      setInitialized(true);
-
-      // Sync profile and progress on auth state change (login/logout)
-      if (session?.user?.id) {
-        syncUserProfile(session.user.id).catch(console.error);
-        syncUserProgress(session.user.id).catch(console.error);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    }
   }, []);
 
   // Helper function to sync user profile
