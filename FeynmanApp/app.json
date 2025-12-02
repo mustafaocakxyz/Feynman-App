@@ -7,11 +7,12 @@
     "icon": "./assets/images/appicon.png",
     "scheme": "feynmanapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.feynmanapp",
       "adaptiveIcon": {
         "backgroundColor": "#4F9DFF",
         "foregroundImage": "./assets/images/appicon.png"
@@ -41,6 +42,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "cefa35c8-6b60-45dc-8a08-6effec199fbc"
+      }
     }
   }
 }
