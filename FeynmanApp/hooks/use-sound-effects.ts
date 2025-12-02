@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAudioPlayer } from 'expo-audio';
 import { Asset } from 'expo-asset';
 import { Platform } from 'react-native';
@@ -6,8 +6,11 @@ import { Platform } from 'react-native';
 const isWeb = Platform.OS === 'web';
 
 export function useSoundEffects() {
+  const [audioError, setAudioError] = useState(false);
+  
   // Always call hooks (React rules), but only use on native
   // On web, these will be ignored and we'll use HTML5 Audio instead
+  // Wrap in try-catch-safe way: hooks must be called, but we handle errors in usage
   const positivePlayer = useAudioPlayer(
     isWeb ? null : require('@/assets/sounds/positive.mp3'),
   );
@@ -18,6 +21,15 @@ export function useSoundEffects() {
   // Web audio refs
   const webPositiveRef = useRef<HTMLAudioElement | null>(null);
   const webNegativeRef = useRef<HTMLAudioElement | null>(null);
+
+  // Verify players are valid (not just truthy, but actually usable)
+  const isPlayerReady = (player: ReturnType<typeof useAudioPlayer> | null) => {
+    if (!player) return false;
+    // Check if player has required methods (expo-audio specific)
+    return typeof player.play === 'function' && 
+           typeof player.pause === 'function' &&
+           typeof player.seekTo === 'function';
+  };
 
   useEffect(() => {
     if (!isWeb) return; // Native uses the hooks above
@@ -80,14 +92,20 @@ export function useSoundEffects() {
         }
 
         // Native: use expo-audio player
-        if (!positivePlayer) return;
+        if (audioError || !isPlayerReady(positivePlayer)) {
+          console.warn('Audio player not ready (positive)');
+          return;
+        }
         try {
           // Replay from beginning
-          positivePlayer.pause();
-          positivePlayer.seekTo(0);
-          positivePlayer.play();
+          if (positivePlayer) {
+            positivePlayer.pause();
+            positivePlayer.seekTo(0);
+            positivePlayer.play();
+          }
         } catch (error) {
           console.warn('Pozitif ses çalınamadı (native)', error);
+          setAudioError(true);
         }
       },
       playNegative: async () => {
@@ -104,17 +122,23 @@ export function useSoundEffects() {
         }
 
         // Native: use expo-audio player
-        if (!negativePlayer) return;
+        if (audioError || !isPlayerReady(negativePlayer)) {
+          console.warn('Audio player not ready (negative)');
+          return;
+        }
         try {
           // Replay from beginning
-          negativePlayer.pause();
-          negativePlayer.seekTo(0);
-          negativePlayer.play();
+          if (negativePlayer) {
+            negativePlayer.pause();
+            negativePlayer.seekTo(0);
+            negativePlayer.play();
+          }
         } catch (error) {
           console.warn('Negatif ses çalınamadı (native)', error);
+          setAudioError(true);
         }
       },
     }),
-    [positivePlayer, negativePlayer],
+    [positivePlayer, negativePlayer, audioError],
   );
 }
