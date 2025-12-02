@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { pullProfile, syncProfile } from '../lib/profile-storage';
+import { syncProgress } from '../lib/sync-service';
 
 type AuthContextType = {
   user: User | null;
@@ -29,9 +30,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       setInitialized(true);
 
-      // Sync profile on initial session load
+      // Sync profile and progress on initial session load
       if (session?.user?.id) {
         syncUserProfile(session.user.id).catch(console.error);
+        syncUserProgress(session.user.id).catch(console.error);
       }
     });
 
@@ -44,9 +46,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       setInitialized(true);
 
-      // Sync profile on auth state change (login/logout)
+      // Sync profile and progress on auth state change (login/logout)
       if (session?.user?.id) {
         syncUserProfile(session.user.id).catch(console.error);
+        syncUserProgress(session.user.id).catch(console.error);
       }
     });
 
@@ -63,6 +66,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.warn('Profile sync failed on auth state change', error);
       // Don't throw - this is a background operation
+    }
+  };
+
+  // Helper function to sync user progress
+  const syncUserProgress = async (userId: string) => {
+    try {
+      // Bidirectional sync: pull from remote first, then push local changes
+      await syncProgress(userId);
+    } catch (error) {
+      console.warn('Progress sync failed on auth state change', error);
+      // Don't throw - this is a background operation (errors are queued in sync-service)
     }
   };
 
