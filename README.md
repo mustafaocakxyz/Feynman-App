@@ -50,3 +50,9 @@
 
 ✅ Uygulama offline kullanılabiliyor ve internete bağlanınca cloud ile sync oluyor.
 ✅ Uygulama gerçek kullanıcı verileri (isim, avatar, xp, ilerleme) ile çalışmaya başladı.
+
+### Gün #24 | 2 Aralık | UI Geliştirmeleri.
+
+✅ Navigation tab UI geliştirmesi
+✅ Welcome page UI geliştirmesi
+✅ Authentication pages UI geliştirmesi
