@@ -62,6 +62,13 @@ export async function addXp(userId: string, amount: number): Promise<XpState> {
   // Trigger sync in background (fire-and-forget)
   triggerSync(userId);
   
+  // Check avatar unlock conditions in background (fire-and-forget)
+  import('./avatar-unlocks')
+    .then(({ checkUnlockConditions }) => checkUnlockConditions(userId))
+    .catch((error) => {
+      console.warn('[XP Storage] Avatar unlock check failed:', error);
+    });
+  
   return next;
 }
 

@@ -2,9 +2,9 @@ import {
   ActivityIndicator,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -12,16 +12,15 @@ import { useCallback, useState } from 'react';
 import { Image } from 'expo-image';
 import { useAuth } from '@/contexts/auth-context';
 import { Colors } from '@/constants/theme';
-import { getProfile, updateProfile, getAvatarSource, type AvatarId } from '@/lib/profile-storage';
-import { AvatarPicker } from '@/components/AvatarPicker';
+import { getProfile, updateProfile, getAvatarSource, type AvatarId, VALID_AVATARS } from '@/lib/profile-storage';
+import { getUnlockedAvatars } from '@/lib/avatar-unlocks';
 
 export default function ProfileScreen() {
   const { user, signOut, loading } = useAuth();
   const [profileName, setProfileName] = useState('');
   const [avatarId, setAvatarId] = useState<AvatarId | null>(null);
-  const [isEditingName, setIsEditingName] = useState(false);
+  const [unlockedAvatars, setUnlockedAvatars] = useState<AvatarId[]>([]);
   const [isSaving, setIsSaving] = useState(false);
-  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
   // Load profile when screen is focused
@@ -35,9 +34,13 @@ export default function ProfileScreen() {
       const loadProfile = async () => {
         try {
           setIsLoadingProfile(true);
-          const profile = await getProfile(user.id);
+          const [profile, unlocked] = await Promise.all([
+            getProfile(user.id),
+            getUnlockedAvatars(user.id),
+          ]);
           setProfileName(profile.name || '');
           setAvatarId(profile.avatarId);
+          setUnlockedAvatars(unlocked);
         } catch (error) {
           console.error('Profile yüklenirken hata:', error);
         } finally {
@@ -48,23 +51,6 @@ export default function ProfileScreen() {
       loadProfile();
     }, [user?.id])
   );
-
-  const handleSaveName = async () => {
-    if (!user?.id || !profileName.trim()) {
-      setIsEditingName(false);
-      return;
-    }
-
-    try {
-      setIsSaving(true);
-      await updateProfile(user.id, { name: profileName.trim() });
-      setIsEditingName(false);
-    } catch (error) {
-      console.error('İsim kaydedilirken hata:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleAvatarSelect = async (selectedAvatarId: AvatarId) => {
     if (!user?.id) return;
@@ -90,7 +76,11 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>Profil</Text>
 
         {isLoadingProfile ? (
@@ -98,59 +88,84 @@ export default function ProfileScreen() {
             <ActivityIndicator size="large" color={Colors.light.tint} />
           </View>
         ) : (
-          <View style={styles.profileCard}>
-            {/* Avatar */}
-            <Pressable
-              style={styles.avatarContainer}
-              onPress={() => setShowAvatarPicker(true)}
-              disabled={isSaving}
-            >
-              {avatarSource ? (
-                <Image
-                  source={avatarSource}
-                  style={styles.avatarImage}
-                  contentFit="cover"
-                />
-              ) : (
-                <View style={styles.avatar}>
-                  <Text style={styles.avatarText}>{displayInitial}</Text>
-                </View>
-              )}
-              {isSaving && (
-                <View style={styles.avatarLoadingOverlay}>
-                  <ActivityIndicator color="#fff" size="small" />
-                </View>
-              )}
-            </Pressable>
-
-            {/* Name */}
-            <View style={styles.nameContainer}>
-              {isEditingName ? (
-                <View style={styles.nameEditContainer}>
-                  <TextInput
-                    style={styles.nameInput}
-                    value={profileName}
-                    onChangeText={setProfileName}
-                    placeholder="İsminizi girin"
-                    autoFocus
-                    onSubmitEditing={handleSaveName}
-                    onBlur={handleSaveName}
-                    editable={!isSaving}
+          <>
+            {/* Section 1: Current Avatar + Username */}
+            <View style={styles.profileCard}>
+              <View style={styles.avatarContainer}>
+                {avatarSource ? (
+                  <Image
+                    source={avatarSource}
+                    style={styles.avatarImage}
+                    contentFit="cover"
                   />
-                </View>
-              ) : (
-                <Pressable
-                  onPress={() => setIsEditingName(true)}
-                  disabled={isSaving}
-                >
-                  <Text style={styles.name}>{displayName}</Text>
-                  <Text style={styles.editHint}>Düzenlemek için dokunun</Text>
-                </Pressable>
-              )}
+                ) : (
+                  <View style={styles.avatar}>
+                    <Text style={styles.avatarText}>{displayInitial}</Text>
+                  </View>
+                )}
+                {isSaving && (
+                  <View style={styles.avatarLoadingOverlay}>
+                    <ActivityIndicator color="#fff" size="small" />
+                  </View>
+                )}
+              </View>
+
+              {/* Name */}
+              <View style={styles.nameContainer}>
+                <Text style={styles.name}>{displayName}</Text>
+              </View>
             </View>
 
-            <Text style={styles.email}>{user?.email}</Text>
-          </View>
+            {/* Section 2: All Avatars Grid */}
+            <View style={styles.avatarsSection}>
+              <Text style={styles.sectionTitle}>Avatarlar</Text>
+              <View style={styles.avatarGrid}>
+                {VALID_AVATARS.map((id) => {
+                  const isUnlocked = unlockedAvatars.includes(id);
+                  const isSelected = avatarId === id;
+                  const source = getAvatarSource(id);
+
+                  return (
+                    <Pressable
+                      key={id}
+                      style={[
+                        styles.gridAvatarContainer,
+                        isSelected && styles.gridAvatarContainerSelected,
+                        !isUnlocked && styles.gridAvatarContainerLocked,
+                      ]}
+                      onPress={() => {
+                        if (isUnlocked && !isSaving) {
+                          handleAvatarSelect(id);
+                        }
+                      }}
+                      disabled={!isUnlocked || isSaving}
+                    >
+                      {source && (
+                        <Image
+                          source={source}
+                          style={[
+                            styles.gridAvatarImage,
+                            !isUnlocked && styles.gridAvatarImageLocked,
+                          ]}
+                          contentFit="cover"
+                        />
+                      )}
+                      {isSelected && isUnlocked && (
+                        <View style={styles.gridCheckmark}>
+                          <Text style={styles.gridCheckmarkText}>✓</Text>
+                        </View>
+                      )}
+                      {!isUnlocked && (
+                        <View style={styles.gridLockOverlay}>
+                          <Text style={styles.gridLockIcon}>🔒</Text>
+                        </View>
+                      )}
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+          </>
         )}
 
         <Pressable
@@ -168,14 +183,7 @@ export default function ProfileScreen() {
             <Text style={styles.logoutButtonText}>Çıkış Yap</Text>
           )}
         </Pressable>
-      </View>
-
-      <AvatarPicker
-        visible={showAvatarPicker}
-        selectedAvatarId={avatarId}
-        onSelect={handleAvatarSelect}
-        onClose={() => setShowAvatarPicker(false)}
-      />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -185,10 +193,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.light.background,
   },
-  content: {
+  scrollView: {
     flex: 1,
+  },
+  content: {
     paddingHorizontal: 32,
     paddingTop: 64,
+    paddingBottom: 32,
     gap: 32,
   },
   title: {
@@ -216,6 +227,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   avatarContainer: {
+    alignItems: 'center',
     position: 'relative',
   },
   avatar: {
@@ -279,14 +291,81 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.light.icon,
   },
+  avatarsSection: {
+    gap: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.light.text,
+  },
+  avatarGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+    justifyContent: 'flex-start',
+  },
+  gridAvatarContainer: {
+    width: '30%',
+    aspectRatio: 1,
+    borderRadius: 16,
+    borderWidth: 3,
+    borderColor: 'transparent',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  gridAvatarContainerSelected: {
+    borderColor: Colors.light.tint,
+  },
+  gridAvatarContainerLocked: {
+    opacity: 0.6,
+  },
+  gridAvatarImage: {
+    width: '100%',
+    height: '100%',
+  },
+  gridAvatarImageLocked: {
+    opacity: 0.5,
+  },
+  gridCheckmark: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: Colors.light.tint,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  gridCheckmarkText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  gridLockOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 16,
+  },
+  gridLockIcon: {
+    fontSize: 24,
+  },
   logoutButton: {
     backgroundColor: '#dc2626',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 'auto',
-    marginBottom: 32,
+    marginTop: 16,
   },
   logoutButtonPressed: {
     opacity: 0.7,

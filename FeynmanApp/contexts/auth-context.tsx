@@ -3,6 +3,7 @@ import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { pullProfile, syncProfile } from '../lib/profile-storage';
 import { syncProgress } from '../lib/sync-service';
+import { pullUnlockedAvatars, syncUnlockedAvatars } from '../lib/avatar-unlocks';
 
 type AuthContextType = {
   user: User | null;
@@ -41,13 +42,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false);
           setInitialized(true);
 
-          // Sync profile and progress on initial session load
+          // Sync profile, progress, and unlocked avatars on initial session load
           if (session?.user?.id) {
             syncUserProfile(session.user.id).catch((err) => {
               console.warn('[AuthProvider] Profile sync failed:', err);
             });
             syncUserProgress(session.user.id).catch((err) => {
               console.warn('[AuthProvider] Progress sync failed:', err);
+            });
+            syncUnlockedAvatarsData(session.user.id).catch((err) => {
+              console.warn('[AuthProvider] Unlocked avatars sync failed:', err);
             });
           }
         })
@@ -71,13 +75,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false);
           setInitialized(true);
 
-          // Sync profile and progress on auth state change (login/logout)
+          // Sync profile, progress, and unlocked avatars on auth state change (login/logout)
           if (session?.user?.id) {
             syncUserProfile(session.user.id).catch((err) => {
               console.warn('[AuthProvider] Profile sync failed:', err);
             });
             syncUserProgress(session.user.id).catch((err) => {
               console.warn('[AuthProvider] Progress sync failed:', err);
+            });
+            syncUnlockedAvatarsData(session.user.id).catch((err) => {
+              console.warn('[AuthProvider] Unlocked avatars sync failed:', err);
             });
           }
         });
@@ -121,6 +128,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.warn('Progress sync failed on auth state change', error);
       // Don't throw - this is a background operation (errors are queued in sync-service)
+    }
+  };
+
+  // Helper function to sync unlocked avatars
+  const syncUnlockedAvatarsData = async (userId: string) => {
+    try {
+      // Pull from remote first to get latest data, then sync local to remote
+      await pullUnlockedAvatars(userId);
+      // Then sync local changes (if any) back to remote
+      await syncUnlockedAvatars(userId);
+    } catch (error) {
+      console.warn('Unlocked avatars sync failed on auth state change', error);
+      // Don't throw - this is a background operation
     }
   };
 

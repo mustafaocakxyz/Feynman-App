@@ -1,13 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from './supabase';
 
-// Valid avatar identifiers: "1", "2", "3"
-export const VALID_AVATARS = ['1', '2', '3'] as const;
+// Valid avatar identifiers: "1", "2", "3", "4", "5"
+export const VALID_AVATARS = ['1', '2', '3', '4', '5'] as const;
 export type AvatarId = typeof VALID_AVATARS[number];
 
 export type UserProfile = {
   name: string;
-  avatarId: AvatarId | null; // "1", "2", "3", or null
+  avatarId: AvatarId | null; // "1", "2", "3", "4", "5", or null
 };
 
 const STORAGE_KEY_PREFIX = '@feynman/profile_';
@@ -223,6 +223,10 @@ export function getAvatarSource(avatarId: AvatarId | null): any {
       return require('@/assets/images/avatars/avatar2.png');
     case '3':
       return require('@/assets/images/avatars/avatar3.png');
+    case '4':
+      return require('@/assets/images/avatars/avatar4.png');
+    case '5':
+      return require('@/assets/images/avatars/avatar5.png');
     default:
       return null;
   }

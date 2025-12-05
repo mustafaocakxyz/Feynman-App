@@ -160,17 +160,19 @@ export default function HomeScreen() {
             
             return (
               <>
-                {avatarSource ? (
-                  <ExpoImage
-                    source={avatarSource}
-                    style={styles.avatar}
-                    contentFit="cover"
-                  />
-                ) : (
-                  <View style={styles.avatarPlaceholder}>
-                    <Text style={styles.avatarPlaceholderText}>{displayInitial}</Text>
-                  </View>
-                )}
+                <Pressable onPress={() => router.push('/profil' as never)}>
+                  {avatarSource ? (
+                    <ExpoImage
+                      source={avatarSource}
+                      style={styles.avatar}
+                      contentFit="cover"
+                    />
+                  ) : (
+                    <View style={styles.avatarPlaceholder}>
+                      <Text style={styles.avatarPlaceholderText}>{displayInitial}</Text>
+                    </View>
+                  )}
+                </Pressable>
                 <Text style={styles.welcomeText}>
                   Hoş geldin <Text style={styles.nameText}>{displayName}</Text>
                 </Text>

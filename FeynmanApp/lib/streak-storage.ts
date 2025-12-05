@@ -114,6 +114,13 @@ export async function recordStreakActivity(userId: string): Promise<StreakState>
   // Trigger sync in background (fire-and-forget)
   triggerSync(userId);
   
+  // Check avatar unlock conditions in background (fire-and-forget)
+  import('./avatar-unlocks')
+    .then(({ checkUnlockConditions }) => checkUnlockConditions(userId))
+    .catch((error) => {
+      console.warn('[Streak Storage] Avatar unlock check failed:', error);
+    });
+  
   return nextState;
 }
 

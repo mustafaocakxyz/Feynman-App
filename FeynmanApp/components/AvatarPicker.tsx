@@ -7,11 +7,12 @@ import { AvatarId, VALID_AVATARS, getAvatarSource } from '@/lib/profile-storage'
 type AvatarPickerProps = {
   visible: boolean;
   selectedAvatarId: AvatarId | null;
+  unlockedAvatars: AvatarId[];
   onSelect: (avatarId: AvatarId) => void;
   onClose: () => void;
 };
 
-export function AvatarPicker({ visible, selectedAvatarId, onSelect, onClose }: AvatarPickerProps) {
+export function AvatarPicker({ visible, selectedAvatarId, unlockedAvatars, onSelect, onClose }: AvatarPickerProps) {
   return (
     <Modal
       visible={visible}
@@ -26,27 +27,43 @@ export function AvatarPicker({ visible, selectedAvatarId, onSelect, onClose }: A
           <View style={styles.avatarGrid}>
             {VALID_AVATARS.map((avatarId) => {
               const isSelected = selectedAvatarId === avatarId;
+              const isUnlocked = unlockedAvatars.includes(avatarId);
               const source = getAvatarSource(avatarId);
               
               return (
                 <Pressable
                   key={avatarId}
-                  style={[styles.avatarContainer, isSelected && styles.avatarContainerSelected]}
+                  style={[
+                    styles.avatarContainer,
+                    isSelected && styles.avatarContainerSelected,
+                    !isUnlocked && styles.avatarContainerLocked,
+                  ]}
                   onPress={() => {
-                    onSelect(avatarId);
-                    onClose();
+                    if (isUnlocked) {
+                      onSelect(avatarId);
+                      onClose();
+                    }
                   }}
+                  disabled={!isUnlocked}
                 >
                   {source && (
                     <Image
                       source={source}
-                      style={styles.avatarImage}
+                      style={[
+                        styles.avatarImage,
+                        !isUnlocked && styles.avatarImageLocked,
+                      ]}
                       contentFit="cover"
                     />
                   )}
-                  {isSelected && (
+                  {isSelected && isUnlocked && (
                     <View style={styles.checkmark}>
                       <Text style={styles.checkmarkText}>✓</Text>
+                    </View>
+                  )}
+                  {!isUnlocked && (
+                    <View style={styles.lockOverlay}>
+                      <Text style={styles.lockIcon}>🔒</Text>
                     </View>
                   )}
                 </Pressable>
@@ -110,6 +127,26 @@ const styles = StyleSheet.create({
   avatarImage: {
     width: '100%',
     height: '100%',
+  },
+  avatarImageLocked: {
+    opacity: 0.5,
+  },
+  avatarContainerLocked: {
+    opacity: 0.6,
+  },
+  lockOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 40,
+  },
+  lockIcon: {
+    fontSize: 24,
   },
   checkmark: {
     position: 'absolute',

@@ -2,6 +2,7 @@ import {
   Animated,
   Easing,
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -17,6 +18,8 @@ import { subtopicTitleBySlug } from './subtopics';
 import { markSubtopicCompleted } from '@/lib/completion-storage';
 import { recordStreakActivity, getStreakState } from '@/lib/streak-storage';
 import { addXp } from '@/lib/xp-storage';
+import { getUnlockedAvatars } from '@/lib/avatar-unlocks';
+import { getAvatarSource, type AvatarId } from '@/lib/profile-storage';
 import { useXpFeedback } from '@/components/xp-feedback-provider';
 import { useSoundEffects } from '@/hooks/use-sound-effects';
 import { MathText } from '@/components/MathText';
@@ -2352,6 +2355,7 @@ export default function AYTSubtopicScreen() {
   const [completionAwarded, setCompletionAwarded] = useState(false);
   const [sessionXp, setSessionXp] = useState(0); // Track XP earned from questions
   const [completionPageIndex, setCompletionPageIndex] = useState(0); // 0 = summary, 1 = rewards
+  const [initialUnlockedAvatars, setInitialUnlockedAvatars] = useState<AvatarId[]>([]); // Unlocked avatars at subtopic start
   const [completionData, setCompletionData] = useState<{
     totalXp: number;
     questionXp: number;
@@ -2360,6 +2364,7 @@ export default function AYTSubtopicScreen() {
     streakAfter: number;
     streakIncreased: boolean;
     hasRewards: boolean;
+    newlyUnlockedAvatars: Array<{ id: AvatarId; condition: string }>;
   } | null>(null);
   const congratulationsAnim = useRef(new Animated.Value(0)).current;
   const medalAnim = useRef(new Animated.Value(0)).current;
@@ -2381,8 +2386,14 @@ export default function AYTSubtopicScreen() {
       setSessionXp(0);
       setCompletionData(null);
       setCompletionPageIndex(0);
+      // Store initial unlocked avatars when starting a new subtopic
+      if (user?.id) {
+        getUnlockedAvatars(user.id).then((unlocked) => {
+          setInitialUnlockedAvatars(unlocked);
+        });
+      }
     }
-  }, [pageIndex, currentPage?.id, subtopic]);
+  }, [pageIndex, currentPage?.id, subtopic, user?.id]);
 
   // Animate completion elements with staggered delays
   useEffect(() => {
@@ -2524,14 +2535,35 @@ export default function AYTSubtopicScreen() {
         // Don't show XP toast here - will show in completion summary
       }
       
+      // Wait a bit for background unlock checks from addXp/recordStreakActivity to complete
+      await new Promise(resolve => setTimeout(resolve, 200)); // Give time for background unlocks
+      
+      // Get current unlocked avatars after all updates
+      const finalUnlockedAvatars = await getUnlockedAvatars(user.id);
+      
+      // Find avatars that were unlocked during THIS subtopic session
+      const newlyUnlockedIds = finalUnlockedAvatars.filter(
+        id => !initialUnlockedAvatars.includes(id)
+      );
+      
+      // Map to display format
+      const newlyUnlockedAvatars = newlyUnlockedIds.map((id) => {
+        let condition = '';
+        if (id === '4') {
+          condition = '1000XP topla';
+        } else if (id === '5') {
+          condition = '3 günlük seri yakala';
+        }
+        return { id, condition };
+      });
+      
       // Calculate completion data for summary page
       const questionXp = sessionXp;
       const completionXp = xpAmount;
       const totalXp = questionXp + completionXp;
       const streakIncreased = streakAfter.count > streakBefore.count;
       
-      // Check for rewards (future: avatar unlocks, module unlocks, etc.)
-      const hasRewards = false; // Currently no rewards system
+      const hasRewards = newlyUnlockedAvatars.length > 0;
       
       if (!cancelled) {
         setCompletionData({
@@ -2542,6 +2574,7 @@ export default function AYTSubtopicScreen() {
           streakAfter: streakAfter.count,
           streakIncreased,
           hasRewards,
+          newlyUnlockedAvatars,
         });
         setCompletionAwarded(true);
         await playPositive();
@@ -2746,7 +2779,7 @@ export default function AYTSubtopicScreen() {
                 {/* Medal Image */}
                 <Animated.View style={[styles.medalContainer, createSlideStyle(medalAnim)]}>
                   <Image
-                    source={require('@/assets/images/medal.png')}
+                    source={require('@/assets/images/7.png')}
                     style={styles.medalImage}
                     resizeMode="contain"
                   />
@@ -2756,7 +2789,7 @@ export default function AYTSubtopicScreen() {
                 <Animated.View style={[styles.rewardSection, createSlideStyle(xpAnim)]}>
                   <Text style={styles.rewardSectionTitle}>BU MODÜLDE TOPLAM</Text>
                   <Text style={styles.rewardMainValue}>
-                    ⭐ {completionData.totalXp} XP Kazandınız!
+                    ⭐ {completionData.totalXp} XP Kazandın!
                   </Text>
                 </Animated.View>
 
@@ -2786,11 +2819,27 @@ export default function AYTSubtopicScreen() {
               <View style={styles.pageCard}>
                 <Text style={styles.completionTitle}>🎁 YENİ KAZANÇLAR</Text>
                 
-                {/* Rewards list - placeholder for future implementation */}
-                <View style={styles.rewardSection}>
-                  <Text style={styles.rewardItem}>✓ Yeni Avatar Açıldı</Text>
-                  <Text style={styles.rewardItem}>✓ Yeni Modül Açıldı</Text>
-                </View>
+                {/* Newly unlocked avatars */}
+                {completionData.newlyUnlockedAvatars.map((avatar) => {
+                  const avatarSource = getAvatarSource(avatar.id);
+                  return (
+                    <View key={avatar.id} style={styles.rewardSection}>
+                      {avatarSource && (
+                        <Image
+                          source={avatarSource}
+                          style={styles.unlockedAvatarImage}
+                          resizeMode="contain"
+                        />
+                      )}
+                      <Text style={styles.rewardMainValue}>
+                        🎉 Yeni avatar açıldı!
+                      </Text>
+                      <Text style={styles.rewardBreakdown}>
+                        {avatar.condition}
+                      </Text>
+                    </View>
+                  );
+                })}
 
                 <Pressable
                   style={styles.primaryButton}
@@ -2820,6 +2869,28 @@ export default function AYTSubtopicScreen() {
   );
 }
 
+// Helper function to create shadow styles compatible with web
+const createShadowStyle = (
+  shadowColor: string,
+  shadowOpacity: number,
+  shadowRadius: number,
+  shadowOffset: { width: number; height: number },
+  elevation?: number,
+) => {
+  if (Platform.OS === 'web') {
+    return {
+      boxShadow: `${shadowOffset.width}px ${shadowOffset.height}px ${shadowRadius}px ${shadowColor}${Math.round(shadowOpacity * 255).toString(16).padStart(2, '0')}`,
+    };
+  }
+  return {
+    shadowColor,
+    shadowOpacity,
+    shadowRadius,
+    shadowOffset,
+    elevation: elevation || shadowRadius,
+  };
+};
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -2844,11 +2915,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderRadius: 12,
     backgroundColor: '#f3f4f6',
-    shadowColor: '#0f172a',
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 5,
+    ...createShadowStyle('#0f172a', 0.12, 8, { width: 0, height: 4 }, 5),
   },
   navButtonText: {
     fontSize: 16,
@@ -2866,11 +2933,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9fafb',
     padding: 24,
     gap: 24,
-    shadowColor: '#0f172a',
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 8,
+    ...createShadowStyle('#0f172a', 0.12, 12, { width: 0, height: 6 }, 8),
   },
   diagramCard: {
     width: '100%',
@@ -2982,11 +3045,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     backgroundColor: '#2563eb',
-    shadowColor: '#1d4ed8',
-    shadowOpacity: 0.22,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 8,
+    ...createShadowStyle('#1d4ed8', 0.22, 10, { width: 0, height: 6 }, 8),
   },
   primaryButtonText: {
     fontSize: 16,
@@ -3026,11 +3085,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#0f172a',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    ...createShadowStyle('#0f172a', 0.1, 8, { width: 0, height: 4 }, 4),
   },
   congratulationsBox: {
     marginTop: -8,
@@ -3060,6 +3115,11 @@ const styles = StyleSheet.create({
     color: '#111827',
     fontFamily: 'Montserrat_700Bold',
     marginBottom: 8,
+  },
+  unlockedAvatarImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 12,
   },
   medalContainer: {
     alignItems: 'center',
