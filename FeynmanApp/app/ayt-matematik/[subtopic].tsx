@@ -1,4 +1,7 @@
 import {
+  Animated,
+  Easing,
+  Image,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -7,18 +10,19 @@ import {
   View,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, useSegments } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Svg, { Line, Polygon, Rect, Ellipse, Text as SvgText, Defs, Marker, Polyline } from 'react-native-svg';
 
 import { subtopicTitleBySlug } from './subtopics';
 import { markSubtopicCompleted } from '@/lib/completion-storage';
-import { recordStreakActivity } from '@/lib/streak-storage';
+import { recordStreakActivity, getStreakState } from '@/lib/streak-storage';
 import { addXp } from '@/lib/xp-storage';
 import { useXpFeedback } from '@/components/xp-feedback-provider';
 import { useSoundEffects } from '@/hooks/use-sound-effects';
 import { MathText } from '@/components/MathText';
 import { useAuth } from '@/contexts/auth-context';
 import { FunctionGraph, GraphConfig } from '@/components/FunctionGraph';
+import { ProgressDots } from '@/components/ProgressDots';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five' | 'function-machine' | 'domain-range-mapping';
 
@@ -2346,6 +2350,21 @@ export default function AYTSubtopicScreen() {
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [isChoiceCorrect, setIsChoiceCorrect] = useState<boolean | null>(null);
   const [completionAwarded, setCompletionAwarded] = useState(false);
+  const [sessionXp, setSessionXp] = useState(0); // Track XP earned from questions
+  const [completionPageIndex, setCompletionPageIndex] = useState(0); // 0 = summary, 1 = rewards
+  const [completionData, setCompletionData] = useState<{
+    totalXp: number;
+    questionXp: number;
+    completionXp: number;
+    streakBefore: number;
+    streakAfter: number;
+    streakIncreased: boolean;
+    hasRewards: boolean;
+  } | null>(null);
+  const congratulationsAnim = useRef(new Animated.Value(0)).current;
+  const medalAnim = useRef(new Animated.Value(0)).current;
+  const xpAnim = useRef(new Animated.Value(0)).current;
+  const streakAnim = useRef(new Animated.Value(0)).current;
 
   const effectiveTitle =
     lesson?.title ?? subtopicTitleBySlug[subtopic ?? ''] ?? 'Alt Konu';
@@ -2357,7 +2376,79 @@ export default function AYTSubtopicScreen() {
     setSelectedChoice(null);
     setIsChoiceCorrect(null);
     setCompletionAwarded(false);
-  }, [pageIndex, currentPage?.id]);
+    // Reset session XP and completion page when starting a new subtopic
+    if (pageIndex === 0) {
+      setSessionXp(0);
+      setCompletionData(null);
+      setCompletionPageIndex(0);
+    }
+  }, [pageIndex, currentPage?.id, subtopic]);
+
+  // Animate completion elements with staggered delays
+  useEffect(() => {
+    if (currentPage?.type === 'completion' && completionData) {
+      // Reset all animations
+      congratulationsAnim.setValue(0);
+      medalAnim.setValue(0);
+      xpAnim.setValue(0);
+      streakAnim.setValue(0);
+
+      // Animate congratulations box (0.3s delay)
+      Animated.timing(congratulationsAnim, {
+        toValue: 1,
+        duration: 350,
+        delay: 300,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+
+      // Animate medal image (0.6s delay)
+      Animated.timing(medalAnim, {
+        toValue: 1,
+        duration: 350,
+        delay: 600,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+
+      // Animate XP info box (0.9s delay)
+      Animated.timing(xpAnim, {
+        toValue: 1,
+        duration: 350,
+        delay: 900,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+
+      // Animate streak box (1.2s delay) - only if streak increased
+      if (completionData.streakIncreased) {
+        Animated.timing(streakAnim, {
+          toValue: 1,
+          duration: 350,
+          delay: 1200,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }).start();
+      }
+    } else {
+      congratulationsAnim.setValue(0);
+      medalAnim.setValue(0);
+      xpAnim.setValue(0);
+      streakAnim.setValue(0);
+    }
+  }, [congratulationsAnim, medalAnim, xpAnim, streakAnim, completionData, completionPageIndex, currentPage?.id, currentPage?.type]);
+
+  const createSlideStyle = (animValue: Animated.Value) => ({
+    opacity: animValue,
+    transform: [
+      {
+        translateY: animValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [24, 0],
+        }),
+      },
+    ],
+  });
 
   const handleAdvance = () => {
     if (!lesson) return;
@@ -2377,7 +2468,13 @@ export default function AYTSubtopicScreen() {
     setIsChoiceCorrect(isCorrectNow);
     if (isCorrectNow && !wasCorrect) {
       await addXp(user.id, 10);
-      showXp(10);
+      setSessionXp(prev => prev + 10); // Track XP for completion summary
+      // Show XP panel with advance button for quiz questions
+      const isQuizPage = page.type === 'quiz';
+      showXp(10, {
+        showAdvance: isQuizPage,
+        onAdvance: isQuizPage ? handleAdvance : undefined,
+      });
       await playPositive();
     } else if (!isCorrectNow) {
       await playNegative();
@@ -2386,6 +2483,16 @@ export default function AYTSubtopicScreen() {
 
   const handleCompletionPress = async () => {
     router.replace(completionTarget as never);
+  };
+
+  const handleAdvanceToRewards = () => {
+    // Move to rewards page if rewards exist
+    if (completionData?.hasRewards) {
+      setCompletionPageIndex(1);
+    } else {
+      // No rewards, go directly to finish
+      handleCompletionPress();
+    }
   };
 
   useEffect(() => {
@@ -2400,19 +2507,44 @@ export default function AYTSubtopicScreen() {
         return;
       }
 
+      // Get streak before updating
+      const streakBefore = await getStreakState(user.id);
+      
       let xpAmount = 0;
       if (typeof subtopic === 'string') {
         const isNew = await markSubtopicCompleted(user.id, subtopic);
         xpAmount = isNew ? 20 : 5;
       }
-      await recordStreakActivity(user.id);
+      
+      // Update streak and get new value
+      const streakAfter = await recordStreakActivity(user.id);
+      
       if (xpAmount > 0) {
         await addXp(user.id, xpAmount);
-        showXp(xpAmount);
-        await playPositive();
+        // Don't show XP toast here - will show in completion summary
       }
+      
+      // Calculate completion data for summary page
+      const questionXp = sessionXp;
+      const completionXp = xpAmount;
+      const totalXp = questionXp + completionXp;
+      const streakIncreased = streakAfter.count > streakBefore.count;
+      
+      // Check for rewards (future: avatar unlocks, module unlocks, etc.)
+      const hasRewards = false; // Currently no rewards system
+      
       if (!cancelled) {
+        setCompletionData({
+          totalXp,
+          questionXp,
+          completionXp,
+          streakBefore: streakBefore.count,
+          streakAfter: streakAfter.count,
+          streakIncreased,
+          hasRewards,
+        });
         setCompletionAwarded(true);
+        await playPositive();
       }
     };
 
@@ -2421,32 +2553,45 @@ export default function AYTSubtopicScreen() {
     return () => {
       cancelled = true;
     };
-  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, playPositive, showXp, subtopic, user?.id]);
+  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, playPositive, sessionXp, subtopic, user?.id]);
 
   const isLastPage = lesson ? pageIndex >= lesson.pages.length - 1 : true;
+  // Show advance button separately only for non-quiz pages
+  // Quiz pages show advance button inside XP panel
   const showAdvanceButton =
     lesson &&
     currentPage?.type !== 'completion' &&
-    ((currentPage?.type !== 'quiz' && !isLastPage) ||
-      (currentPage?.type === 'quiz' && isChoiceCorrect === true));
+    currentPage?.type !== 'quiz' &&
+    !isLastPage;
+
+  const isCompletionPage = currentPage?.type === 'completion';
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.topRow}>
-          <Pressable
-            style={styles.navButton}
-            onPress={() => router.back()}>
-            <Text style={styles.navButtonText}>{'‹'} Geri</Text>
-          </Pressable>
-          <Pressable
-            style={styles.navButton}
-            onPress={() => router.push('/')}>
-            <Text style={styles.navButtonText}>⌂ Ana Sayfa</Text>
-          </Pressable>
-        </View>
+        {!isCompletionPage && (
+          <View style={styles.topRow}>
+            <Pressable
+              style={styles.navButton}
+              onPress={() => router.back()}>
+              <Text style={styles.navButtonText}>{'‹'} Geri</Text>
+            </Pressable>
+            <Pressable
+              style={styles.navButton}
+              onPress={() => router.push('/')}>
+              <Text style={styles.navButtonText}>⌂ Ana Sayfa</Text>
+            </Pressable>
+          </View>
+        )}
 
-        <Text style={styles.headline}>{effectiveTitle}</Text>
+        {!isCompletionPage && (
+          <>
+            <Text style={styles.headline}>{effectiveTitle}</Text>
+            {lesson && lesson.pages.length > 0 && (
+              <ProgressDots totalPages={lesson.pages.length} currentPageIndex={pageIndex} />
+            )}
+          </>
+        )}
 
         {lesson && currentPage?.type === 'teaching' && (
           <View style={styles.pageCard}>
@@ -2583,17 +2728,78 @@ export default function AYTSubtopicScreen() {
           </View>
         )}
 
-        {lesson && currentPage?.type === 'completion' && (
-          <View style={styles.pageCard}>
-            <Text style={styles.completionTitle}>
-              {getCompletionMessage(currentPage)}
-            </Text>
-            <Pressable
-              style={styles.primaryButton}
-              onPress={handleCompletionPress}>
-              <Text style={styles.primaryButtonText}>Bitir</Text>
-            </Pressable>
-          </View>
+        {lesson && currentPage?.type === 'completion' && completionData && (
+          <>
+            {/* Completion Summary Page (Page 1) */}
+            {completionPageIndex === 0 && (
+              <View style={styles.pageCard}>
+                {/* Congratulations Header Box */}
+                <Animated.View style={[styles.rewardSection, styles.congratulationsBox, createSlideStyle(congratulationsAnim)]}>
+                  <Text style={styles.completionTitle}>
+                    🎉 TEBRİKLER! 🎉
+                  </Text>
+                  <Text style={styles.completionSubtitle}>
+                    Desen Tamamlandı!
+                  </Text>
+                </Animated.View>
+
+                {/* Medal Image */}
+                <Animated.View style={[styles.medalContainer, createSlideStyle(medalAnim)]}>
+                  <Image
+                    source={require('@/assets/images/medal.png')}
+                    style={styles.medalImage}
+                    resizeMode="contain"
+                  />
+                </Animated.View>
+
+                {/* XP Summary Section */}
+                <Animated.View style={[styles.rewardSection, createSlideStyle(xpAnim)]}>
+                  <Text style={styles.rewardSectionTitle}>BU MODÜLDE TOPLAM</Text>
+                  <Text style={styles.rewardMainValue}>
+                    ⭐ {completionData.totalXp} XP Kazandınız!
+                  </Text>
+                </Animated.View>
+
+                {/* Streak Section (only if streak increased) */}
+                {completionData.streakIncreased && (
+                  <Animated.View style={[styles.rewardSection, createSlideStyle(streakAnim)]}>
+                    <Text style={styles.rewardSectionTitle}>🔥 SERİ</Text>
+                    <Text style={styles.rewardMainValue}>
+                      Seriniz: {completionData.streakAfter} gün
+                    </Text>
+                  </Animated.View>
+                )}
+
+                {/* Button: İlerle if rewards exist, Bitir if not */}
+                <Pressable
+                  style={styles.primaryButton}
+                  onPress={completionData.hasRewards ? handleAdvanceToRewards : handleCompletionPress}>
+                  <Text style={styles.primaryButtonText}>
+                    {completionData.hasRewards ? 'İlerle' : 'Bitir'}
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+
+            {/* Rewards Page (Page 2) - Only shown if rewards exist */}
+            {completionPageIndex === 1 && completionData.hasRewards && (
+              <View style={styles.pageCard}>
+                <Text style={styles.completionTitle}>🎁 YENİ KAZANÇLAR</Text>
+                
+                {/* Rewards list - placeholder for future implementation */}
+                <View style={styles.rewardSection}>
+                  <Text style={styles.rewardItem}>✓ Yeni Avatar Açıldı</Text>
+                  <Text style={styles.rewardItem}>✓ Yeni Modül Açıldı</Text>
+                </View>
+
+                <Pressable
+                  style={styles.primaryButton}
+                  onPress={handleCompletionPress}>
+                  <Text style={styles.primaryButtonText}>Bitir</Text>
+                </Pressable>
+              </View>
+            )}
+          </>
         )}
 
         {showAdvanceButton && (
@@ -2806,6 +3012,62 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#111827',
     fontFamily: 'Montserrat_700Bold',
+    marginBottom: 8,
+  },
+  completionSubtitle: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#6b7280',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  rewardSection: {
+    marginBottom: 24,
+    padding: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    alignItems: 'center',
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+  },
+  congratulationsBox: {
+    marginTop: -8,
+  },
+  rewardSectionTitle: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontFamily: 'Montserrat_700Bold',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  rewardMainValue: {
+    fontSize: 24,
+    color: '#111827',
+    fontFamily: 'Montserrat_700Bold',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  rewardBreakdown: {
+    fontSize: 14,
+    color: '#6b7280',
+    textAlign: 'center',
+  },
+  rewardItem: {
+    fontSize: 16,
+    color: '#111827',
+    fontFamily: 'Montserrat_700Bold',
+    marginBottom: 8,
+  },
+  medalContainer: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  medalImage: {
+    width: 200,
+    height: 200,
   },
 });
 

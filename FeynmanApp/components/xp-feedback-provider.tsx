@@ -1,15 +1,22 @@
 import { ReactNode, createContext, useContext, useMemo, useRef, useState } from 'react';
-import { Animated, Dimensions, StyleSheet, Text } from 'react-native';
+import { Animated, Dimensions, StyleSheet, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+type XpToast = {
+  amount: number;
+  id: number;
+  onAdvance?: () => void;
+  showAdvance?: boolean;
+};
+
 type XpContextValue = {
-  showXp: (amount: number) => void;
+  showXp: (amount: number, options?: { onAdvance?: () => void; showAdvance?: boolean }) => void;
 };
 
 const XpFeedbackContext = createContext<XpContextValue | undefined>(undefined);
 
 export function XpFeedbackProvider({ children }: { children: ReactNode }) {
-  const [toast, setToast] = useState<{ amount: number; id: number } | null>(null);
+  const [toast, setToast] = useState<XpToast | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const insets = useSafeAreaInsets();
   const anim = useRef(new Animated.Value(0)).current;
@@ -24,28 +31,51 @@ export function XpFeedbackProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const showXp = (amount: number) => {
+  const showXp = (amount: number, options?: { onAdvance?: () => void; showAdvance?: boolean }) => {
     if (!Number.isFinite(amount) || amount <= 0) return;
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
     const nextId = Date.now();
-    setToast({ amount: Math.round(amount), id: nextId });
+    setToast({
+      amount: Math.round(amount),
+      id: nextId,
+      onAdvance: options?.onAdvance,
+      showAdvance: options?.showAdvance ?? false,
+    });
     anim.stopAnimation();
     Animated.timing(anim, {
       toValue: 1,
       duration: 350,
       useNativeDriver: true,
     }).start();
-    timeoutRef.current = setTimeout(() => {
-      hideToast(nextId);
-    }, 3000);
+    
+    // Only auto-hide if there's no advance button
+    if (!options?.showAdvance) {
+      timeoutRef.current = setTimeout(() => {
+        hideToast(nextId);
+      }, 3000);
+    }
+  };
+
+  const handleAdvance = () => {
+    if (toast?.onAdvance) {
+      toast.onAdvance();
+    }
+    if (toast) {
+      hideToast(toast.id);
+    }
   };
 
   const value = useMemo(() => ({ showXp }), []);
 
-  const screenHeight = Dimensions.get('window').height;
-  const toastHeight = screenHeight * 0.3;
+  // Calculate approximate content height based on whether button is shown
+  // ~180px with button (text + spacing + button + padding), ~100px without
+  const insetsValue = insets.bottom || 16;
+  const estimatedContentHeight = toast?.showAdvance ? 180 : 100;
+  const toastHeight = estimatedContentHeight + insetsValue + 32; // +32 for paddingTop
+  
   const translateY = anim.interpolate({
     inputRange: [0, 1],
     outputRange: [toastHeight, 0],
@@ -64,12 +94,19 @@ export function XpFeedbackProvider({ children }: { children: ReactNode }) {
             styles.toastContainer,
             {
               paddingBottom: Math.max(insets.bottom, 16),
+              paddingTop: 32,
               transform: [{ translateY }],
               opacity,
-              height: toastHeight,
             },
           ]}>
-          <Text style={styles.toastText}>{toast.amount} XP Kazandınız!</Text>
+          <Text style={styles.toastText}>⭐ {toast.amount} XP Kazandınız!</Text>
+          {toast.showAdvance && toast.onAdvance && (
+            <Pressable
+              style={styles.advanceButton}
+              onPress={handleAdvance}>
+              <Text style={styles.advanceButtonText}>İlerle</Text>
+            </Pressable>
+          )}
         </Animated.View>
       )}
     </XpFeedbackContext.Provider>
@@ -92,21 +129,41 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    backgroundColor: '#15803d',
+    backgroundColor: '#ffffff',
     paddingHorizontal: 32,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#065f46',
-    shadowOpacity: 0.35,
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.15,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: -6 },
     elevation: 20,
   },
   toastText: {
-    color: '#f0fdf4',
+    color: '#1e293b',
     fontSize: 20,
     fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
+    marginBottom: 24,
+  },
+  advanceButton: {
+    marginTop: 8,
+    alignSelf: 'center',
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 18,
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    shadowColor: '#1d4ed8',
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 8,
+  },
+  advanceButtonText: {
+    fontSize: 16,
+    color: '#ffffff',
+    fontFamily: 'Montserrat_700Bold',
   },
 });
 

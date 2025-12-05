@@ -235,11 +235,11 @@ export default function HomeScreen() {
                   <Text style={styles.episodeValue}>
                     {completedTopics} / {totalTopics}
                   </Text>
-                  <Image
+        <Image
                     source={item.visual}
                     style={[styles.visual, { height: imageHeight }]}
                     resizeMode="contain"
-                  />
+        />
                   <View style={styles.progressBarTrack}>
                     <View
                       style={[
