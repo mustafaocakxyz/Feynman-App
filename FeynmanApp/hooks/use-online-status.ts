@@ -21,6 +21,13 @@ export function useOnlineStatus() {
 
     setIsChecking(true);
     try {
+      // Defensive check: Ensure supabase and auth exist
+      if (!supabase || !supabase.auth || typeof supabase.auth.getSession !== 'function') {
+        console.warn('[useOnlineStatus] Supabase not available, assuming offline');
+        setIsOnline(false);
+        return;
+      }
+
       // Try to get the current session (lightweight operation)
       // This verifies we can actually reach Supabase, not just that navigator thinks we're online
       const { error } = await supabase.auth.getSession();
