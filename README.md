@@ -56,3 +56,9 @@
 ✅ Navigation tab UI geliştirmesi
 ✅ Welcome page UI geliştirmesi
 ✅ Authentication pages UI geliştirmesi
+
+### Gün #27 | 5 Aralık | Gamification ve UI Geliştirmeleri
+
+✅ Modüllerin tamamlanma sayfaları geliştirildi.
+✅ Modüllerin sonuna ödüller eklendi.
+✅ XP ve Streak ile kazanılan avatarlar eklendi.
