@@ -21,7 +21,8 @@ import { getCompletedSubtopics } from '@/lib/completion-storage';
 import { getStreakState } from '@/lib/streak-storage';
 import { getXpState } from '@/lib/xp-storage';
 import { getProfile, getAvatarSource, type AvatarId } from '@/lib/profile-storage';
-import { topicSubtopicsEntries } from '@/app/ayt-matematik/subtopics';
+import { topicSubtopicsEntries as aytSubtopicsEntries } from '@/app/ayt-matematik/subtopics.data';
+import { topicSubtopicsEntries as tytSubtopicsEntries } from '@/app/tyt-matematik/subtopics.data';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/auth-context';
 import { Colors } from '@/constants/theme';
@@ -29,25 +30,21 @@ import { Colors } from '@/constants/theme';
 export default function HomeScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const totalTopics = topicSubtopicsEntries.length;
 
   const modules = useMemo(
     () => [
       {
         id: 'ayt',
         name: 'AYT Matematik',
-        currentEpisode: 0,
-        totalEpisodes: topicSubtopicsEntries.reduce(
-          (acc, [, list]) => acc + list.length,
-          0,
-        ),
+        totalTopics: aytSubtopicsEntries.length,
+        totalSubtopics: aytSubtopicsEntries.reduce((acc, [, list]) => acc + list.length, 0),
         visual: require('@/assets/images/aytmath_logo.png'),
       },
       {
         id: 'tyt',
         name: 'TYT Matematik',
-        currentEpisode: 0,
-        totalEpisodes: 0,
+        totalTopics: tytSubtopicsEntries.length,
+        totalSubtopics: tytSubtopicsEntries.reduce((acc, [, list]) => acc + list.length, 0),
         visual: require('@/assets/images/partial-react-logo.png'),
       },
     ],
@@ -140,6 +137,9 @@ export default function HomeScreen() {
     if (moduleId === 'ayt') {
       router.push('/ayt-matematik' as never);
     }
+    if (moduleId === 'tyt') {
+      router.push('/tyt-matematik' as never);
+    }
   };
 
   return (
@@ -210,32 +210,24 @@ export default function HomeScreen() {
             nestedScrollEnabled={true}
             style={styles.flatList}
             renderItem={({ item }) => {
-              const totalSubtopics =
-                item.id === 'ayt'
-                  ? topicSubtopicsEntries.reduce(
-                      (acc, [, list]) => acc + list.length,
-                      0,
-                    )
-                  : 0;
-              const completedDesenCount =
-                item.id === 'ayt' ? completedSubtopics.length : 0;
+              const subtopicEntries =
+                item.id === 'ayt' ? aytSubtopicsEntries : tytSubtopicsEntries;
+              const totalSubtopics = item.totalSubtopics;
+              const completedDesenCount = completedSubtopics.filter((slug) =>
+                subtopicEntries.some(([, list]) => list.some((s) => s.slug === slug)),
+              ).length;
               const progressRatio =
                 totalSubtopics > 0 ? completedDesenCount / totalSubtopics : 0;
 
-              const completedTopics =
-                item.id === 'ayt'
-                  ? topicSubtopicsEntries.filter(([, list]) =>
-                      list.every((subtopic) =>
-                        completedSubtopics.includes(subtopic.slug),
-                      ),
-                    ).length
-                  : 0;
+              const completedTopics = subtopicEntries.filter(([, list]) =>
+                list.every((subtopic) => completedSubtopics.includes(subtopic.slug)),
+              ).length;
               return (
                 <View style={[styles.moduleCard, { width: screenWidth - 48 }]}>
                   <Text style={styles.moduleName}>{item.name}</Text>
                   <Text style={styles.episodeLabel}>Tamamlanan Konu</Text>
                   <Text style={styles.episodeValue}>
-                    {completedTopics} / {totalTopics}
+                    {completedTopics} / {item.totalTopics}
                   </Text>
         <Image
                     source={item.visual}
@@ -256,15 +248,13 @@ export default function HomeScreen() {
                   <Pressable
                     style={({ pressed }) => [
                       styles.ctaButton,
-                      item.id !== 'ayt' && styles.ctaButtonDisabled,
-                      pressed && item.id === 'ayt' && styles.ctaButtonPressed,
+                      pressed && styles.ctaButtonPressed,
                     ]}
                     onPress={() => handleContinue(item.id)}
-                    disabled={item.id !== 'ayt'}>
+                    disabled={false}>
                     <Text
                       style={[
                         styles.ctaText,
-                        item.id !== 'ayt' && styles.ctaTextDisabled,
                       ]}>
                       Devam Et
                     </Text>

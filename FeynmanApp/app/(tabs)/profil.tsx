@@ -15,6 +15,22 @@ import { Colors } from '@/constants/theme';
 import { getProfile, updateProfile, getAvatarSource, type AvatarId, VALID_AVATARS } from '@/lib/profile-storage';
 import { getUnlockedAvatars } from '@/lib/avatar-unlocks';
 
+const AVATAR_DESCRIPTIONS: Record<AvatarId, string> = {
+  '1': 'Kaydolduğunda açılır',
+  '2': 'Kaydolduğunda açılır',
+  '3': 'Kaydolduğunda açılır',
+  '4': 'Açmak için 1000XP topla.',
+  '5': 'Açmak için 3 gün seri yap.',
+};
+
+const AVATAR_LABELS: Record<AvatarId, string> = {
+  '1': 'Avatar 1',
+  '2': 'Avatar 2',
+  '3': 'Avatar 3',
+  '4': 'XP Kasıyorum',
+  '5': 'İstikrarlı',
+};
+
 export default function ProfileScreen() {
   const { user, signOut, loading } = useAuth();
   const [profileName, setProfileName] = useState('');
@@ -119,19 +135,21 @@ export default function ProfileScreen() {
             {/* Section 2: All Avatars Grid */}
             <View style={styles.avatarsSection}>
               <Text style={styles.sectionTitle}>Avatarlar</Text>
-              <View style={styles.avatarGrid}>
+              <View style={styles.avatarList}>
                 {VALID_AVATARS.map((id) => {
                   const isUnlocked = unlockedAvatars.includes(id);
                   const isSelected = avatarId === id;
                   const source = getAvatarSource(id);
+                  const description = AVATAR_DESCRIPTIONS[id];
+                  const label = AVATAR_LABELS[id];
 
                   return (
                     <Pressable
                       key={id}
                       style={[
-                        styles.gridAvatarContainer,
-                        isSelected && styles.gridAvatarContainerSelected,
-                        !isUnlocked && styles.gridAvatarContainerLocked,
+                        styles.listItem,
+                        isUnlocked && isSelected && styles.listItemSelected,
+                        !isUnlocked && styles.listItemLocked,
                       ]}
                       onPress={() => {
                         if (isUnlocked && !isSaving) {
@@ -140,26 +158,32 @@ export default function ProfileScreen() {
                       }}
                       disabled={!isUnlocked || isSaving}
                     >
-                      {source && (
-                        <Image
-                          source={source}
-                          style={[
-                            styles.gridAvatarImage,
-                            !isUnlocked && styles.gridAvatarImageLocked,
-                          ]}
-                          contentFit="cover"
-                        />
-                      )}
-                      {isSelected && isUnlocked && (
-                        <View style={styles.gridCheckmark}>
-                          <Text style={styles.gridCheckmarkText}>✓</Text>
-                        </View>
-                      )}
-                      {!isUnlocked && (
-                        <View style={styles.gridLockOverlay}>
-                          <Text style={styles.gridLockIcon}>🔒</Text>
-                        </View>
-                      )}
+                      <View style={styles.listAvatarWrapper}>
+                        {source && (
+                          <Image
+                            source={source}
+                            style={[
+                              styles.listAvatarImage,
+                              !isUnlocked && styles.listAvatarImageLocked,
+                            ]}
+                            contentFit="cover"
+                          />
+                        )}
+                        {!isUnlocked && (
+                          <View style={styles.listLockBadge}>
+                            <Text style={styles.listLockText}>🔒</Text>
+                          </View>
+                        )}
+                        {isUnlocked && isSelected && (
+                          <View style={styles.listCheckBadge}>
+                            <Text style={styles.listCheckText}>✓</Text>
+                          </View>
+                        )}
+                      </View>
+                      <View style={styles.listTextContainer}>
+                        <Text style={styles.listTitle}>{label}</Text>
+                        <Text style={styles.listDescription}>{description}</Text>
+                      </View>
                     </Pressable>
                   );
                 })}
@@ -299,65 +323,92 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.light.text,
   },
-  avatarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-    justifyContent: 'flex-start',
+  avatarList: {
+    gap: 12,
   },
-  gridAvatarContainer: {
-    width: '30%',
-    aspectRatio: 1,
-    borderRadius: 16,
-    borderWidth: 3,
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    padding: 14,
+    borderRadius: 14,
+    backgroundColor: '#fff',
+    borderWidth: 2,
     borderColor: 'transparent',
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+  },
+  listItemSelected: {
+    borderColor: Colors.light.tint,
+  },
+  listItemLocked: {
+    opacity: 0.75,
+  },
+  listAvatarWrapper: {
+    width: 72,
+    height: 72,
+    borderRadius: 16,
     overflow: 'hidden',
     position: 'relative',
   },
-  gridAvatarContainerSelected: {
-    borderColor: Colors.light.tint,
-  },
-  gridAvatarContainerLocked: {
-    opacity: 0.6,
-  },
-  gridAvatarImage: {
+  listAvatarImage: {
     width: '100%',
     height: '100%',
   },
-  gridAvatarImageLocked: {
-    opacity: 0.5,
+  listAvatarImageLocked: {
+    opacity: 0.45,
   },
-  gridCheckmark: {
+  listLockBadge: {
     position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 24,
-    height: 24,
+    top: 6,
+    right: 6,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: 12,
-    backgroundColor: Colors.light.tint,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#fff',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
   },
-  gridCheckmarkText: {
+  listLockText: {
     color: '#fff',
-    fontSize: 14,
     fontWeight: 'bold',
   },
-  gridLockOverlay: {
+  listCheckBadge: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    borderRadius: 16,
+    top: 6,
+    right: 6,
+    backgroundColor: Colors.light.tint,
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
   },
-  gridLockIcon: {
-    fontSize: 24,
+  listCheckText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  listTextContainer: {
+    flex: 1,
+    gap: 4,
+  },
+  listTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.light.text,
+  },
+  listDescription: {
+    fontSize: 14,
+    color: Colors.light.icon,
+  },
+  listStatus: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  listStatusUnlocked: {
+    color: '#16a34a',
+  },
+  listStatusLocked: {
+    color: '#b91c1c',
   },
   logoutButton: {
     backgroundColor: '#dc2626',

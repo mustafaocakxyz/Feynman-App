@@ -22,6 +22,8 @@ function RootLayoutNav() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="ayt-matematik/index" options={{ headerShown: false }} />
         <Stack.Screen name="ayt-matematik/[subtopic]" options={{ headerShown: false }} />
+        <Stack.Screen name="tyt-matematik/index" options={{ headerShown: false }} />
+        <Stack.Screen name="tyt-matematik/[subtopic]" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>
     </ProtectedRouteProvider>

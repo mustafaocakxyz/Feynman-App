@@ -71,4 +71,3 @@ export const subtopicTitleBySlug: Record<string, string> = allSubtopics.reduce(
   },
   {} as Record<string, string>,
 );
-

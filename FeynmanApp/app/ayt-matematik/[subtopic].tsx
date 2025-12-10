@@ -14,7 +14,7 @@ import { useLocalSearchParams, useRouter, useSegments } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Svg, { Line, Polygon, Rect, Ellipse, Text as SvgText, Defs, Marker, Polyline } from 'react-native-svg';
 
-import { subtopicTitleBySlug } from './subtopics';
+import { subtopicTitleBySlug } from './subtopics.data';
 import { markSubtopicCompleted } from '@/lib/completion-storage';
 import { recordStreakActivity, getStreakState } from '@/lib/streak-storage';
 import { addXp } from '@/lib/xp-storage';

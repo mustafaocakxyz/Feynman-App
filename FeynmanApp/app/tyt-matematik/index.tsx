@@ -1,22 +1,29 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { topicSubtopicsEntries } from './subtopics.data';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
 import { useAuth } from '@/contexts/auth-context';
 
-export default function AYTMatematikScreen() {
+export default function TYTMatematikScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [openTopic, setOpenTopic] = useState<string | null>(null);
   const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
 
-  const topics = topicSubtopicsEntries.map(([name, subtopics]) => ({
-    name,
-    subtopics,
-  }));
+  const topics = useMemo(
+    () =>
+      topicSubtopicsEntries.map(([name, subtopics]) => ({
+        name,
+        subtopics,
+      })),
+    [],
+  );
+
+  const totalTopics = topics.length;
+  const totalSubtopics = topics.reduce((acc, topic) => acc + topic.subtopics.length, 0);
 
   const toggleTopic = (topic: string) => {
     setOpenTopic((current) => (current === topic ? null : topic));
@@ -53,10 +60,10 @@ export default function AYTMatematikScreen() {
           </Pressable>
         </View>
 
-        <Text style={styles.headline}>AYT Matematik</Text>
+        <Text style={styles.headline}>TYT Matematik</Text>
 
         <Image
-          source={require('@/assets/images/aytmath_logo.png')}
+          source={require('@/assets/images/partial-react-logo.png')}
           style={styles.visual}
           resizeMode="contain"
         />
@@ -66,28 +73,27 @@ export default function AYTMatematikScreen() {
             <Text style={styles.detailIcon}>📘</Text>
             <View>
               <Text style={styles.detailLabel}>Konular</Text>
-              <Text style={styles.detailValue}>13</Text>
+              <Text style={styles.detailValue}>{totalTopics}</Text>
             </View>
           </View>
           <View style={styles.detailCard}>
             <Text style={styles.detailIcon}>💡</Text>
             <View>
               <Text style={styles.detailLabel}>Desenler</Text>
-              <Text style={styles.detailValue}>130</Text>
+              <Text style={styles.detailValue}>{totalSubtopics}</Text>
             </View>
           </View>
         </View>
+
         <View style={styles.topicList}>
           {topics.map((topic) => {
             const isOpen = openTopic === topic.name;
-            const totalSubtopics = topic.subtopics.length;
+            const topicTotal = topic.subtopics.length;
             const completedCount = topic.subtopics.filter((subtopic) =>
               completedSubtopics.includes(subtopic.slug),
             ).length;
             const topicTitle =
-              totalSubtopics > 0
-                ? `${topic.name} (${completedCount} / ${totalSubtopics} tamamlandı)`
-                : topic.name;
+              topicTotal > 0 ? `${topic.name} (${completedCount} / ${topicTotal} tamamlandı)` : topic.name;
             return (
               <View key={topic.name} style={[styles.topicCard, isOpen && styles.topicCardOpen]}>
                 <Pressable
@@ -111,7 +117,7 @@ export default function AYTMatematikScreen() {
                             completedSubtopics.includes(subtopic.slug) &&
                               styles.subtopicItemCompleted,
                           ]}
-                          onPress={() => router.push(`/ayt-matematik/${subtopic.slug}`)}>
+                          onPress={() => router.push(`/tyt-matematik/${subtopic.slug}`)}>
                           <Text style={styles.subtopicText}>{subtopic.title}</Text>
                           <Text style={styles.subtopicArrow}>›</Text>
                         </Pressable>
@@ -314,5 +320,3 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_700Bold',
   },
 });
-
-
