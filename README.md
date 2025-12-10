@@ -63,4 +63,8 @@
 ✅ Modüllerin sonuna ödüller eklendi.
 ✅ XP ve Streak ile kazanılan avatarlar eklendi.
 
-### Gün 32 | 10 Aralık | Avatar Açıklamaları +Ekstra Modüller
+### Gün 32 | 10 Aralık | Avatar, Streak ve XP Sayfaları
+
+✅ Avatarlara açıklamalar eklendi.
+✅ Streak için ayrı bir sayfa oluşturuldu.
+✅ XP için ayrı bir sayfa oluşturuldu.
