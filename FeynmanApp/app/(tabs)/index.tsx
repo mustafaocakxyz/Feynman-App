@@ -182,20 +182,30 @@ export default function HomeScreen() {
         </Animated.View>
 
         <Animated.View style={[styles.metricsRow, makeAnimatedStyle(metricsAnim)]}>
-          <View style={styles.metricCard}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.metricCard,
+              pressed && styles.metricCardPressed,
+            ]}
+            onPress={() => router.push('/(tabs)/streak' as never)}>
             <Text style={styles.metricIcon}>🔥</Text>
             <View>
               <Text style={styles.metricLabel}>Gün Serisi</Text>
               <Text style={styles.metricValue}>{streak}</Text>
             </View>
-          </View>
-          <View style={styles.metricCard}>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.metricCard,
+              pressed && styles.metricCardPressed,
+            ]}
+            onPress={() => router.push('/(tabs)/xp' as never)}>
             <Text style={styles.metricIcon}>⭐️</Text>
             <View>
               <Text style={styles.metricLabel}>XP</Text>
               <Text style={styles.metricValue}>{xp}</Text>
             </View>
-          </View>
+          </Pressable>
         </Animated.View>
 
         <Animated.View style={[makeAnimatedStyle(modulesAnim), styles.flatListContainer]}>
@@ -344,6 +354,10 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
+  },
+  metricCardPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
   },
   metricIcon: {
     fontSize: 28,
