@@ -2342,7 +2342,7 @@ export default function AYTSubtopicScreen() {
   const parentPath = segments.slice(0, Math.max(segments.length - 1, 0)).join('/');
   const completionTarget = parentPath ? `/${parentPath}` : '/';
   const { showXp } = useXpFeedback();
-  const { playPositive, playNegative } = useSoundEffects();
+  const { playPositive, playNegative, playCorrect, playCompletion } = useSoundEffects();
 
   const lesson = useMemo(() => {
     if (!subtopic) return null;
@@ -2486,7 +2486,7 @@ export default function AYTSubtopicScreen() {
         showAdvance: isQuizPage,
         onAdvance: isQuizPage ? handleAdvance : undefined,
       });
-      await playPositive();
+      await playCorrect();
     } else if (!isCorrectNow) {
       await playNegative();
     }
@@ -2577,7 +2577,7 @@ export default function AYTSubtopicScreen() {
           newlyUnlockedAvatars,
         });
         setCompletionAwarded(true);
-        await playPositive();
+        await playCompletion();
       }
     };
 
@@ -2586,7 +2586,7 @@ export default function AYTSubtopicScreen() {
     return () => {
       cancelled = true;
     };
-  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, playPositive, sessionXp, subtopic, user?.id]);
+  }, [completionAwarded, currentPage?.id, currentPage?.type, lesson, playCompletion, sessionXp, subtopic, user?.id]);
 
   const isLastPage = lesson ? pageIndex >= lesson.pages.length - 1 : true;
   // Show advance button separately only for non-quiz pages

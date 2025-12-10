@@ -17,10 +17,18 @@ export function useSoundEffects() {
   const negativePlayer = useAudioPlayer(
     isWeb ? null : require('@/assets/sounds/negative.mp3'),
   );
+  const correctPlayer = useAudioPlayer(
+    isWeb ? null : require('@/assets/sounds/correct.mp3'),
+  );
+  const completionPlayer = useAudioPlayer(
+    isWeb ? null : require('@/assets/sounds/completion.mp3'),
+  );
 
   // Web audio refs
   const webPositiveRef = useRef<HTMLAudioElement | null>(null);
   const webNegativeRef = useRef<HTMLAudioElement | null>(null);
+  const webCorrectRef = useRef<HTMLAudioElement | null>(null);
+  const webCompletionRef = useRef<HTMLAudioElement | null>(null);
 
   // Verify players are valid (not just truthy, but actually usable)
   const isPlayerReady = (player: ReturnType<typeof useAudioPlayer> | null) => {
@@ -39,22 +47,32 @@ export function useSoundEffects() {
 
     const loadWebAudio = async () => {
       try {
-        const [positiveAsset, negativeAsset] = await Asset.loadAsync([
+        const [positiveAsset, negativeAsset, correctAsset, completionAsset] = await Asset.loadAsync([
           require('@/assets/sounds/positive.mp3'),
           require('@/assets/sounds/negative.mp3'),
+          require('@/assets/sounds/correct.mp3'),
+          require('@/assets/sounds/completion.mp3'),
         ]);
         if (cancelled) return;
 
         const positiveUri = positiveAsset.localUri ?? positiveAsset.uri;
         const negativeUri = negativeAsset.localUri ?? negativeAsset.uri;
+        const correctUri = correctAsset.localUri ?? correctAsset.uri;
+        const completionUri = completionAsset.localUri ?? completionAsset.uri;
 
         if (typeof window !== 'undefined') {
           const positive = new window.Audio(positiveUri);
           positive.preload = 'auto';
           const negative = new window.Audio(negativeUri);
           negative.preload = 'auto';
+          const correct = new window.Audio(correctUri);
+          correct.preload = 'auto';
+          const completion = new window.Audio(completionUri);
+          completion.preload = 'auto';
           webPositiveRef.current = positive;
           webNegativeRef.current = negative;
+          webCorrectRef.current = correct;
+          webCompletionRef.current = completion;
         }
       } catch (error) {
         console.warn('Ses efektleri yüklenemedi (web)', error);
@@ -72,6 +90,14 @@ export function useSoundEffects() {
       if (webNegativeRef.current) {
         webNegativeRef.current.pause();
         webNegativeRef.current = null;
+      }
+      if (webCorrectRef.current) {
+        webCorrectRef.current.pause();
+        webCorrectRef.current = null;
+      }
+      if (webCompletionRef.current) {
+        webCompletionRef.current.pause();
+        webCompletionRef.current = null;
       }
     };
   }, []);
@@ -138,7 +164,67 @@ export function useSoundEffects() {
           setAudioError(true);
         }
       },
+      playCorrect: async () => {
+        if (isWeb) {
+          const audio = webCorrectRef.current;
+          if (!audio) return;
+          try {
+            audio.currentTime = 0;
+            await audio.play();
+          } catch (error) {
+            console.warn('Correct ses çalınamadı (web)', error);
+          }
+          return;
+        }
+
+        // Native: use expo-audio player
+        if (audioError || !isPlayerReady(correctPlayer)) {
+          console.warn('Audio player not ready (correct)');
+          return;
+        }
+        try {
+          // Replay from beginning
+          if (correctPlayer) {
+            correctPlayer.pause();
+            correctPlayer.seekTo(0);
+            correctPlayer.play();
+          }
+        } catch (error) {
+          console.warn('Correct ses çalınamadı (native)', error);
+          setAudioError(true);
+        }
+      },
+      playCompletion: async () => {
+        if (isWeb) {
+          const audio = webCompletionRef.current;
+          if (!audio) return;
+          try {
+            audio.currentTime = 0;
+            await audio.play();
+          } catch (error) {
+            console.warn('Completion ses çalınamadı (web)', error);
+          }
+          return;
+        }
+
+        // Native: use expo-audio player
+        if (audioError || !isPlayerReady(completionPlayer)) {
+          console.warn('Audio player not ready (completion)');
+          return;
+        }
+        try {
+          // Replay from beginning
+          if (completionPlayer) {
+            completionPlayer.pause();
+            completionPlayer.seekTo(0);
+            completionPlayer.play();
+          }
+        } catch (error) {
+          console.warn('Completion ses çalınamadı (native)', error);
+          setAudioError(true);
+        }
+      },
     }),
-    [positivePlayer, negativePlayer, audioError],
+    [positivePlayer, negativePlayer, correctPlayer, completionPlayer, audioError],
   );
 }
