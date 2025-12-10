@@ -45,7 +45,7 @@ export default function HomeScreen() {
         name: 'TYT Matematik',
         totalTopics: tytSubtopicsEntries.length,
         totalSubtopics: tytSubtopicsEntries.reduce((acc, [, list]) => acc + list.length, 0),
-        visual: require('@/assets/images/partial-react-logo.png'),
+        visual: require('@/assets/images/tytmath_logo.png'),
       },
     ],
     [],

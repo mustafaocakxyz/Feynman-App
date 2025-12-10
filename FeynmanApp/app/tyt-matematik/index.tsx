@@ -63,7 +63,7 @@ export default function TYTMatematikScreen() {
         <Text style={styles.headline}>TYT Matematik</Text>
 
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
+          source={require('@/assets/images/tytmath_logo.png')}
           style={styles.visual}
           resizeMode="contain"
         />
