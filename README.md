@@ -62,3 +62,5 @@
 ✅ Modüllerin tamamlanma sayfaları geliştirildi.
 ✅ Modüllerin sonuna ödüller eklendi.
 ✅ XP ve Streak ile kazanılan avatarlar eklendi.
+
+### Gün 32 | 10 Aralık | Avatar Açıklamaları +Ekstra Modüller
