@@ -585,22 +585,28 @@ export default function QuizScreen() {
           <View style={styles.idleContainer}>
             <Text style={styles.title}>Quiz Modu</Text>
             <Text style={styles.subtitle}>
-              Tamamladığın konulardan rastgele sorular çöz!
+              Tamamladığın konulardan rastgele sorular çöz, ödüller kazan!
             </Text>
+            
+            <Image
+              source={require('@/assets/images/quiz.png')}
+              style={styles.quizImage}
+              resizeMode="contain"
+            />
             
             {!hasEnough ? (
               <View style={styles.warningBox}>
                 <Text style={styles.warningText}>
-                  Quiz başlatmak için en az 3 tamamlanmış konu gerekiyor.
+                  Quiz başlatmak için en az 3 konu tamamlaman gerekiyor.
                 </Text>
                 <Text style={styles.warningSubtext}>
-                  Şu anda {availableQuizCount} quiz mevcut.
+                  Şu anda {availableQuizCount} soru mevcut.
                 </Text>
               </View>
             ) : (
               <View style={styles.infoBox}>
                 <Text style={styles.infoText}>
-                  {availableQuizCount} quiz mevcut
+                  {availableQuizCount} soru mevcut
                 </Text>
                 <Text style={styles.infoSubtext}>
                   Her doğru cevap: +10 XP{'\n'}
@@ -756,7 +762,7 @@ export default function QuizScreen() {
 
         {quizState === 'completed' && (
           <View style={styles.completedContainer}>
-            <Text style={styles.completedTitle}>🎉 Tebrikler!</Text>
+            <Text style={styles.completedTitle}>🎉 Tebrikler</Text>
             <Text style={styles.completedText}>
               Tüm soruları doğru cevapladın!
             </Text>
@@ -789,7 +795,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: '700',
     color: '#0f172a',
     fontFamily: 'Montserrat_700Bold',
   },
@@ -798,6 +803,11 @@ const styles = StyleSheet.create({
     color: '#64748b',
     textAlign: 'center',
     fontFamily: 'Montserrat_400Regular',
+  },
+  quizImage: {
+    width: '100%',
+    height: 280,
+    marginVertical: 16,
   },
   warningBox: {
     backgroundColor: '#fef2f2',
@@ -861,7 +871,6 @@ const styles = StyleSheet.create({
   startButtonText: {
     color: '#ffffff',
     fontSize: 18,
-    fontWeight: '700',
     fontFamily: 'Montserrat_700Bold',
   },
   quizContainer: {
@@ -986,7 +995,6 @@ const styles = StyleSheet.create({
   },
   gameOverTitle: {
     fontSize: 32,
-    fontWeight: '700',
     color: '#dc2626',
     fontFamily: 'Montserrat_700Bold',
   },
@@ -1008,7 +1016,6 @@ const styles = StyleSheet.create({
   },
   completedTitle: {
     fontSize: 32,
-    fontWeight: '700',
     color: '#16a34a',
     fontFamily: 'Montserrat_700Bold',
   },
@@ -1021,7 +1028,6 @@ const styles = StyleSheet.create({
   completedXp: {
     fontSize: 20,
     color: '#2563eb',
-    fontWeight: '700',
     fontFamily: 'Montserrat_700Bold',
   },
   returnButton: {
@@ -1038,7 +1044,6 @@ const styles = StyleSheet.create({
   returnButtonText: {
     color: '#ffffff',
     fontSize: 18,
-    fontWeight: '700',
     fontFamily: 'Montserrat_700Bold',
   },
 });

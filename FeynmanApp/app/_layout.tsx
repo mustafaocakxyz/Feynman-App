@@ -6,7 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+import { Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { XpFeedbackProvider } from '@/components/xp-feedback-provider';
 import { AuthProvider } from '@/contexts/auth-context';
 import { ProtectedRouteProvider } from '@/components/protected-route';
@@ -38,6 +38,8 @@ export default function RootLayout() {
   console.log('[RootLayout] Color scheme loaded');
   
   const [fontsLoaded, fontError] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_600SemiBold,
     Montserrat_700Bold,
   });
   

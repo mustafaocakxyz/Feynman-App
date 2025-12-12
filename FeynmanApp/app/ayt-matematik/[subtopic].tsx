@@ -2769,7 +2769,7 @@ export default function AYTSubtopicScreen() {
                 {/* Congratulations Header Box */}
                 <Animated.View style={[styles.rewardSection, styles.congratulationsBox, createSlideStyle(congratulationsAnim)]}>
                   <Text style={styles.completionTitle}>
-                    🎉 TEBRİKLER! 🎉
+                    🎉 TEBRİKLER
                   </Text>
                   <Text style={styles.completionSubtitle}>
                     Desen Tamamlandı!
