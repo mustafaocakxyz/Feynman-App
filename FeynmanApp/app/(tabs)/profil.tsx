@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
 import { Image } from 'expo-image';
@@ -89,12 +90,13 @@ export default function ProfileScreen() {
   const avatarSource = getAvatarSource(avatarId);
   const displayName = profileName || user?.user_metadata?.name || 'Kullanıcı';
   const displayInitial = displayName.charAt(0).toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U';
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView 
         style={styles.scrollView}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingTop: Math.max(insets.top, 16) }]}
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>Profil</Text>

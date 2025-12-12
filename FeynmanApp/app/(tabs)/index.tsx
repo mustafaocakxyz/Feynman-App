@@ -148,11 +148,14 @@ export default function HomeScreen() {
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom, 24) },
+          { 
+            paddingTop: Math.max(insets.top, 16),
+            paddingBottom: Math.max(insets.bottom, 24),
+          },
         ]}
         showsVerticalScrollIndicator={false}
         bounces={true}>
-        <Animated.View style={[styles.header, makeAnimatedStyle(headerAnim)]}>
+        <Animated.View style={[styles.topRow, makeAnimatedStyle(headerAnim)]}>
           {(() => {
             const avatarSource = userAvatarId ? getAvatarSource(userAvatarId) : null;
             const displayName = userName || user?.user_metadata?.name || 'Kullanıcı';
@@ -160,53 +163,52 @@ export default function HomeScreen() {
             
             return (
               <>
-                <Pressable onPress={() => router.push('/profil' as never)}>
+                <Pressable onPress={() => router.push('/(tabs)/profil' as never)}>
                   {avatarSource ? (
                     <ExpoImage
                       source={avatarSource}
-                      style={styles.avatar}
+                      style={styles.topAvatar}
                       contentFit="cover"
                     />
                   ) : (
-                    <View style={styles.avatarPlaceholder}>
-                      <Text style={styles.avatarPlaceholderText}>{displayInitial}</Text>
+                    <View style={styles.topAvatarPlaceholder}>
+                      <Text style={styles.topAvatarPlaceholderText}>{displayInitial}</Text>
                     </View>
                   )}
                 </Pressable>
-                <Text style={styles.welcomeText}>
-                  Hoş geldin <Text style={styles.nameText}>{displayName}</Text>
-                </Text>
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.topMetricCard,
+                    pressed && styles.metricCardPressed,
+                  ]}
+                  onPress={() => router.push('/(tabs)/streak' as never)}>
+                  <Text style={styles.metricIcon}>🔥</Text>
+                  <Text style={styles.metricValue}>{streak}</Text>
+                </Pressable>
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.topMetricCard,
+                    pressed && styles.metricCardPressed,
+                  ]}
+                  onPress={() => router.push('/(tabs)/xp' as never)}>
+                  <Text style={styles.metricIcon}>⭐️</Text>
+                  <Text style={styles.metricValue}>{xp}</Text>
+                </Pressable>
               </>
             );
           })()}
         </Animated.View>
 
-        <Animated.View style={[styles.metricsRow, makeAnimatedStyle(metricsAnim)]}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.metricCard,
-              pressed && styles.metricCardPressed,
-            ]}
-            onPress={() => router.push('/(tabs)/streak' as never)}>
-            <Text style={styles.metricIcon}>🔥</Text>
-            <View>
-              <Text style={styles.metricLabel}>Gün Serisi</Text>
-              <Text style={styles.metricValue}>{streak}</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.metricCard,
-              pressed && styles.metricCardPressed,
-            ]}
-            onPress={() => router.push('/(tabs)/xp' as never)}>
-            <Text style={styles.metricIcon}>⭐️</Text>
-            <View>
-              <Text style={styles.metricLabel}>XP</Text>
-              <Text style={styles.metricValue}>{xp}</Text>
-            </View>
-          </Pressable>
-        </Animated.View>
+        <Pressable
+          style={({ pressed }) => [
+            styles.quizButton,
+            pressed && styles.quizButtonPressed,
+          ]}
+          onPress={() => router.push('/(tabs)/quiz' as never)}>
+          <Text style={styles.quizButtonEmoji}>❓</Text>
+          <Text style={styles.quizButtonText}>Kendini test et!</Text>
+          <Text style={styles.quizButtonArrow}>›</Text>
+        </Pressable>
 
         <Animated.View style={[makeAnimatedStyle(modulesAnim), styles.flatListContainer]}>
           <FlatList
@@ -302,38 +304,44 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 16,
   },
-  header: {
+  topRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
+    marginBottom: 24,
   },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  topAvatar: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
   },
-  avatarPlaceholder: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  topAvatarPlaceholder: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     backgroundColor: Colors.light.tint,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarPlaceholderText: {
+  topAvatarPlaceholderText: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
   },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: '500',
-    color: '#000000',
-    fontFamily: 'Montserrat_700Bold',
-  },
-  nameText: {
-    color: '#1d4ed8',
-    fontFamily: 'Montserrat_700Bold',
+  topMetricCard: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    borderRadius: 16,
+    backgroundColor: '#f3f4f6',
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.14,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
   },
   metricsRow: {
     flexDirection: 'row',
@@ -376,6 +384,39 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#111827',
     fontFamily: 'Montserrat_700Bold',
+  },
+  quizButton: {
+    marginTop: 24,
+    backgroundColor: '#2563eb',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#1d4ed8',
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+  },
+  quizButtonPressed: {
+    opacity: 0.8,
+    transform: [{ scale: 0.98 }],
+  },
+  quizButtonEmoji: {
+    fontSize: 24,
+  },
+  quizButtonText: {
+    flex: 1,
+    fontSize: 16,
+    color: '#ffffff',
+    fontFamily: 'Montserrat_700Bold',
+    marginLeft: 12,
+  },
+  quizButtonArrow: {
+    fontSize: 24,
+    color: '#ffffff',
   },
   flatListContainer: {
     marginVertical: 8,

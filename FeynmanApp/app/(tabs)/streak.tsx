@@ -1,4 +1,5 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/theme';
 import { useFocusEffect } from '@react-navigation/native';
@@ -107,9 +108,11 @@ export default function StreakScreen() {
     return days;
   }, [streakCount, lastActivityDate]);
 
+  const insets = useSafeAreaInsets();
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 16) }]}>
         <View style={styles.navRow}>
           <Pressable style={styles.backButton} onPress={() => router.push('/(tabs)' as never)}>
             <Text style={styles.backButtonText}>{'<'} Geri</Text>

@@ -1,5 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -48,9 +49,11 @@ export default function TYTMatematikScreen() {
     }, [user?.id]),
   );
 
+  const insets = useSafeAreaInsets();
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 24) }]}>
         <View style={styles.navRow}>
           <Pressable style={styles.backButton} onPress={() => router.back()}>
             <Text style={styles.backButtonText}>{'<'} Geri</Text>

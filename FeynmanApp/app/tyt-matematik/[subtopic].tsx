@@ -1,4 +1,5 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '@/constants/theme';
 import { subtopicTitleBySlug } from './subtopics.data';
@@ -8,10 +9,11 @@ export default function TYTSubtopicScreen() {
   const { subtopic } = useLocalSearchParams<{ subtopic?: string }>();
 
   const title = subtopic ? subtopicTitleBySlug[subtopic] ?? 'Alt Konu' : 'Alt Konu';
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 32) }]}>
         <View style={styles.navRow}>
           <Pressable style={styles.navButton} onPress={() => router.back()}>
             <Text style={styles.navButtonText}>{'<'} Geri</Text>

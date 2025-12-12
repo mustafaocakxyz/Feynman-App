@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, useSegments } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Svg, { Line, Polygon, Rect, Ellipse, Text as SvgText, Defs, Marker, Polyline } from 'react-native-svg';
@@ -2598,10 +2599,11 @@ export default function AYTSubtopicScreen() {
     !isLastPage;
 
   const isCompletionPage = currentPage?.type === 'completion';
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 32) }]}>
         {!isCompletionPage && (
           <View style={styles.topRow}>
             <Pressable

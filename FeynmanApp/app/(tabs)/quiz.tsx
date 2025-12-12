@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Svg, { Line, Polygon, Rect, Ellipse, Text as SvgText, Defs, Marker, Polyline } from 'react-native-svg';
@@ -578,9 +579,11 @@ export default function QuizScreen() {
   const currentQuiz = selectedQuizzes[currentQuestionIndex];
   const hasEnough = hasEnoughQuizzes(completedSubtopics);
 
+  const insets = useSafeAreaInsets();
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 32) }]}>
         {quizState === 'idle' && (
           <View style={styles.idleContainer}>
             <Text style={styles.title}>Quiz Modu</Text>

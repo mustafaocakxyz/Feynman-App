@@ -1,4 +1,5 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable, Animated } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/theme';
 import { useFocusEffect } from '@react-navigation/native';
@@ -119,9 +120,11 @@ export default function XPScreen() {
   // Full progress bar height representing MAX_XP range
   const PROGRESS_BAR_HEIGHT = (MAX_XP / VISIBLE_MAX_XP) * CONTAINER_HEIGHT;
 
+  const insets = useSafeAreaInsets();
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 16) }]}>
         <View style={styles.navRow}>
           <Pressable style={styles.backButton} onPress={() => router.push('/(tabs)' as never)}>
             <Text style={styles.backButtonText}>{'<'} Geri</Text>
