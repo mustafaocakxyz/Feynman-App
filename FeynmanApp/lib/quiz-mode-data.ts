@@ -209,4 +209,194 @@ export const quizModePages: QuizModePage[] = [
     ],
     correctChoiceId: 'two-limit',
   },
+  // TYT Matematik - Pozitif Negatif Sayılar
+  {
+    id: 'quiz-pozitif-negatif-1',
+    subtopicSlug: 'pozitif-negatif-sayilar',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'Aşağıdaki çarpma işleminin sonucu nedir?',
+      },
+      {
+        kind: 'formula',
+        content: '(-4) \\cdot (-5) = ?',
+      },
+    ],
+    hint: 'Aynı işaretler çarpılınca sonuç pozitif olur!',
+    choices: [
+      { id: 'twenty', label: '20' },
+      { id: 'negative-twenty', label: '-20' },
+    ],
+    correctChoiceId: 'twenty',
+  },
+  // TYT Matematik - Denklem Kurma
+  {
+    id: 'quiz-denklem-kurma-1',
+    subtopicSlug: 'denklem-kurma',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: '"Bir sayının 4 eksiğinin 3 katı" cümlesinin matematikçesi nedir?',
+      },
+    ],
+    hint: 'Sıraya ve paranteze dikkat et!',
+    choices: [
+      { id: 'three-x-minus-four', label: '3(x-4)' },
+      { id: 'three-x-minus-four-wrong', label: '3x-4' },
+    ],
+    correctChoiceId: 'three-x-minus-four',
+  },
+  // TYT Matematik - Faktöriyel
+  {
+    id: 'quiz-faktoriyel-1',
+    subtopicSlug: 'faktoriyel',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: '3! işleminin sonucu kaçtır?',
+      },
+      {
+        kind: 'formula',
+        content: '3! = 3 \\cdot 2 \\cdot 1',
+      },
+    ],
+    choices: [
+      { id: 'six', label: '6' },
+      { id: 'three', label: '3' },
+    ],
+    correctChoiceId: 'six',
+  },
+  // TYT Matematik - Tek & Çift Sayılar
+  {
+    id: 'quiz-tek-cift-toplama-1',
+    subtopicSlug: 'tek-cift-sayilar',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'a + b toplamı ÇİFT olduğuna göre aşağıdakilerden hangisi doğrudur?',
+      },
+    ],
+    hint: 'Aynı türlerin toplamı ÇİFT olur!',
+    choices: [
+      { id: 'tek-tek', label: 'a = tek, b = tek' },
+      { id: 'tek-cift', label: 'a = tek, b = çift' },
+    ],
+    correctChoiceId: 'tek-tek',
+  },
+  {
+    id: 'quiz-tek-cift-carpim-1',
+    subtopicSlug: 'tek-cift-sayilar',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'a = tek, b = çift bilgisi veriliyor.',
+      },
+      {
+        kind: 'text',
+        content: 'c\'nin türü bilinmiyor.',
+      },
+      {
+        kind: 'text',
+        content: 'Aşağıdakilerden hangisi kesinlikle çifttir?',
+      },
+    ],
+    choices: [
+      { id: 'a-carpim-c', label: 'a x c' },
+      { id: 'b-carpim-c', label: 'b x c' },
+    ],
+    correctChoiceId: 'b-carpim-c',
+  },
+  // TYT Matematik - Sayı Kümeleri
+  {
+    id: 'quiz-sayi-kumeleri-1',
+    subtopicSlug: 'sayi-kumeleri',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'Aşağıdaki sayılardan hangisi bir tam sayıdır ANCAK doğal sayı DEĞİLDİR?',
+      },
+    ],
+    choices: [
+      { id: 'negative-two', label: '-2' },
+      { id: 'five', label: '5' },
+    ],
+    correctChoiceId: 'negative-two',
+  },
+  {
+    id: 'quiz-sayi-kumeleri-2',
+    subtopicSlug: 'sayi-kumeleri',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'Aşağıdakilerden hangisi Rasyonel Sayılar kümesindedir ANCAK Tam Sayılar kümesinde DEĞİLDİR?',
+      },
+    ],
+    choices: [
+      { id: 'fifty', label: '50' },
+      { id: 'one-point-five', label: '1.5' },
+    ],
+    correctChoiceId: 'one-point-five',
+  },
+  // TYT Matematik - Ardışık Sayılar
+  {
+    id: 'quiz-ardisik-sayilar-1',
+    subtopicSlug: 'ardisik-sayilar',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'Ardışık üç tane TEK sayının ilki 5\'e eşitse üçüncüsü kaça eşittir?',
+      },
+    ],
+    choices: [
+      { id: 'nine', label: '9' },
+      { id: 'seven', label: '7' },
+    ],
+    correctChoiceId: 'nine',
+  },
+  {
+    id: 'quiz-ardisik-sayilar-2',
+    subtopicSlug: 'ardisik-sayilar',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'Ardışık üç tane ÇİFT sayının toplamı 12\'ye eşitse bu sayılar aşağıdakilerden hangisidir?',
+      },
+    ],
+    choices: [
+      { id: 'two-four-six', label: '2 - 4 - 6' },
+      { id: 'three-five-seven', label: '3 - 5 - 7' },
+    ],
+    correctChoiceId: 'two-four-six',
+  },
+  // TYT Matematik - Asal Sayılar
+  {
+    id: 'quiz-asal-sayilar-1',
+    subtopicSlug: 'asal-sayilar',
+    type: 'quiz',
+    blocks: [
+      {
+        kind: 'text',
+        content: 'Aşağıdakilerden hangisi bir Asal Sayıdır?',
+      },
+      {
+        kind: 'formula',
+        content: '9 \\quad \\text{veya} \\quad 11',
+      },
+    ],
+    choices: [
+      { id: 'eleven', label: '11' },
+      { id: 'nine', label: '9' },
+    ],
+    correctChoiceId: 'eleven',
+  },
 ];

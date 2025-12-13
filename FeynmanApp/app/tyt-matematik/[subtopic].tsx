@@ -324,6 +324,448 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
+  'tek-cift-sayilar': {
+    title: 'Tek & Çift Sayılar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'tek-cift-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: '2\'ye tam bölünen sayılar ÇİFT, bölünemeyenler TEK sayıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Çiftler:',
+          },
+          {
+            kind: 'formula',
+            content: '0, 2, 4, 6...',
+          },
+          {
+            kind: 'text',
+            content: 'Tekler:',
+          },
+          {
+            kind: 'formula',
+            content: '1, 3, 5, 7...',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-cift-sorular',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sorularda iki sayının toplamı verilir ve "Hangisi kesinlikle çifttir?" veya "Hangisi tek olabilir?" gibi sorular sorulur.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu sorularda bilmen gereken en önemli kural şudur:',
+          },
+          {
+            kind: 'text',
+            content: 'İki aynı türü toplarsan sonuç ÇİFT olur.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-cift-toplama-kurallari',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Kural: İki aynı türü toplarsan sonuç ÇİFT olur.',
+          },
+          {
+            kind: 'text',
+            content: 'Tek + Tek = Çift',
+          },
+          {
+            kind: 'formula',
+            content: '3 + 5 = 8',
+          },
+          {
+            kind: 'text',
+            content: 'Çift + Çift = Çift',
+          },
+          {
+            kind: 'formula',
+            content: '2 + 4 = 6',
+          },
+          {
+            kind: 'text',
+            content: 'İki farklı tür toplanırsa sonuç TEK olur.',
+          },
+          {
+            kind: 'text',
+            content: 'Tek + Çift = Tek',
+          },
+          {
+            kind: 'formula',
+            content: '3 + 4 = 7',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-cift-toplama-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'a + b toplamı ÇİFT olduğuna göre aşağıdakilerden hangisi doğrudur?',
+          },
+        ],
+        hint: 'Aynı türlerin toplamı ÇİFT olur!',
+        choices: [
+          { id: 'tek-tek', label: 'a = tek, b = tek' },
+          { id: 'tek-cift', label: 'a = tek, b = çift' },
+        ],
+        correctChoiceId: 'tek-tek',
+      },
+      {
+        type: 'teaching',
+        id: 'tek-cift-carpim-giris',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sorularda çarpım işlemi de verilebilir ve "Hangisi kesinlikle çifttir?" veya "Hangisi tek olabilir?" gibi sorular sorulabilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Çarpım için en önemli kural ise şudur:',
+          },
+          {
+            kind: 'text',
+            content: 'Çarpımda ÇİFT varsa sonuç ÇİFTtir.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-cift-carpim-kurallari',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çarpımda ÇİFT varsa sonuç ÇİFTtir.',
+          },
+          {
+            kind: 'text',
+            content: 'Tek x Çift = Çift',
+          },
+          {
+            kind: 'formula',
+            content: '3 \\times 2 = 6',
+          },
+          {
+            kind: 'text',
+            content: 'Çift x Çift = Çift',
+          },
+          {
+            kind: 'formula',
+            content: '2 \\times 2 = 4',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-cift-carpim-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'a = tek, b = çift bilgisi veriliyor.',
+          },
+          {
+            kind: 'text',
+            content: 'c\'nin türü bilinmiyor.',
+          },
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi kesinlikle çifttir?',
+          },
+        ],
+        choices: [
+          { id: 'a-carpim-c', label: 'a x c' },
+          { id: 'b-carpim-c', label: 'b x c' },
+        ],
+        correctChoiceId: 'b-carpim-c',
+      },
+      {
+        type: 'completion',
+        id: 'tek-cift-complete',
+      },
+    ],
+  },
+  'sayi-kumeleri': {
+    title: 'Sayı Kümeleri',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'sayi-kumeleri-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sayılar özelliklerine göre gruplara ayrılırlar. Bu gruplara "Sayı Kümeleri" denir.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayma sayıları, doğal sayılar, tam sayılar, rasyonel sayılar ve çok daha fazlası...',
+          },
+          {
+            kind: 'text',
+            content: 'Örneğin sayma sayıları saymak için kullandığımız sayılardır ve 1\'den başlayıp sonsuza kadar giderler.',
+          },
+          {
+            kind: 'formula',
+            content: 'S = \\{1, 2, 3, ...\\}',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'sayi-kumeleri-dogal-tam',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir başka tanıdık sayı kümesi ise "Doğal Sayılar"dır.',
+          },
+          {
+            kind: 'text',
+            content: 'Doğal Sayılar 0\'dan başlar ve sonsuza kadar gider.',
+          },
+          {
+            kind: 'formula',
+            content: '\\mathbb{N} = \\{0, 1, 2, 3, ...\\}',
+          },
+          {
+            kind: 'text',
+            content: '"Tam Sayılar" kümesi ise negatif sayıları da içerir:',
+          },
+          {
+            kind: 'formula',
+            content: '\\mathbb{Z} = \\{..., -2, -1, 0, 1, 2, ...\\}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'sayi-kumeleri-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki sayılardan hangisi bir tam sayıdır ANCAK doğal sayı DEĞİLDİR?',
+          },
+        ],
+        choices: [
+          { id: 'negative-two', label: '-2' },
+          { id: 'five', label: '5' },
+        ],
+        correctChoiceId: 'negative-two',
+      },
+      {
+        type: 'teaching',
+        id: 'sayi-kumeleri-rasyonel',
+        blocks: [
+          {
+            kind: 'text',
+            content: '"Rasyonel Sayılar" ise tam sayıları ve küsüratlı (kesirli) sayıları içinde barındıran daha büyük bir sayı kümesidir.',
+          },
+          {
+            kind: 'text',
+            content: 'Aşağıdaki örneklerin hepsi rasyonel sayılar kümesindedir:',
+          },
+          {
+            kind: 'formula',
+            content: '-5, -4, 0, 3, 77, 1000',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{5}{3}, 0.93, \\frac{1}{10}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'sayi-kumeleri-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi Rasyonel Sayılar kümesindedir ANCAK Tam Sayılar kümesinde DEĞİLDİR?',
+          },
+        ],
+        choices: [
+          { id: 'fifty', label: '50' },
+          { id: 'one-point-five', label: '1.5' },
+        ],
+        correctChoiceId: 'one-point-five',
+      },
+      {
+        type: 'completion',
+        id: 'sayi-kumeleri-complete',
+      },
+    ],
+  },
+  'ardisik-sayilar': {
+    title: 'Ardışık Sayılar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'ardisik-sayilar-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Arka arkaya, belli bir kurala göre gelen sayılara ardışık sayılar denir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bunları "örüntüler" gibi düşünebilirsin.',
+          },
+          {
+            kind: 'text',
+            content: 'En basit hali birer birer artanlardır:',
+          },
+          {
+            kind: 'formula',
+            content: '1, 2, 3, 4...',
+          },
+          {
+            kind: 'text',
+            content: 'Daha "matematiksel" bir gösterim yapalım:',
+          },
+          {
+            kind: 'formula',
+            content: 'n, n+1, n+2, ...',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'ardisik-sayilar-tek-cift',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Soru bize "ardışık ÇİFT sayılar" veya "ardışık TEK sayılar" derse bu sefer sayıların 2\'şer 2\'şer arttığını bilmliyiz.',
+          },
+          {
+            kind: 'text',
+            content: 'Ardışık TEK sayılar:',
+          },
+          {
+            kind: 'formula',
+            content: '1, 3, 5, ...',
+          },
+          {
+            kind: 'text',
+            content: 'Ardışık ÇİFT sayılar:',
+          },
+          {
+            kind: 'formula',
+            content: '2, 4, 6, ...',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'ardisik-sayilar-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Ardışık üç tane TEK sayının ilki 5\'e eşitse üçüncüsü kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'nine', label: '9' },
+          { id: 'seven', label: '7' },
+        ],
+        correctChoiceId: 'nine',
+      },
+      {
+        type: 'quiz',
+        id: 'ardisik-sayilar-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Ardışık üç tane ÇİFT sayının toplamı 12\'ye eşitse bu sayılar aşağıdakilerden hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'two-four-six', label: '2 - 4 - 6' },
+          { id: 'three-five-seven', label: '3 - 5 - 7' },
+        ],
+        correctChoiceId: 'two-four-six',
+      },
+      {
+        type: 'completion',
+        id: 'ardisik-sayilar-complete',
+      },
+    ],
+  },
+  'asal-sayilar': {
+    title: 'Asal Sayılar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'asal-sayilar-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sadece 1\'e ve kendisine bölünebilen, 1\'den büyük doğal sayılara "Asal Sayı" denir.',
+          },
+          {
+            kind: 'formula',
+            content: '2, 3, 5, 7, 11, 13...',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'asal-sayilar-kritik',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'İki kritik bilgi:',
+          },
+          {
+            kind: 'text',
+            content: '1) En küçük asal sayı 2\'dir. (1 asal değildir!)',
+          },
+          {
+            kind: 'text',
+            content: '2) Çift olup asal olan tek sayı 2\'dir. Başka çift asal sayı yoktur.',
+          },
+          {
+            kind: 'text',
+            content: 'Çünkü 2\'den büyük çift sayıların hepsi kendisine, 1\'e ve 2\'ye bölünür! Bu da "asallığı" bozar.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'asal-sayilar-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi bir Asal Sayıdır?',
+          },
+          {
+            kind: 'formula',
+            content: '9 \\quad \\text{veya} \\quad 11',
+          },
+        ],
+        choices: [
+          { id: 'eleven', label: '11' },
+          { id: 'nine', label: '9' },
+        ],
+        correctChoiceId: 'eleven',
+      },
+      {
+        type: 'completion',
+        id: 'asal-sayilar-complete',
+      },
+    ],
+  },
 };
 
 const defaultPlaceholderMessage =
