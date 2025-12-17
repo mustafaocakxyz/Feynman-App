@@ -12,6 +12,7 @@ import { AuthProvider } from '@/contexts/auth-context';
 import { ProtectedRouteProvider } from '@/components/protected-route';
 import { SyncProvider } from '@/components/SyncProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useImagePreloader } from '@/hooks/use-image-preloader';
 
 function RootLayoutNav() {
   return (
@@ -43,7 +44,11 @@ export default function RootLayout() {
     Montserrat_700Bold,
   });
   
+  // Preload critical images (only on web)
+  const imagesLoaded = useImagePreloader();
+  
   console.log('[RootLayout] Fonts loaded:', fontsLoaded, fontError);
+  console.log('[RootLayout] Images preloaded:', imagesLoaded);
 
   if (!fontsLoaded) {
     console.log('[RootLayout] Waiting for fonts...');
