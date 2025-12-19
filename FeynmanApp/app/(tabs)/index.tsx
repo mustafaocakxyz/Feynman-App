@@ -34,18 +34,18 @@ export default function HomeScreen() {
   const modules = useMemo(
     () => [
       {
-        id: 'ayt',
-        name: 'AYT Matematik',
-        totalTopics: aytSubtopicsEntries.length,
-        totalSubtopics: aytSubtopicsEntries.reduce((acc, [, list]) => acc + list.length, 0),
-        visual: require('@/assets/images/aytmath_logo.png'),
-      },
-      {
         id: 'tyt',
         name: 'TYT Matematik',
         totalTopics: tytSubtopicsEntries.length,
         totalSubtopics: tytSubtopicsEntries.reduce((acc, [, list]) => acc + list.length, 0),
         visual: require('@/assets/images/tytmath_logo.png'),
+      },
+      {
+        id: 'ayt',
+        name: 'AYT Matematik',
+        totalTopics: aytSubtopicsEntries.length,
+        totalSubtopics: aytSubtopicsEntries.reduce((acc, [, list]) => acc + list.length, 0),
+        visual: require('@/assets/images/aytmath_logo.png'),
       },
     ],
     [],

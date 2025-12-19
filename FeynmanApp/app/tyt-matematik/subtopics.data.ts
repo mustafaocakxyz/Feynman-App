@@ -16,6 +16,20 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
       { title: 'Asal Sayılar', slug: 'asal-sayilar' },
     ],
   ],
+  [
+    'Basamak Kavramı',
+    [
+      { title: 'Basamak Kavramı', slug: 'basamak-kavrami' },
+    ],
+  ],
+  [
+    'Bölme Bölünebilme',
+    [
+      { title: 'Bölünebilme Kuralları', slug: 'bolunebilme-kurallari' },
+      { title: 'Bölünebilme Kuralları 2', slug: 'bolunebilme-kurallari-2' },
+      { title: 'Kalan Bulma Mantığı', slug: 'kalan-bulma-mantigi' },
+    ],
+  ],
 ];
 
 export const topicSubtopics = Object.fromEntries(topicSubtopicsEntries);
