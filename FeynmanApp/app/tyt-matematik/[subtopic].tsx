@@ -766,6 +766,544 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
+  'basamak-kavrami': {
+    title: 'Basamak Kavramı',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'basamak-kavrami-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Birler, onlar ve yüzler basamağının neler olduğunu ilkokulda öğrenmiştik.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayıları bu basamaklarına göre çözümleyebiliriz.',
+          },
+          {
+            kind: 'text',
+            content: 'Örneğin 246 sayısı aynı zamanda şuna eşittir:',
+          },
+          {
+            kind: 'formula',
+            content: '246 = 200 + 40 + 6',
+          },
+          {
+            kind: 'text',
+            content: 'Bunu da şu şekilde yazabiliriz:',
+          },
+          {
+            kind: 'formula',
+            content: '246 = 2 \\cdot 100 + 4 \\cdot 10 + 6 \\cdot 1',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'basamak-kavrami-genel',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '246 = 2 \\cdot 100 + 4 \\cdot 10 + 6 \\cdot 1',
+          },
+          {
+            kind: 'text',
+            content: 'Bu örneği bütün sayılar için genelleştirebiliriz:',
+          },
+          {
+            kind: 'formula',
+            content: 'ABC = A \\cdot 100 + B \\cdot 10 + C \\cdot 1',
+          },
+          {
+            kind: 'text',
+            content: 'Sayılar iki basamaklı olduğunda da şöyle yaparız:',
+          },
+          {
+            kind: 'formula',
+            content: 'AB = A \\cdot 10 + B \\cdot 1',
+          },
+          {
+            kind: 'text',
+            content: 'Yani AB sayısını gördüğünde aklına "10 tane A ve 1 tane B" gelmeli.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'basamak-kavrami-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: '73 iki basamaklı sayısının matematiksel çözümlemesi hangisidir?',
+          },
+          {
+            kind: 'formula',
+            content: '73 = ?',
+          },
+        ],
+        choices: [
+          { id: 'seven-times-ten-plus-three', label: '7 \\cdot 10 + 3', isMath: true },
+          { id: 'seven-plus-three', label: '7 + 3', isMath: true },
+        ],
+        correctChoiceId: 'seven-times-ten-plus-three',
+      },
+      {
+        type: 'quiz',
+        id: 'basamak-kavrami-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'ABC üç basamaklı sayısının matematiksel çözümlemesi hangisidir?',
+          },
+          {
+            kind: 'formula',
+            content: 'ABC = ?',
+          },
+        ],
+        choices: [
+          { id: 'hundred-a-plus-ten-b-plus-c', label: '100A + 10B + C', isMath: true },
+          { id: 'a-plus-b-plus-c', label: 'A + B + C', isMath: true },
+        ],
+        correctChoiceId: 'hundred-a-plus-ten-b-plus-c',
+      },
+      {
+        type: 'teaching',
+        id: 'basamak-kavrami-toplama',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Peki AB ve BA iki basamaklı sayılarını toplarsam sonucu ne olur?',
+          },
+          {
+            kind: 'formula',
+            content: 'AB + BA = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Bunun için iki sayıyı da çözümlemeliyiz:',
+          },
+          {
+            kind: 'formula',
+            content: 'AB = 10A + B',
+          },
+          {
+            kind: 'formula',
+            content: 'BA = 10B + A',
+          },
+          {
+            kind: 'text',
+            content: 'Sonra da ikisini toplamalıyız:',
+          },
+          {
+            kind: 'formula',
+            content: '10A + B + 10B + A',
+          },
+          {
+            kind: 'formula',
+            content: '11A + 11B',
+          },
+          {
+            kind: 'formula',
+            content: '11(A + B)',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'basamak-kavrami-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'AB ve BA iki basamaklı sayılardır. Toplamları 66 olduğuna göre rakamları toplamı (A+B) kaçtır?',
+          },
+          {
+            kind: 'formula',
+            content: 'AB + BA = 66',
+          },
+          {
+            kind: 'formula',
+            content: 'A+B=?',
+          },
+        ],
+        choices: [
+          { id: 'six', label: '6' },
+          { id: 'eleven', label: '11' },
+        ],
+        correctChoiceId: 'six',
+      },
+      {
+        type: 'completion',
+        id: 'basamak-kavrami-complete',
+      },
+    ],
+  },
+  'bolunebilme-kurallari': {
+    title: 'Bölünebilme Kuralları',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'bolunebilme-kurallari-2-5-10',
+        blocks: [
+          {
+            kind: 'text',
+            content: '2, 5 ve 10 sayılarının bölünebilme kuralları yalnızca "son basamakla" ilgilidir.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayının 2 ile bölünebilmesi için son basamak çift olmalıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayının 5 ile bölünebilmesi için son basamak "0" veya "5" olmalıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayının 10 ile bölünebilmesi için son basamak "0" olmalıdır.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bolunebilme-kurallari-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki sayılardan hangisi 2, 5 ve 10 sayılarının hepsine bölünebilir?',
+          },
+        ],
+        choices: [
+          { id: 'twenty-five', label: '25' },
+          { id: 'twenty', label: '20' },
+        ],
+        correctChoiceId: 'twenty',
+      },
+      {
+        type: 'teaching',
+        id: 'bolunebilme-kurallari-3-9',
+        blocks: [
+          {
+            kind: 'text',
+            content: '3 ve 9 ile bölünebilme kuralları ise sayının rakamları toplamı ile ilgilidir.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayının 3 ile bölünebilmesi için rakamları toplamı 3\'ün katı olmalıdır. Örneğin 123 sayısı:',
+          },
+          {
+            kind: 'formula',
+            content: '123 \\rightarrow 1 + 2 + 3 = 6',
+          },
+          {
+            kind: 'text',
+            content: 'Sayının 9 ile bölünebilmesi için rakamları toplamı 9\'un katı olmalıdır. Örneğin 225 sayısı:',
+          },
+          {
+            kind: 'formula',
+            content: '225 \\rightarrow 2 + 2 + 5 = 9',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bolunebilme-kurallari-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi 3 ile bölünür ancak 9 ile BÖLÜNEMEZ?',
+          },
+        ],
+        hint: '9 ile bölünmek için rakamlar toplamının 3\'ün katı olması yetmez, çünkü 6 ve 12 gibi sayılar da 3\'ün katıdır ama 9\'un katı değildir!',
+        choices: [
+          { id: 'four-fifty', label: '450' },
+          { id: 'one-twenty-three', label: '123' },
+        ],
+        correctChoiceId: 'one-twenty-three',
+      },
+      {
+        type: 'completion',
+        id: 'bolunebilme-kurallari-complete',
+      },
+    ],
+  },
+  'bolunebilme-kurallari-2': {
+    title: 'Bölünebilme Kuralları 2',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'bolunebilme-kurallari-2-4-8',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bu modülde 4, 6, 8 ve 11 ile bölünebilme kurallarını öğreneceğiz.',
+          },
+          {
+            kind: 'text',
+            content: 'Bir sayının 4 ile bölünebilmesi için son İKİ basamağının 4\'ün katı olması gerekir.',
+          },
+          {
+            kind: 'text',
+            content: 'Örnekler:',
+          },
+          {
+            kind: 'formula',
+            content: '16, 516, 9916',
+          },
+          {
+            kind: 'text',
+            content: 'Bir sayının 8 ile bölünebilmesi için son ÜÇ basamağının 8\'in katı olması gerekir.',
+          },
+          {
+            kind: 'text',
+            content: 'Örnekler:',
+          },
+          {
+            kind: 'formula',
+            content: '160, 5160, ...',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bolunebilme-kurallari-2-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi 2 ile bölünür ancak 4 ile bölünemez?',
+          },
+        ],
+        choices: [
+          { id: 'fourteen', label: '14' },
+          { id: 'forty-four', label: '44' },
+        ],
+        correctChoiceId: 'fourteen',
+      },
+      {
+        type: 'teaching',
+        id: 'bolunebilme-kurallari-2-6',
+        blocks: [
+          {
+            kind: 'text',
+            content: '6 ile bölünebilme kuralı gayet basittir: Bir sayı hem 2 hem de 3\'e bölünüyorsa 6\'ya da bölünür.',
+          },
+          {
+            kind: 'text',
+            content: 'Çünkü 2 ve 3, 6\'nın çarpanlarıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Örnekler:',
+          },
+          {
+            kind: 'formula',
+            content: '6, 12, 18, 24...',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bolunebilme-kurallari-2-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi 6 ile bölünebilen bir sayıdır?',
+          },
+        ],
+        hint: 'Hangisi hem 2 hem de 3\'e bölünebilir?',
+        choices: [
+          { id: 'twenty-six', label: '26' },
+          { id: 'twenty-four', label: '24' },
+        ],
+        correctChoiceId: 'twenty-four',
+      },
+      {
+        type: 'teaching',
+        id: 'bolunebilme-kurallari-2-11',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir sayının 11 ile bölünüp bölünemeyeceğini bulmak için sayının en sağından en soluna doğru sırasıyla (+) ve (-) yerleştiririz.',
+          },
+          {
+            kind: 'formula',
+            content: '625 \\rightarrow +6 -2 +5',
+          },
+          {
+            kind: 'text',
+            content: 'Sonrasında başlarında (+) olanları toplayıp (-) olanları ondan çıkarırız.',
+          },
+          {
+            kind: 'formula',
+            content: '+6 +5 -2 = 9',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer sonuç 11\'in katı ise (0, 11, 22...) o zaman sayı 11 ile bölünür.',
+          },
+          {
+            kind: 'text',
+            content: '625 örneğinde sayı 9 çıktı, yani 625 sayısı 11 ile bölünmüyor!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bolunebilme-kurallari-2-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki sayılardan hangisi 11 ile bölünebilir?',
+          },
+        ],
+        hint: 'Sağdan sola (+) ve (-) ler yerleştir ve işlemin sonucuna bak. 0 veya 11\'in katları olmalı!',
+        choices: [
+          { id: 'one-twenty-three', label: '123' },
+          { id: 'four-zero-seven', label: '407' },
+        ],
+        correctChoiceId: 'four-zero-seven',
+      },
+      {
+        type: 'completion',
+        id: 'bolunebilme-kurallari-2-complete',
+      },
+    ],
+  },
+  'kalan-bulma-mantigi': {
+    title: 'Kalan Bulma Mantığı',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'kalan-bulma-mantigi-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şu ana kadar hep tam bölünen sayıları inceledik ancak tam bölünemeyen sayıları da ifade edebilmeliyiz:',
+          },
+          {
+            kind: 'text',
+            content: 'Örneğin 10 sayısını 3 ile bölersek ne olur?',
+          },
+          {
+            kind: 'text',
+            content: '10 sayısının içinde 3 tane 3 bulabiliriz, geriye ise 1 kalır.',
+          },
+          {
+            kind: 'formula',
+            content: '10 = 3 \\cdot 3 + 1',
+          },
+          {
+            kind: 'text',
+            content: 'Yani 10 sayısının 3 ile bölümünden kalanı 1\'dir.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'kalan-bulma-mantigi-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: '14 sayısının 4 ile bölümünden kalan kaçtır?',
+          },
+        ],
+        choices: [
+          { id: 'one', label: '1' },
+          { id: 'two', label: '2' },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
+        type: 'teaching',
+        id: 'kalan-bulma-mantigi-formul',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bu kalan durumunu matematiksel şekilde ifade edelim.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayımız A olsun ve B ile bölünüyor olsun.',
+          },
+          {
+            kind: 'text',
+            content: 'A\'nın içinde C tane B olsun ve bölümden kalan da K olsun.',
+          },
+          {
+            kind: 'formula',
+            content: 'A = B \\cdot C + K',
+          },
+          {
+            kind: 'text',
+            content: 'Bölünen (A) = Bölen (B) çarpı Sonuç (C) artı Kalan (K)',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'kalan-bulma-mantigi-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir A sayısını 4\'e böldüğümüzde bölüm 5, kalan 3 oluyor. A sayısı kaçtır?',
+          },
+          {
+            kind: 'formula',
+            content: 'A = 4 \\cdot 5 + 3',
+          },
+        ],
+        choices: [
+          { id: 'twenty-three', label: '23' },
+          { id: 'seventeen', label: '17' },
+        ],
+        correctChoiceId: 'twenty-three',
+      },
+      {
+        type: 'teaching',
+        id: 'kalan-bulma-mantigi-kural',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Önemli bir kural ile kapatalım:',
+          },
+          {
+            kind: 'text',
+            content: 'Kalan her zaman bölenden KÜÇÜK olmalıdır',
+          },
+          {
+            kind: 'formula',
+            content: 'Kalan < Bölen',
+          },
+          {
+            kind: 'text',
+            content: 'Düşün: Bir sayının 8 ile bölümünden kalan 12 olabilir mi?',
+          },
+          {
+            kind: 'text',
+            content: 'Olamaz! Çünkü o 12\'yi de 8\'e bölebiliriz ve kalan 4 olur.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'kalan-bulma-mantigi-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir sayıyı 6\'ya böldüğünde kalan aşağıdakilerden hangisi OLAMAZ?',
+          },
+        ],
+        choices: [
+          { id: 'eight', label: '8' },
+          { id: 'three', label: '3' },
+        ],
+        correctChoiceId: 'eight',
+      },
+      {
+        type: 'completion',
+        id: 'kalan-bulma-mantigi-complete',
+      },
+    ],
+  },
 };
 
 const defaultPlaceholderMessage =
