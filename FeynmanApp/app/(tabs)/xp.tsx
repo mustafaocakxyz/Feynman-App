@@ -8,6 +8,7 @@ import { getXpState } from '@/lib/xp-storage';
 import { useAuth } from '@/contexts/auth-context';
 import { Image } from 'expo-image';
 import { getAvatarSource } from '@/lib/profile-storage';
+import { useTheme } from '@/contexts/theme-context';
 
 const MAX_XP = 8000;
 const VISIBLE_MAX_XP = 4000; // Maximum XP shown in the visible bar area
@@ -41,6 +42,8 @@ const MILESTONES: Milestone[] = [
 export default function XPScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const colors = Colors[theme as 'light' | 'dark'];
   const [currentXp, setCurrentXp] = useState(0);
   const fillAnim = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
@@ -123,18 +126,18 @@ export default function XPScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 16) }]}>
         <View style={styles.navRow}>
-          <Pressable style={styles.backButton} onPress={() => router.push('/(tabs)' as never)}>
-            <Text style={styles.backButtonText}>{'<'} Geri</Text>
+          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={() => router.push('/(tabs)' as never)}>
+            <Text style={[styles.backButtonText, { color: colors.text }]}>{'<'} Geri</Text>
           </Pressable>
         </View>
 
         {/* Current XP Display */}
         <View style={styles.currentXpContainer}>
-          <Text style={styles.currentXpValue}>⭐ {currentXp}</Text>
-          <Text style={styles.currentXpLabel}>XP</Text>
+          <Text style={[styles.currentXpValue, { color: colors.text }]}>⭐ {currentXp}</Text>
+          <Text style={[styles.currentXpLabel, { color: colors.textSecondary }]}>XP</Text>
         </View>
 
         {/* Scrollable Progress Bar Container */}
@@ -146,13 +149,14 @@ export default function XPScreen() {
             showsVerticalScrollIndicator={true}
             scrollEventThrottle={16}>
             {/* Progress Track (background) - full height representing MAX_XP */}
-            <View style={[styles.progressTrack, { height: PROGRESS_BAR_HEIGHT }]}>
+            <View style={[styles.progressTrack, { height: PROGRESS_BAR_HEIGHT, backgroundColor: colors.progressBarBackground }]}>
               {/* Animated Fill */}
               <Animated.View
                 style={[
                   styles.progressFill,
                   {
                     height: fillHeight,
+                    backgroundColor: colors.primary,
                   },
                 ]}
               />
@@ -176,7 +180,11 @@ export default function XPScreen() {
                     milestoneStyle,
                   ]}>
                   {/* Node Circle */}
-                  <View style={[styles.nodeCircle, isReached && styles.nodeCircleReached]}>
+                  <View style={[
+                    styles.nodeCircle,
+                    { backgroundColor: colors.cardBackground, borderColor: colors.border },
+                    isReached && { backgroundColor: colors.warningBackground, borderColor: colors.warning },
+                  ]}>
                     {isReached && milestone.rewardImage && (
                       <Image
                         source={milestone.rewardImage}
@@ -184,13 +192,17 @@ export default function XPScreen() {
                         contentFit="cover"
                       />
                     )}
-                    {!isReached && <View style={styles.nodeDot} />}
+                    {!isReached && <View style={[styles.nodeDot, { backgroundColor: colors.border }]} />}
                   </View>
 
                   {/* Milestone Info Card */}
-                  <View style={[styles.milestoneCard, isReached && styles.milestoneCardReached]}>
-                    <Text style={styles.milestoneXp}>{milestone.xp} XP</Text>
-                    <Text style={styles.milestoneReward}>{milestone.reward}</Text>
+                  <View style={[
+                    styles.milestoneCard,
+                    { backgroundColor: colors.cardBackground },
+                    isReached && { backgroundColor: colors.cardBackground },
+                  ]}>
+                    <Text style={[styles.milestoneXp, { color: colors.text }]}>{milestone.xp} XP</Text>
+                    <Text style={[styles.milestoneReward, { color: colors.textSecondary }]}>{milestone.reward}</Text>
                   </View>
                 </View>
               );
@@ -205,7 +217,6 @@ export default function XPScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   container: {
     paddingHorizontal: 24,
@@ -222,7 +233,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 12,
-    backgroundColor: '#f3f4f6',
     shadowColor: '#0f172a',
     shadowOpacity: 0.12,
     shadowRadius: 8,
@@ -231,7 +241,6 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    color: '#1f2937',
     fontFamily: 'Montserrat_700Bold',
   },
   headline: {
@@ -247,12 +256,10 @@ const styles = StyleSheet.create({
   currentXpValue: {
     fontSize: 48,
     fontWeight: '700',
-    color: '#111827',
     fontFamily: 'Montserrat_700Bold',
   },
   currentXpLabel: {
     fontSize: 18,
-    color: '#6b7280',
     fontFamily: 'Montserrat_700Bold',
   },
   progressContainer: {
@@ -273,7 +280,6 @@ const styles = StyleSheet.create({
     left: '50%',
     marginLeft: -4,
     width: 8,
-    backgroundColor: '#e5e7eb',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -282,7 +288,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#2563eb',
     borderRadius: 4,
   },
   milestoneNode: {

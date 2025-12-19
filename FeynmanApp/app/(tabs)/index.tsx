@@ -26,10 +26,13 @@ import { topicSubtopicsEntries as tytSubtopicsEntries } from '@/app/tyt-matemati
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/auth-context';
 import { Colors } from '@/constants/theme';
+import { useTheme } from '@/contexts/theme-context';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const colors = Colors[theme];
 
   const modules = useMemo(
     () => [
@@ -143,7 +146,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -171,7 +174,7 @@ export default function HomeScreen() {
                       contentFit="cover"
                     />
                   ) : (
-                    <View style={styles.topAvatarPlaceholder}>
+                    <View style={[styles.topAvatarPlaceholder, { backgroundColor: colors.tint }]}>
                       <Text style={styles.topAvatarPlaceholderText}>{displayInitial}</Text>
                     </View>
                   )}
@@ -179,36 +182,39 @@ export default function HomeScreen() {
                 <Pressable
                   style={({ pressed }) => [
                     styles.topMetricCard,
+                    { backgroundColor: colors.cardBackgroundSecondary },
                     pressed && styles.metricCardPressed,
                   ]}
                   onPress={() => router.push('/(tabs)/streak' as never)}>
                   <Text style={styles.metricIcon}>🔥</Text>
-                  <Text style={styles.metricValue}>{streak}</Text>
+                  <Text style={[styles.metricValue, { color: colors.text }]}>{streak}</Text>
                 </Pressable>
                 <Pressable
                   style={({ pressed }) => [
                     styles.topMetricCard,
+                    { backgroundColor: colors.cardBackgroundSecondary },
                     pressed && styles.metricCardPressed,
                   ]}
                   onPress={() => router.push('/(tabs)/xp' as never)}>
                   <Text style={styles.metricIcon}>⭐️</Text>
-                  <Text style={styles.metricValue}>{xp}</Text>
+                  <Text style={[styles.metricValue, { color: colors.text }]}>{xp}</Text>
                 </Pressable>
               </>
             );
           })()}
         </Animated.View>
 
-        <Pressable
-          style={({ pressed }) => [
-            styles.quizButton,
-            pressed && styles.quizButtonPressed,
-          ]}
-          onPress={() => router.push('/(tabs)/quiz' as never)}>
-          <Text style={styles.quizButtonEmoji}>❓</Text>
-          <Text style={styles.quizButtonText}>Kendini test et!</Text>
-          <Text style={styles.quizButtonArrow}>›</Text>
-        </Pressable>
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.quizButton,
+                    { backgroundColor: colors.primary },
+                    pressed && styles.quizButtonPressed,
+                  ]}
+                  onPress={() => router.push('/(tabs)/quiz' as never)}>
+                  <Text style={styles.quizButtonEmoji}>❓</Text>
+                  <Text style={styles.quizButtonText}>Kendini test et!</Text>
+                  <Text style={styles.quizButtonArrow}>›</Text>
+                </Pressable>
 
         <Animated.View style={[makeAnimatedStyle(modulesAnim), styles.flatListContainer]}>
           <FlatList
@@ -235,10 +241,10 @@ export default function HomeScreen() {
                 list.every((subtopic) => completedSubtopics.includes(subtopic.slug)),
               ).length;
               return (
-                <View style={[styles.moduleCard, { width: screenWidth - 48 }]}>
-                  <Text style={styles.moduleName}>{item.name}</Text>
-                  <Text style={styles.episodeLabel}>Tamamlanan Konu</Text>
-                  <Text style={styles.episodeValue}>
+                <View style={[styles.moduleCard, { width: screenWidth - 48, backgroundColor: colors.cardBackground }]}>
+                  <Text style={[styles.moduleName, { color: colors.text }]}>{item.name}</Text>
+                  <Text style={[styles.episodeLabel, { color: colors.textSecondary }]}>Tamamlanan Konu</Text>
+                  <Text style={[styles.episodeValue, { color: colors.text }]}>
                     {completedTopics} / {item.totalTopics}
                   </Text>
         <Image
@@ -246,20 +252,21 @@ export default function HomeScreen() {
                     style={[styles.visual, { height: imageHeight }]}
                     resizeMode="contain"
         />
-                  <View style={styles.progressBarTrack}>
+                  <View style={[styles.progressBarTrack, { backgroundColor: colors.progressBarBackground }]}>
                     <View
                       style={[
                         styles.progressBarFill,
-                        { width: `${progressRatio * 100}%` },
+                        { width: `${progressRatio * 100}%`, backgroundColor: colors.primary },
                       ]}
                     />
                   </View>
-                  <Text style={styles.progressText}>
+                  <Text style={[styles.progressText, { color: colors.textSecondary }]}>
                     {completedDesenCount} / {totalSubtopics} desen tamamlandı
                   </Text>
                   <Pressable
                     style={({ pressed }) => [
                       styles.ctaButton,
+                      { backgroundColor: colors.primary },
                       pressed && styles.ctaButtonPressed,
                     ]}
                     onPress={() => handleContinue(item.id)}
@@ -282,7 +289,11 @@ export default function HomeScreen() {
           {modules.map((module, index) => (
             <View
               key={module.id}
-              style={[styles.paginationDot, index === activeIndex && styles.paginationDotActive]}
+              style={[
+                styles.paginationDot,
+                { backgroundColor: index === activeIndex ? colors.primary : colors.border },
+                index === activeIndex && styles.paginationDotActive,
+              ]}
             />
           ))}
         </View>
@@ -294,7 +305,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   scrollView: {
     flex: 1,
@@ -319,7 +329,6 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: Colors.light.tint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -336,7 +345,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 18,
     borderRadius: 16,
-    backgroundColor: '#f3f4f6',
     shadowColor: '#0f172a',
     shadowOpacity: 0.14,
     shadowRadius: 12,
@@ -356,7 +364,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 18,
     borderRadius: 16,
-    backgroundColor: '#f3f4f6',
     shadowColor: '#0f172a',
     shadowOpacity: 0.14,
     shadowRadius: 12,
@@ -375,19 +382,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textTransform: 'uppercase',
     letterSpacing: 1,
-    color: '#6b7280',
     fontFamily: 'Montserrat_700Bold',
   },
   metricValue: {
     marginTop: 4,
     fontSize: 20,
     fontWeight: '600',
-    color: '#111827',
     fontFamily: 'Montserrat_700Bold',
   },
   quizButton: {
     marginTop: 24,
-    backgroundColor: '#2563eb',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 20,
@@ -431,7 +435,6 @@ const styles = StyleSheet.create({
   },
   moduleCard: {
     borderRadius: 24,
-    backgroundColor: '#f5f7fb',
     padding: 24,
     marginRight: 24,
     alignSelf: 'center',
@@ -444,19 +447,16 @@ const styles = StyleSheet.create({
   moduleName: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#111827',
     fontFamily: 'Montserrat_700Bold',
   },
   episodeLabel: {
     marginTop: 12,
     fontSize: 14,
-    color: '#6b7280',
     fontFamily: 'Montserrat_700Bold',
   },
   episodeValue: {
     fontSize: 32,
     fontWeight: '700',
-    color: '#111827',
     fontFamily: 'Montserrat_700Bold',
   },
   visual: {
@@ -467,23 +467,19 @@ const styles = StyleSheet.create({
   progressBarTrack: {
     marginTop: 24,
     height: 10,
-    backgroundColor: '#e5e7eb',
     borderRadius: 8,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#2563eb',
   },
   progressText: {
     marginTop: 8,
     fontSize: 14,
-    color: '#374151',
     fontFamily: 'Montserrat_700Bold',
   },
   ctaButton: {
     marginTop: 24,
-    backgroundColor: '#2563eb',
     borderRadius: 16,
     paddingVertical: 14,
     alignItems: 'center',
@@ -520,10 +516,8 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#d1d5db',
   },
   paginationDotActive: {
-    backgroundColor: '#2563eb',
     width: 18,
   },
 });

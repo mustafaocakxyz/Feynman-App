@@ -50,6 +50,8 @@ function getDayOfWeek(date: Date): number {
 export default function StreakScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const colors = Colors[theme];
   const [streakCount, setStreakCount] = useState(0);
   const [lastActivityDate, setLastActivityDate] = useState<string | null>(null);
 
@@ -111,11 +113,11 @@ export default function StreakScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 16) }]}>
         <View style={styles.navRow}>
-          <Pressable style={styles.backButton} onPress={() => router.push('/(tabs)' as never)}>
-            <Text style={styles.backButtonText}>{'<'} Geri</Text>
+          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={() => router.push('/(tabs)' as never)}>
+            <Text style={[styles.backButtonText, { color: colors.text }]}>{'<'} Geri</Text>
           </Pressable>
         </View>
 
@@ -125,16 +127,16 @@ export default function StreakScreen() {
         </View>
 
         {/* Current streak count */}
-        <Text style={styles.streakCount}>{streakCount}</Text>
+        <Text style={[styles.streakCount, { color: colors.text }]}>{streakCount}</Text>
 
         {/* "gün serisi!" text */}
-        <Text style={styles.streakLabel}>gün serisi!</Text>
+        <Text style={[styles.streakLabel, { color: colors.textSecondary }]}>gün serisi!</Text>
 
         {/* Horizontal day labels */}
         <View style={styles.daysContainer}>
           {weekDays.map((day, index) => (
             <View key={day.dateString} style={styles.dayItem}>
-              <Text style={styles.dayLabel}>{day.dayName}</Text>
+              <Text style={[styles.dayLabel, { color: colors.textSecondary }]}>{day.dayName}</Text>
             </View>
           ))}
         </View>
@@ -143,7 +145,11 @@ export default function StreakScreen() {
         <View style={styles.circlesContainer}>
           {weekDays.map((day, index) => (
             <View key={day.dateString} style={styles.circleItem}>
-              <View style={[styles.circle, day.hasStreak && styles.circleActive]}>
+              <View style={[
+                styles.circle,
+                { backgroundColor: colors.cardBackgroundSecondary, borderColor: colors.border },
+                day.hasStreak && { backgroundColor: colors.warningBackground, borderColor: colors.warning },
+              ]}>
                 {day.hasStreak && <Text style={styles.fireIcon}>🔥</Text>}
               </View>
             </View>
@@ -157,7 +163,6 @@ export default function StreakScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   container: {
     paddingHorizontal: 24,
@@ -176,7 +181,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 12,
-    backgroundColor: '#f3f4f6',
     shadowColor: '#0f172a',
     shadowOpacity: 0.12,
     shadowRadius: 8,
@@ -185,7 +189,6 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    color: '#1f2937',
     fontFamily: 'Montserrat_700Bold',
   },
   fireContainer: {
@@ -223,7 +226,6 @@ const styles = StyleSheet.create({
   },
   dayLabel: {
     fontSize: 14,
-    color: '#6b7280',
     fontFamily: 'Montserrat_700Bold',
   },
   circlesContainer: {

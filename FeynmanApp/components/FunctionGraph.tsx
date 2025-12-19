@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Svg, { Line, Path, Circle, Text as SvgText, Marker, Polyline, Defs } from 'react-native-svg';
+import { useTheme } from '@/contexts/theme-context';
+import { Colors } from '@/constants/theme';
 
 export type FunctionDef = {
   formula: string; // e.g., "x^2 + 1", "sin(x)", "1/x"
@@ -112,6 +114,8 @@ function mathToSvg(
 }
 
 export function FunctionGraph({ config }: { config: GraphConfig }) {
+  const { theme } = useTheme();
+  const colors = Colors[theme as 'light' | 'dark'];
   const {
     functions,
     xDomain,
@@ -165,7 +169,7 @@ export function FunctionGraph({ config }: { config: GraphConfig }) {
 
     return {
       path: pathData,
-      color: func.color || '#2563eb',
+      color: func.color || colors.primary,
       lineWidth: func.lineWidth || 2.5,
       formula: func.formula,
       points: points,
@@ -231,14 +235,14 @@ export function FunctionGraph({ config }: { config: GraphConfig }) {
                     y1={padding}
                     x2={svgPos.x}
                     y2={height - padding}
-                    stroke="#e5e7eb"
+                    stroke={colors.border}
                     strokeWidth={1}
                     strokeDasharray="2,2"
                   />
                   <SvgText
                     x={svgPos.x}
                     y={height - padding + 20}
-                    fill="#6b7280"
+                    fill={colors.textSecondary}
                     fontSize="12"
                     textAnchor="middle">
                     {grid.label}
@@ -254,14 +258,14 @@ export function FunctionGraph({ config }: { config: GraphConfig }) {
                     y1={svgPos.y}
                     x2={width - padding}
                     y2={svgPos.y}
-                    stroke="#e5e7eb"
+                    stroke={colors.border}
                     strokeWidth={1}
                     strokeDasharray="2,2"
                   />
                   <SvgText
                     x={padding - 10}
                     y={svgPos.y + 4}
-                    fill="#6b7280"
+                    fill={colors.textSecondary}
                     fontSize="12"
                     textAnchor="end">
                     {grid.label}
@@ -311,7 +315,7 @@ export function FunctionGraph({ config }: { config: GraphConfig }) {
               <SvgText
                 x={width - padding + 10}
                 y={xAxisY - 5}
-                fill="#374151"
+                fill={colors.text}
                 fontSize="14"
                 fontWeight="bold">
                 x
@@ -319,7 +323,7 @@ export function FunctionGraph({ config }: { config: GraphConfig }) {
               <SvgText
                 x={yAxisX + 5}
                 y={padding - 10}
-                fill="#374151"
+                fill={colors.text}
                 fontSize="14"
                 fontWeight="bold">
                 y
@@ -488,14 +492,14 @@ export function FunctionGraph({ config }: { config: GraphConfig }) {
                 cy={svgPos.y}
                 r={radius}
                 fill={color}
-                stroke="#ffffff"
+                stroke={colors.background}
                 strokeWidth={2}
               />
               {point.label && (
                 <SvgText
                   x={svgPos.x + radius + 8}
                   y={svgPos.y + 4}
-                  fill="#374151"
+                  fill={colors.text}
                   fontSize="12"
                   fontWeight="bold">
                   {point.label}

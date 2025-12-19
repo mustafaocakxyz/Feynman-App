@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from 'react-native';
@@ -15,6 +16,7 @@ import { useAuth } from '@/contexts/auth-context';
 import { Colors } from '@/constants/theme';
 import { getProfile, updateProfile, getAvatarSource, type AvatarId, VALID_AVATARS } from '@/lib/profile-storage';
 import { getUnlockedAvatars } from '@/lib/avatar-unlocks';
+import { useTheme } from '@/contexts/theme-context';
 
 const AVATAR_DESCRIPTIONS: Record<AvatarId, string> = {
   '1': 'Kaydolduğunda açılır',
@@ -34,11 +36,13 @@ const AVATAR_LABELS: Record<AvatarId, string> = {
 
 export default function ProfileScreen() {
   const { user, signOut, loading } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [profileName, setProfileName] = useState('');
   const [avatarId, setAvatarId] = useState<AvatarId | null>(null);
   const [unlockedAvatars, setUnlockedAvatars] = useState<AvatarId[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const colors = Colors[theme];
 
   // Load profile when screen is focused
   useFocusEffect(
@@ -93,22 +97,22 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={[styles.content, { paddingTop: Math.max(insets.top, 16) }]}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Profil</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Profil</Text>
 
         {isLoadingProfile ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.light.tint} />
+            <ActivityIndicator size="large" color={colors.tint} />
           </View>
         ) : (
           <>
             {/* Section 1: Current Avatar + Username */}
-            <View style={styles.profileCard}>
+            <View style={[styles.profileCard, { backgroundColor: colors.cardBackground }]}>
               <View style={styles.avatarContainer}>
                 {avatarSource ? (
                   <Image
@@ -117,9 +121,9 @@ export default function ProfileScreen() {
                     contentFit="cover"
                   />
                 ) : (
-                  <View style={styles.avatar}>
-                    <Text style={styles.avatarText}>{displayInitial}</Text>
-                  </View>
+              <View style={[styles.avatar, { backgroundColor: colors.tint }]}>
+                <Text style={styles.avatarText}>{displayInitial}</Text>
+              </View>
                 )}
                 {isSaving && (
                   <View style={styles.avatarLoadingOverlay}>
@@ -130,13 +134,32 @@ export default function ProfileScreen() {
 
               {/* Name */}
               <View style={styles.nameContainer}>
-                <Text style={styles.name}>{displayName}</Text>
+                <Text style={[styles.name, { color: colors.text }]}>{displayName}</Text>
               </View>
             </View>
 
-            {/* Section 2: All Avatars Grid */}
+            {/* Section 2: Dark Mode Toggle */}
+            <View style={[styles.settingsCard, { backgroundColor: colors.cardBackground }]}>
+              <View style={styles.settingRow}>
+                <View style={styles.settingTextContainer}>
+                  <Text style={[styles.settingTitle, { color: colors.text }]}>Karanlık Mod</Text>
+                  <Text style={[styles.settingDescription, { color: colors.textSecondary }]}>
+                    {theme === 'dark' ? 'Karanlık tema aktif' : 'Açık tema aktif'}
+                  </Text>
+                </View>
+                <Switch
+                  value={theme === 'dark'}
+                  onValueChange={() => toggleTheme()}
+                  trackColor={{ false: colors.border, true: colors.primary }}
+                  thumbColor={theme === 'dark' ? '#ffffff' : '#f4f3f4'}
+                  ios_backgroundColor={colors.border}
+                />
+              </View>
+            </View>
+
+            {/* Section 3: All Avatars Grid */}
             <View style={styles.avatarsSection}>
-              <Text style={styles.sectionTitle}>Avatarlar</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Avatarlar</Text>
               <View style={styles.avatarList}>
                 {VALID_AVATARS.map((id) => {
                   const isUnlocked = unlockedAvatars.includes(id);
@@ -150,7 +173,8 @@ export default function ProfileScreen() {
                       key={id}
                       style={[
                         styles.listItem,
-                        isUnlocked && isSelected && styles.listItemSelected,
+                        { backgroundColor: colors.cardBackground },
+                        isUnlocked && isSelected && { borderColor: colors.tint },
                         !isUnlocked && styles.listItemLocked,
                       ]}
                       onPress={() => {
@@ -177,14 +201,14 @@ export default function ProfileScreen() {
                           </View>
                         )}
                         {isUnlocked && isSelected && (
-                          <View style={styles.listCheckBadge}>
+                          <View style={[styles.listCheckBadge, { backgroundColor: colors.tint }]}>
                             <Text style={styles.listCheckText}>✓</Text>
                           </View>
                         )}
                       </View>
                       <View style={styles.listTextContainer}>
-                        <Text style={styles.listTitle}>{label}</Text>
-                        <Text style={styles.listDescription}>{description}</Text>
+                        <Text style={[styles.listTitle, { color: colors.text }]}>{label}</Text>
+                        <Text style={[styles.listDescription, { color: colors.textSecondary }]}>{description}</Text>
                       </View>
                     </Pressable>
                   );
@@ -217,7 +241,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
   },
   scrollView: {
     flex: 1,
@@ -231,7 +254,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: Colors.light.text,
     marginBottom: 8,
   },
   loadingContainer: {
@@ -244,13 +266,38 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     paddingHorizontal: 24,
     borderRadius: 20,
-    backgroundColor: Colors.light.background,
     shadowColor: '#0f172a',
     shadowOpacity: 0.12,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
     elevation: 7,
     gap: 16,
+  },
+  settingsCard: {
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+  },
+  settingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  settingTextContainer: {
+    flex: 1,
+    marginRight: 16,
+  },
+  settingTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  settingDescription: {
+    fontSize: 14,
   },
   avatarContainer: {
     alignItems: 'center',
@@ -260,7 +307,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: Colors.light.tint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -292,7 +338,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: Colors.light.text,
   },
   editHint: {
     fontSize: 12,
@@ -323,7 +368,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.light.text,
   },
   avatarList: {
     gap: 12,
@@ -334,7 +378,6 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 14,
     borderRadius: 14,
-    backgroundColor: '#fff',
     borderWidth: 2,
     borderColor: 'transparent',
     shadowColor: '#0f172a',
@@ -342,9 +385,6 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 3 },
     elevation: 3,
-  },
-  listItemSelected: {
-    borderColor: Colors.light.tint,
   },
   listItemLocked: {
     opacity: 0.75,
@@ -380,7 +420,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 6,
     right: 6,
-    backgroundColor: Colors.light.tint,
     borderRadius: 12,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -396,11 +435,9 @@ const styles = StyleSheet.create({
   listTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.light.text,
   },
   listDescription: {
     fontSize: 14,
-    color: Colors.light.icon,
   },
   listStatus: {
     fontSize: 12,

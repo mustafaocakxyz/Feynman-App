@@ -24,6 +24,7 @@ import { useSoundEffects } from '@/hooks/use-sound-effects';
 import { MathText } from '@/components/MathText';
 import { FunctionGraph, GraphConfig } from '@/components/FunctionGraph';
 import { Colors } from '@/constants/theme';
+import { useTheme } from '@/contexts/theme-context';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five' | 'function-machine' | 'domain-range-mapping';
 
@@ -400,45 +401,47 @@ function renderDiagram(kind?: DiagramKind) {
   return <View style={styles.diagramCard}>{renderDiagramByKind(kind)}</View>;
 }
 
-function renderTeachingBlock(block: TeachingBlock, index: number) {
+function renderTeachingBlock(block: TeachingBlock, index: number, colors: typeof Colors.light) {
   switch (block.kind) {
     case 'diagram':
       return (
-        <View key={`diagram-${block.diagram}-${index}`} style={styles.diagramCard}>
+        <View key={`diagram-${block.diagram}-${index}`} style={[styles.diagramCard, { backgroundColor: colors.cardBackground }]}>
           {renderDiagramByKind(block.diagram)}
         </View>
       );
     case 'text':
       return (
-        <Text key={`text-${index}`} style={styles.bodyText}>
+        <Text key={`text-${index}`} style={[styles.bodyText, { color: colors.text }]}>
           {block.content}
         </Text>
       );
     case 'formula':
       return (
-        <View key={`formula-${index}`} style={styles.formulaCard}>
+        <View key={`formula-${index}`} style={[styles.formulaCard, { backgroundColor: colors.formulaBackground, borderColor: colors.formulaBorder }]}>
           <MathText
             latex={block.content}
             widthFactor={block.widthFactor ?? 0.75}
             fontSize={block.fontSize ?? 20}
             textAlign={block.textAlign ?? 'center'}
+            color={colors.text}
           />
         </View>
       );
     case 'hint':
       return (
-        <View key={`hint-${index}`} style={styles.hintCard}>
+        <View key={`hint-${index}`} style={[styles.hintCard, { backgroundColor: colors.hintBackground, borderColor: colors.hintBorder }]}>
           <MathText
             latex={block.content}
             widthFactor={block.widthFactor ?? 0.7}
             fontSize={block.fontSize ?? 18}
             textAlign={block.textAlign ?? 'left'}
+            color={colors.hintText}
           />
         </View>
       );
     case 'graph':
       return (
-        <View key={`graph-${index}`} style={styles.diagramCard}>
+        <View key={`graph-${index}`} style={[styles.diagramCard, { backgroundColor: colors.cardBackground }]}>
           <FunctionGraph config={block.config} />
         </View>
       );
@@ -468,6 +471,8 @@ function getPageDiagram(page?: QuizModePage): DiagramKind | undefined {
 export default function QuizScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const colors = Colors[theme];
   const { showXp } = useXpFeedback();
   const { playCorrect, playNegative, playCompletion } = useSoundEffects();
 
@@ -582,12 +587,12 @@ export default function QuizScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 32) }]}>
         {quizState === 'idle' && (
           <View style={styles.idleContainer}>
-            <Text style={styles.title}>Quiz Modu</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.title, { color: colors.text }]}>Quiz Modu</Text>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               Tamamladığın konulardan rastgele sorular çöz, ödüller kazan!
             </Text>
             
@@ -598,20 +603,20 @@ export default function QuizScreen() {
             />
             
             {!hasEnough ? (
-              <View style={styles.warningBox}>
-                <Text style={styles.warningText}>
+              <View style={[styles.warningBox, { backgroundColor: colors.errorBackground, borderColor: colors.error }]}>
+                <Text style={[styles.warningText, { color: colors.error }]}>
                   Quiz başlatmak için en az 3 konu tamamlaman gerekiyor.
                 </Text>
-                <Text style={styles.warningSubtext}>
+                <Text style={[styles.warningSubtext, { color: colors.error }]}>
                   Şu anda {availableQuizCount} soru mevcut.
                 </Text>
               </View>
             ) : (
-              <View style={styles.infoBox}>
-                <Text style={styles.infoText}>
+              <View style={[styles.infoBox, { backgroundColor: colors.hintBackground, borderColor: colors.hintBorder }]}>
+                <Text style={[styles.infoText, { color: colors.hintText }]}>
                   {availableQuizCount} soru mevcut
                 </Text>
-                <Text style={styles.infoSubtext}>
+                <Text style={[styles.infoSubtext, { color: colors.hintText }]}>
                   Her doğru cevap: +10 XP{'\n'}
                   Quiz tamamlama: +20 XP
                 </Text>
@@ -619,7 +624,11 @@ export default function QuizScreen() {
             )}
 
             <Pressable
-              style={[styles.startButton, !hasEnough && styles.startButtonDisabled]}
+              style={[
+                styles.startButton,
+                { backgroundColor: colors.primary },
+                !hasEnough && styles.startButtonDisabled,
+              ]}
               onPress={handleStartQuiz}
               disabled={!hasEnough}>
               <Text style={styles.startButtonText}>Quiz Başlat</Text>
@@ -629,28 +638,31 @@ export default function QuizScreen() {
 
         {quizState === 'playing' && currentQuiz && (
           <View style={styles.quizContainer}>
-            <View style={styles.progressBar}>
+            <View style={[styles.progressBar, { backgroundColor: colors.progressBarBackground }]}>
               <View
                 style={[
                   styles.progressFill,
-                  { width: `${((currentQuestionIndex + 1) / selectedQuizzes.length) * 100}%` },
+                  { 
+                    width: `${((currentQuestionIndex + 1) / selectedQuizzes.length) * 100}%`,
+                    backgroundColor: colors.primary,
+                  },
                 ]}
               />
             </View>
-            <Text style={styles.questionCounter}>
+            <Text style={[styles.questionCounter, { color: colors.textSecondary }]}>
               Soru {currentQuestionIndex + 1} / {selectedQuizzes.length}
             </Text>
 
-            <View style={styles.pageCard}>
+            <View style={[styles.pageCard, { backgroundColor: colors.cardBackground }]}>
               {currentQuiz.blocks ? (
                 <>
-                  {currentQuiz.blocks.map((block, index) => renderTeachingBlock(block, index))}
+                  {currentQuiz.blocks.map((block, index) => renderTeachingBlock(block, index, colors))}
                   {currentQuiz.hint && (
-                    <View style={styles.hintCard}>
+                    <View style={[styles.hintCard, { backgroundColor: colors.hintBackground, borderColor: colors.hintBorder }]}>
                       {currentQuiz.hint.includes('\\') ? (
-                        <MathText latex={currentQuiz.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
+                        <MathText latex={currentQuiz.hint} widthFactor={0.7} fontSize={18} textAlign="left" color={colors.hintText} />
                       ) : (
-                        <Text style={styles.hintText}>{currentQuiz.hint}</Text>
+                        <Text style={[styles.hintText, { color: colors.hintText }]}>{currentQuiz.hint}</Text>
                       )}
                     </View>
                   )}
@@ -659,29 +671,30 @@ export default function QuizScreen() {
                 <>
                   {renderDiagram(getPageDiagram(currentQuiz))}
                   {currentQuiz.graph && (
-                    <View style={styles.diagramCard}>
+                    <View style={[styles.diagramCard, { backgroundColor: colors.cardBackground }]}>
                       <FunctionGraph config={currentQuiz.graph} />
                     </View>
                   )}
                   {currentQuiz.formula && (
-                    <View style={styles.formulaCard}>
+                    <View style={[styles.formulaCard, { backgroundColor: colors.formulaBackground, borderColor: colors.formulaBorder }]}>
                       <MathText
                         latex={currentQuiz.formula}
                         widthFactor={0.75}
                         fontSize={20}
                         textAlign="center"
+                        color={colors.text}
                       />
                     </View>
                   )}
                   {currentQuiz.question && (
-                    <Text style={styles.bodyText}>{currentQuiz.question}</Text>
+                    <Text style={[styles.bodyText, { color: colors.text }]}>{currentQuiz.question}</Text>
                   )}
                   {currentQuiz.hint && (
-                    <View style={styles.hintCard}>
+                    <View style={[styles.hintCard, { backgroundColor: colors.hintBackground, borderColor: colors.hintBorder }]}>
                       {currentQuiz.hint.includes('\\') ? (
-                        <MathText latex={currentQuiz.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
+                        <MathText latex={currentQuiz.hint} widthFactor={0.7} fontSize={18} textAlign="left" color={colors.hintText} />
                       ) : (
-                        <Text style={styles.hintText}>{currentQuiz.hint}</Text>
+                        <Text style={[styles.hintText, { color: colors.hintText }]}>{currentQuiz.hint}</Text>
                       )}
                     </View>
                   )}
@@ -705,10 +718,20 @@ export default function QuizScreen() {
                       key={choice.id}
                       style={({ pressed }) => [
                         styles.choiceButton,
-                        isSelected && styles.choiceButtonSelected,
-                        isCorrectSelection && styles.choiceButtonCorrect,
-                        isIncorrectSelection && styles.choiceButtonIncorrect,
-                        pressed && !isSelected && styles.choiceButtonPressed,
+                        { 
+                          backgroundColor: colors.quizChoiceBackground,
+                          borderColor: colors.quizChoiceBorder,
+                        },
+                        isSelected && { borderColor: colors.quizChoiceSelected },
+                        isCorrectSelection && {
+                          backgroundColor: colors.quizChoiceCorrect,
+                          borderColor: colors.quizChoiceCorrectBorder,
+                        },
+                        isIncorrectSelection && {
+                          backgroundColor: colors.quizChoiceIncorrect,
+                          borderColor: colors.quizChoiceIncorrectBorder,
+                        },
+                        pressed && !isSelected && { backgroundColor: colors.cardBackgroundSecondary },
                       ]}
                       onPress={() => {
                         void handleChoiceSelect(choice.id, currentQuiz);
@@ -719,8 +742,9 @@ export default function QuizScreen() {
                           <Text
                             style={[
                               styles.choiceLabel,
-                              isCorrectSelection && styles.choiceTextCorrect,
-                              isIncorrectSelection && styles.choiceTextIncorrect,
+                              { color: colors.text },
+                              isCorrectSelection && { color: colors.success },
+                              isIncorrectSelection && { color: colors.error },
                             ]}>
                             {choice.label}
                           </Text>
@@ -729,17 +753,18 @@ export default function QuizScreen() {
                           </View>
                         </View>
                       ) : ('isMath' in choice && choice.isMath) || choice.label.includes('\\') ? (
-                        <MathText latex={choice.label} widthFactor={0.85} fontSize={24} />
-                      ) : (
-                        <Text
-                          style={[
-                            styles.choiceText,
-                            isCorrectSelection && styles.choiceTextCorrect,
-                            isIncorrectSelection && styles.choiceTextIncorrect,
-                          ]}>
-                          {choice.label}
-                        </Text>
-                      )}
+                        <MathText latex={choice.label} widthFactor={0.85} fontSize={24} color={colors.text} />
+                    ) : (
+                      <Text
+                        style={[
+                          styles.choiceText,
+                          { color: colors.text },
+                          isCorrectSelection && { color: colors.success },
+                          isIncorrectSelection && { color: colors.error },
+                        ]}>
+                        {choice.label}
+                      </Text>
+                    )}
                     </Pressable>
                   );
                 })}
@@ -785,7 +810,6 @@ export default function QuizScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   container: {
     paddingHorizontal: 24,
@@ -798,12 +822,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    color: '#0f172a',
     fontFamily: 'Montserrat_700Bold',
   },
   subtitle: {
     fontSize: 16,
-    color: '#64748b',
     textAlign: 'center',
     fontFamily: 'Montserrat_400Regular',
   },
@@ -813,8 +835,6 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   warningBox: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fca5a5',
     borderWidth: 2,
     borderRadius: 12,
     padding: 16,
@@ -824,19 +844,15 @@ const styles = StyleSheet.create({
   },
   warningText: {
     fontSize: 16,
-    color: '#991b1b',
     textAlign: 'center',
     fontFamily: 'Montserrat_700Bold',
   },
   warningSubtext: {
     fontSize: 14,
-    color: '#dc2626',
     textAlign: 'center',
     fontFamily: 'Montserrat_400Regular',
   },
   infoBox: {
-    backgroundColor: '#f0f9ff',
-    borderColor: '#93c5fd',
     borderWidth: 2,
     borderRadius: 12,
     padding: 16,
@@ -846,18 +862,15 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 16,
-    color: '#1e40af',
     textAlign: 'center',
     fontFamily: 'Montserrat_700Bold',
   },
   infoSubtext: {
     fontSize: 14,
-    color: '#3b82f6',
     textAlign: 'center',
     fontFamily: 'Montserrat_400Regular',
   },
   startButton: {
-    backgroundColor: '#2563eb',
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 12,
@@ -881,23 +894,19 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 8,
-    backgroundColor: '#e5e7eb',
     borderRadius: 4,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#2563eb',
     borderRadius: 4,
   },
   questionCounter: {
     fontSize: 16,
-    color: '#64748b',
     textAlign: 'center',
     fontFamily: 'Montserrat_600SemiBold',
   },
   pageCard: {
-    backgroundColor: '#ffffff',
     borderRadius: 16,
     padding: 20,
     gap: 16,
@@ -910,31 +919,26 @@ const styles = StyleSheet.create({
   bodyText: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#1f2937',
     fontFamily: 'Montserrat_400Regular',
   },
   formulaCard: {
-    backgroundColor: '#f9fafb',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
+    borderWidth: 2,
   },
   diagramCard: {
-    backgroundColor: '#f9fafb',
     borderRadius: 12,
     padding: 16,
     minHeight: 200,
   },
   hintCard: {
-    backgroundColor: '#fef3c7',
     borderRadius: 12,
     padding: 12,
     borderLeftWidth: 4,
-    borderLeftColor: '#f59e0b',
   },
   hintText: {
     fontSize: 14,
-    color: '#92400e',
     fontFamily: 'Montserrat_400Regular',
   },
   quizChoices: {
@@ -942,44 +946,19 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   choiceButton: {
-    backgroundColor: '#f9fafb',
     borderWidth: 2,
-    borderColor: '#e5e7eb',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 56,
   },
-  choiceButtonSelected: {
-    borderColor: '#2563eb',
-    backgroundColor: '#eff6ff',
-  },
-  choiceButtonCorrect: {
-    borderColor: '#16a34a',
-    backgroundColor: '#dcfce7',
-  },
-  choiceButtonIncorrect: {
-    borderColor: '#dc2626',
-    backgroundColor: '#fee2e2',
-  },
-  choiceButtonPressed: {
-    backgroundColor: '#f3f4f6',
-  },
   choiceText: {
     fontSize: 18,
-    color: '#1f2937',
     fontFamily: 'Montserrat_600SemiBold',
-  },
-  choiceTextCorrect: {
-    color: '#16a34a',
-  },
-  choiceTextIncorrect: {
-    color: '#dc2626',
   },
   choiceLabel: {
     fontSize: 16,
-    color: '#1f2937',
     marginBottom: 8,
     fontFamily: 'Montserrat_600SemiBold',
   },

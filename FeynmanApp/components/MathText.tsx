@@ -1,5 +1,7 @@
 import MathJaxSvg from 'react-native-mathjax-svg';
 import { StyleSheet, View } from 'react-native';
+import { useTheme } from '@/contexts/theme-context';
+import { Colors } from '@/constants/theme';
 
 type Props = {
   latex: string;
@@ -11,11 +13,14 @@ type Props = {
 
 export function MathText({
   latex,
-  color = '#111827',
+  color,
   fontSize = 18,
   widthFactor = 0.8,
   textAlign = 'center',
 }: Props) {
+  const { theme } = useTheme();
+  const colors = Colors[theme as 'light' | 'dark'];
+  const mathColor = color || colors.text;
   const clampedWidth = Math.min(Math.max(widthFactor, 0.4), 1);
   return (
     <View
@@ -25,7 +30,7 @@ export function MathText({
       ]}>
       <View style={[styles.mathWrapper, { maxHeight: fontSize * 1.5 }]}>
         <MathJaxSvg
-          color={color}
+          color={mathColor}
           fontSize={fontSize}
           style={[styles.math, { textAlign }]}
           fontCache="global">

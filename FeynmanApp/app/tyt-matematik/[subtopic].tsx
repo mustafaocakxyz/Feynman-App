@@ -27,6 +27,8 @@ import { MathText } from '@/components/MathText';
 import { useAuth } from '@/contexts/auth-context';
 import { FunctionGraph, GraphConfig } from '@/components/FunctionGraph';
 import { ProgressDots } from '@/components/ProgressDots';
+import { Colors } from '@/constants/theme';
+import { useTheme } from '@/contexts/theme-context';
 
 type DiagramKind = 'unit-triangle' | 'three-four-five' | 'function-machine' | 'domain-range-mapping';
 
@@ -1335,23 +1337,23 @@ function renderDiagram(kind?: DiagramKind) {
   return <View style={styles.diagramCard}>{renderDiagramByKind(kind)}</View>;
 }
 
-function renderTeachingBlock(block: TeachingBlock, index: number) {
+function renderTeachingBlock(block: TeachingBlock, index: number, colors: typeof Colors.light) {
   switch (block.kind) {
     case 'diagram':
       return (
-        <View key={`diagram-${block.diagram}-${index}`} style={styles.diagramCard}>
+        <View key={`diagram-${block.diagram}-${index}`} style={[styles.diagramCard, { backgroundColor: colors.cardBackground }]}>
           {renderDiagramByKind(block.diagram)}
         </View>
       );
     case 'text':
       return (
-        <Text key={`text-${index}`} style={styles.bodyText}>
+        <Text key={`text-${index}`} style={[styles.bodyText, { color: colors.text }]}>
           {block.content}
         </Text>
       );
     case 'formula':
       return (
-        <View key={`formula-${index}`} style={styles.formulaCard}>
+        <View key={`formula-${index}`} style={[styles.formulaCard, { backgroundColor: colors.formulaBackground, borderColor: colors.formulaBorder }]}>
           <MathText
             latex={block.content}
             widthFactor={block.widthFactor ?? 0.75}
@@ -1362,7 +1364,7 @@ function renderTeachingBlock(block: TeachingBlock, index: number) {
       );
     case 'hint':
       return (
-        <View key={`hint-${index}`} style={styles.hintCard}>
+        <View key={`hint-${index}`} style={[styles.hintCard, { backgroundColor: colors.hintBackground, borderColor: colors.hintBorder }]}>
           <MathText
             latex={block.content}
             widthFactor={block.widthFactor ?? 0.7}
@@ -1373,7 +1375,7 @@ function renderTeachingBlock(block: TeachingBlock, index: number) {
       );
     case 'graph':
       return (
-        <View key={`graph-${index}`} style={styles.diagramCard}>
+        <View key={`graph-${index}`} style={[styles.diagramCard, { backgroundColor: colors.cardBackground }]}>
           <FunctionGraph config={block.config} />
         </View>
       );
@@ -1402,6 +1404,8 @@ function getChoiceVisualState(
 export default function TYTSubtopicScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const colors = Colors[theme as 'light' | 'dark'];
   const { subtopic } = useLocalSearchParams<{ subtopic?: string }>();
   const segments = useSegments();
   const parentPath = segments.slice(0, Math.max(segments.length - 1, 0)).join('/');
@@ -1645,26 +1649,26 @@ export default function TYTSubtopicScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 32) }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 32), backgroundColor: colors.background }]}>
         {!isCompletionPage && (
           <View style={styles.topRow}>
             <Pressable
-              style={styles.navButton}
+              style={[styles.navButton, { backgroundColor: colors.cardBackgroundSecondary }]}
               onPress={() => router.back()}>
-              <Text style={styles.navButtonText}>{'‹'} Geri</Text>
+              <Text style={[styles.navButtonText, { color: colors.text }]}>{'‹'} Geri</Text>
             </Pressable>
             <Pressable
-              style={styles.navButton}
+              style={[styles.navButton, { backgroundColor: colors.cardBackgroundSecondary }]}
               onPress={() => router.push('/')}>
-              <Text style={styles.navButtonText}>⌂ Ana Sayfa</Text>
+              <Text style={[styles.navButtonText, { color: colors.text }]}>⌂ Ana Sayfa</Text>
             </Pressable>
           </View>
         )}
 
         {!isCompletionPage && (
           <>
-            <Text style={styles.headline}>{effectiveTitle}</Text>
+            <Text style={[styles.headline, { color: colors.text }]}>{effectiveTitle}</Text>
             {lesson && lesson.pages.length > 0 && (
               <ProgressDots totalPages={lesson.pages.length} currentPageIndex={pageIndex} />
             )}
@@ -1672,26 +1676,26 @@ export default function TYTSubtopicScreen() {
         )}
 
         {lesson && currentPage?.type === 'teaching' && (
-          <View style={styles.pageCard}>
+          <View style={[styles.pageCard, { backgroundColor: colors.cardBackground }]}>
             {currentPage.blocks.map((block, index) =>
-              renderTeachingBlock(block, index),
+              renderTeachingBlock(block, index, colors),
             )}
           </View>
         )}
 
         {lesson && currentPage?.type === 'quiz' && (
-          <View style={styles.pageCard}>
+          <View style={[styles.pageCard, { backgroundColor: colors.cardBackground }]}>
             {currentPage.blocks ? (
               <>
                 {currentPage.blocks.map((block, index) =>
-                  renderTeachingBlock(block, index),
+                  renderTeachingBlock(block, index, colors),
                 )}
                 {currentPage.hint && (
-                  <View style={styles.hintCard}>
+                  <View style={[styles.hintCard, { backgroundColor: colors.hintBackground, borderColor: colors.hintBorder }]}>
                     {currentPage.hint.includes('\\') ? (
                       <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
                     ) : (
-                      <Text style={styles.hintText}>{currentPage.hint}</Text>
+                      <Text style={[styles.hintText, { color: colors.hintText }]}>{currentPage.hint}</Text>
                     )}
                   </View>
                 )}
@@ -1700,12 +1704,12 @@ export default function TYTSubtopicScreen() {
               <>
                 {renderDiagram(getPageDiagram(currentPage))}
                 {currentPage.graph && (
-                  <View style={styles.diagramCard}>
+                  <View style={[styles.diagramCard, { backgroundColor: colors.cardBackground }]}>
                     <FunctionGraph config={currentPage.graph} />
                   </View>
                 )}
                 {currentPage.formula && (
-                  <View style={styles.formulaCard}>
+                  <View style={[styles.formulaCard, { backgroundColor: colors.formulaBackground, borderColor: colors.formulaBorder }]}>
                     <MathText
                       latex={currentPage.formula}
                       widthFactor={0.75}
@@ -1715,14 +1719,14 @@ export default function TYTSubtopicScreen() {
                   </View>
                 )}
                 {currentPage.question && (
-                  <Text style={styles.bodyText}>{currentPage.question}</Text>
+                  <Text style={[styles.bodyText, { color: colors.text }]}>{currentPage.question}</Text>
                 )}
                 {currentPage.hint && (
-                  <View style={styles.hintCard}>
+                  <View style={[styles.hintCard, { backgroundColor: colors.hintBackground, borderColor: colors.hintBorder }]}>
                     {currentPage.hint.includes('\\') ? (
                       <MathText latex={currentPage.hint} widthFactor={0.7} fontSize={18} textAlign="left" />
                     ) : (
-                      <Text style={styles.hintText}>{currentPage.hint}</Text>
+                      <Text style={[styles.hintText, { color: colors.hintText }]}>{currentPage.hint}</Text>
                     )}
                   </View>
                 )}
@@ -1745,10 +1749,17 @@ export default function TYTSubtopicScreen() {
                     key={choice.id}
                     style={({ pressed }) => [
                       styles.choiceButton,
-                      isSelected && styles.choiceButtonSelected,
-                      isCorrectSelection && styles.choiceButtonCorrect,
-                      isIncorrectSelection && styles.choiceButtonIncorrect,
-                      pressed && !isSelected && styles.choiceButtonPressed,
+                      { backgroundColor: colors.quizChoiceBackground, borderColor: colors.quizChoiceBorder },
+                      isSelected && { borderColor: colors.quizChoiceSelected },
+                      isCorrectSelection && {
+                        backgroundColor: colors.quizChoiceCorrect,
+                        borderColor: colors.quizChoiceCorrectBorder,
+                      },
+                      isIncorrectSelection && {
+                        backgroundColor: colors.quizChoiceIncorrect,
+                        borderColor: colors.quizChoiceIncorrectBorder,
+                      },
+                      pressed && !isSelected && { backgroundColor: colors.cardBackgroundSecondary },
                     ]}
                     onPress={() => {
                       void handleChoiceSelect(choice.id, currentPage);
@@ -1758,8 +1769,9 @@ export default function TYTSubtopicScreen() {
                         <Text
                           style={[
                             styles.choiceLabel,
-                            isCorrectSelection && styles.choiceTextCorrect,
-                            isIncorrectSelection && styles.choiceTextIncorrect,
+                            { color: colors.text },
+                            isCorrectSelection && { color: colors.success },
+                            isIncorrectSelection && { color: colors.error },
                           ]}>
                           {choice.label}
                         </Text>
@@ -1773,8 +1785,9 @@ export default function TYTSubtopicScreen() {
                       <Text
                         style={[
                           styles.choiceText,
-                          isCorrectSelection && styles.choiceTextCorrect,
-                          isIncorrectSelection && styles.choiceTextIncorrect,
+                          { color: colors.text },
+                          isCorrectSelection && { color: colors.success },
+                          isIncorrectSelection && { color: colors.error },
                         ]}>
                         {normalizeChoiceLabel(choice.id, choice.label)}
                       </Text>
@@ -1785,20 +1798,20 @@ export default function TYTSubtopicScreen() {
             </View>
             {isChoiceCorrect === false && (
               <Pressable
-                style={[styles.secondaryButton]}
+                style={[styles.secondaryButton, { borderColor: colors.error }]}
                 onPress={() => {
                   setSelectedChoice(null);
                   setIsChoiceCorrect(null);
                 }}>
-                <Text style={styles.secondaryButtonText}>Tekrar dene</Text>
+                <Text style={[styles.secondaryButtonText, { color: colors.error }]}>Tekrar dene</Text>
               </Pressable>
             )}
           </View>
         )}
 
         {lesson && currentPage?.type === 'placeholder' && (
-          <View style={styles.pageCard}>
-            <Text style={styles.bodyTextMuted}>
+          <View style={[styles.pageCard, { backgroundColor: colors.cardBackground }]}>
+            <Text style={[styles.bodyTextMuted, { color: colors.textSecondary }]}>
               {getPlaceholderMessage(currentPage)}
             </Text>
           </View>
@@ -1807,12 +1820,12 @@ export default function TYTSubtopicScreen() {
         {lesson && currentPage?.type === 'completion' && completionData && (
           <>
             {completionPageIndex === 0 && (
-              <View style={styles.pageCard}>
+              <View style={[styles.pageCard, { backgroundColor: colors.cardBackground }]}>
                 <Animated.View style={[styles.rewardSection, styles.congratulationsBox, createSlideStyle(congratulationsAnim)]}>
-                  <Text style={styles.completionTitle}>
+                  <Text style={[styles.completionTitle, { color: colors.text }]}>
                     🎉 TEBRİKLER
                   </Text>
-                  <Text style={styles.completionSubtitle}>
+                  <Text style={[styles.completionSubtitle, { color: colors.textSecondary }]}>
                     Desen Tamamlandı!
                   </Text>
                 </Animated.View>
@@ -1825,24 +1838,24 @@ export default function TYTSubtopicScreen() {
                   />
                 </Animated.View>
 
-                <Animated.View style={[styles.rewardSection, createSlideStyle(xpAnim)]}>
-                  <Text style={styles.rewardSectionTitle}>BU MODÜLDE TOPLAM</Text>
-                  <Text style={styles.rewardMainValue}>
+                <Animated.View style={[styles.rewardSection, { backgroundColor: colors.cardBackground }, createSlideStyle(xpAnim)]}>
+                  <Text style={[styles.rewardSectionTitle, { color: colors.textSecondary }]}>BU MODÜLDE TOPLAM</Text>
+                  <Text style={[styles.rewardMainValue, { color: colors.text }]}>
                     ⭐ {completionData.totalXp} XP Kazandın!
                   </Text>
                 </Animated.View>
 
                 {completionData.streakIncreased && (
-                  <Animated.View style={[styles.rewardSection, createSlideStyle(streakAnim)]}>
-                    <Text style={styles.rewardSectionTitle}>🔥 SERİ</Text>
-                    <Text style={styles.rewardMainValue}>
+                  <Animated.View style={[styles.rewardSection, { backgroundColor: colors.cardBackground }, createSlideStyle(streakAnim)]}>
+                    <Text style={[styles.rewardSectionTitle, { color: colors.textSecondary }]}>🔥 SERİ</Text>
+                    <Text style={[styles.rewardMainValue, { color: colors.text }]}>
                       Seriniz: {completionData.streakAfter} gün
                     </Text>
                   </Animated.View>
                 )}
 
                 <Pressable
-                  style={styles.primaryButton}
+                  style={[styles.primaryButton, { backgroundColor: colors.primary }]}
                   onPress={completionData.hasRewards ? handleAdvanceToRewards : handleCompletionPress}>
                   <Text style={styles.primaryButtonText}>
                     {completionData.hasRewards ? 'İlerle' : 'Bitir'}
@@ -1852,13 +1865,13 @@ export default function TYTSubtopicScreen() {
             )}
 
             {completionPageIndex === 1 && completionData.hasRewards && (
-              <View style={styles.pageCard}>
-                <Text style={styles.completionTitle}>🎁 YENİ KAZANÇLAR</Text>
+              <View style={[styles.pageCard, { backgroundColor: colors.cardBackground }]}>
+                <Text style={[styles.completionTitle, { color: colors.text }]}>🎁 YENİ KAZANÇLAR</Text>
                 
                 {completionData.newlyUnlockedAvatars.map((avatar) => {
                   const avatarSource = getAvatarSource(avatar.id);
                   return (
-                    <View key={avatar.id} style={styles.rewardSection}>
+                    <View key={avatar.id} style={[styles.rewardSection, { backgroundColor: colors.cardBackground }]}>
                       {avatarSource && (
                         <Image
                           source={avatarSource}
@@ -1866,10 +1879,10 @@ export default function TYTSubtopicScreen() {
                           resizeMode="contain"
                         />
                       )}
-                      <Text style={styles.rewardMainValue}>
+                      <Text style={[styles.rewardMainValue, { color: colors.text }]}>
                         🎉 Yeni avatar açıldı!
                       </Text>
-                      <Text style={styles.rewardBreakdown}>
+                      <Text style={[styles.rewardBreakdown, { color: colors.textSecondary }]}>
                         {avatar.condition}
                       </Text>
                     </View>
@@ -1877,7 +1890,7 @@ export default function TYTSubtopicScreen() {
                 })}
 
                 <Pressable
-                  style={styles.primaryButton}
+                  style={[styles.primaryButton, { backgroundColor: colors.primary }]}
                   onPress={handleCompletionPress}>
                   <Text style={styles.primaryButtonText}>Bitir</Text>
                 </Pressable>
@@ -1887,14 +1900,14 @@ export default function TYTSubtopicScreen() {
         )}
 
         {showAdvanceButton && (
-          <Pressable style={styles.primaryButton} onPress={handleAdvance}>
+          <Pressable style={[styles.primaryButton, { backgroundColor: colors.primary }]} onPress={handleAdvance}>
             <Text style={styles.primaryButtonText}>İlerle</Text>
           </Pressable>
         )}
 
         {!lesson && (
-          <View style={styles.pageCard}>
-            <Text style={styles.bodyTextMuted}>
+          <View style={[styles.pageCard, { backgroundColor: colors.cardBackground }]}>
+            <Text style={[styles.bodyTextMuted, { color: colors.textSecondary }]}>
               Bu alt konu için henüz içerik tanımlanmadı.
             </Text>
           </View>
@@ -1928,14 +1941,12 @@ const createShadowStyle = (
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   container: {
     paddingHorizontal: 24,
     paddingTop: 32,
     paddingBottom: 40,
     gap: 24,
-    backgroundColor: '#ffffff',
   },
   topRow: {
     flexDirection: 'row',
@@ -1948,23 +1959,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 18,
     borderRadius: 12,
-    backgroundColor: '#f3f4f6',
     ...createShadowStyle('#0f172a', 0.12, 8, { width: 0, height: 4 }, 5),
   },
   navButtonText: {
     fontSize: 16,
-    color: '#1f2937',
     fontFamily: 'Montserrat_700Bold',
   },
   headline: {
     fontSize: 32,
-    color: '#0f172a',
     fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
   },
   pageCard: {
     borderRadius: 24,
-    backgroundColor: '#f9fafb',
     padding: 24,
     gap: 24,
     ...createShadowStyle('#0f172a', 0.12, 12, { width: 0, height: 6 }, 8),
@@ -1973,43 +1980,30 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 220,
     borderRadius: 20,
-    backgroundColor: '#eff6ff',
     overflow: 'hidden',
   },
   formulaCard: {
     paddingVertical: 18,
     paddingHorizontal: 16,
     borderRadius: 16,
-    backgroundColor: '#ede9fe',
     borderWidth: 2,
-    borderColor: '#ddd6fe',
-  },
-  formulaText: {
-    fontSize: 18,
-    color: '#4c1d95',
-    fontFamily: 'Montserrat_700Bold',
-    textAlign: 'center',
   },
   bodyText: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#1f2937',
     fontFamily: 'Montserrat_700Bold',
   },
   hintText: {
     marginTop: 8,
     fontSize: 14,
     lineHeight: 20,
-    color: '#2563eb',
     fontFamily: 'Montserrat_700Bold',
   },
   hintCard: {
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 14,
-    backgroundColor: '#dbeafe',
     borderWidth: 1,
-    borderColor: '#bfdbfe',
     alignSelf: 'stretch',
   },
   quizChoices: {
@@ -2019,35 +2013,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 18,
     borderRadius: 16,
-    backgroundColor: '#ffffff',
     borderWidth: 2,
-    borderColor: '#e5e7eb',
-  },
-  choiceButtonPressed: {
-    backgroundColor: '#eff6ff',
-  },
-  choiceButtonSelected: {
-    borderColor: '#2563eb',
-  },
-  choiceButtonCorrect: {
-    backgroundColor: '#dcfce7',
-    borderColor: '#16a34a',
-  },
-  choiceButtonIncorrect: {
-    backgroundColor: '#fee2e2',
-    borderColor: '#dc2626',
   },
   choiceText: {
     fontSize: 16,
-    color: '#1f2937',
     fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
-  },
-  choiceTextCorrect: {
-    color: '#166534',
-  },
-  choiceTextIncorrect: {
-    color: '#991b1b',
   },
   choiceGraphContainer: {
     alignItems: 'center',
@@ -2055,7 +2026,6 @@ const styles = StyleSheet.create({
   },
   choiceLabel: {
     fontSize: 14,
-    color: '#1f2937',
     fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
   },
@@ -2067,7 +2037,6 @@ const styles = StyleSheet.create({
   bodyTextMuted: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#6b7280',
     fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
   },
@@ -2078,7 +2047,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 18,
     alignItems: 'center',
-    backgroundColor: '#2563eb',
     ...createShadowStyle('#1d4ed8', 0.22, 10, { width: 0, height: 6 }, 8),
   },
   primaryButtonText: {
@@ -2093,30 +2061,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: '#dc2626',
   },
   secondaryButtonText: {
     fontSize: 16,
-    color: '#b91c1c',
     fontFamily: 'Montserrat_700Bold',
   },
   completionTitle: {
     fontSize: 28,
     textAlign: 'center',
-    color: '#111827',
     fontFamily: 'Montserrat_700Bold',
     marginBottom: 8,
   },
   completionSubtitle: {
     fontSize: 20,
     textAlign: 'center',
-    color: '#6b7280',
     fontFamily: 'Montserrat_700Bold',
   },
   rewardSection: {
     marginBottom: 24,
     padding: 20,
-    backgroundColor: '#ffffff',
     borderRadius: 16,
     alignItems: 'center',
     ...createShadowStyle('#0f172a', 0.1, 8, { width: 0, height: 4 }, 4),
@@ -2126,7 +2089,6 @@ const styles = StyleSheet.create({
   },
   rewardSectionTitle: {
     fontSize: 14,
-    color: '#6b7280',
     fontFamily: 'Montserrat_700Bold',
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -2134,14 +2096,12 @@ const styles = StyleSheet.create({
   },
   rewardMainValue: {
     fontSize: 24,
-    color: '#111827',
     fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
     marginBottom: 4,
   },
   rewardBreakdown: {
     fontSize: 14,
-    color: '#6b7280',
     textAlign: 'center',
   },
   rewardItem: {

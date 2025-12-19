@@ -1,11 +1,10 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider as NavigationThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { XpFeedbackProvider } from '@/components/xp-feedback-provider';
 import { AuthProvider } from '@/contexts/auth-context';
@@ -13,6 +12,7 @@ import { ProtectedRouteProvider } from '@/components/protected-route';
 import { SyncProvider } from '@/components/SyncProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useImagePreloader } from '@/hooks/use-image-preloader';
+import { ThemeProvider, useTheme } from '@/contexts/theme-context';
 
 function RootLayoutNav() {
   return (
@@ -31,13 +31,8 @@ function RootLayoutNav() {
   );
 }
 
-export default function RootLayout() {
-  console.log('[RootLayout] Starting app initialization...');
-  
-  // Hooks must be called unconditionally at the top level
-  const colorScheme = useColorScheme();
-  console.log('[RootLayout] Color scheme loaded');
-  
+function RootLayoutContent() {
+  const { theme } = useTheme();
   const [fontsLoaded, fontError] = useFonts({
     Montserrat_400Regular,
     Montserrat_600SemiBold,
@@ -49,6 +44,7 @@ export default function RootLayout() {
   
   console.log('[RootLayout] Fonts loaded:', fontsLoaded, fontError);
   console.log('[RootLayout] Images preloaded:', imagesLoaded);
+  console.log('[RootLayout] Theme:', theme);
 
   if (!fontsLoaded) {
     console.log('[RootLayout] Waiting for fonts...');
@@ -58,18 +54,28 @@ export default function RootLayout() {
   console.log('[RootLayout] All initializations complete, rendering app');
 
   return (
+    <NavigationThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
+      <RootLayoutNav />
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+    </NavigationThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  console.log('[RootLayout] Starting app initialization...');
+  
+  return (
     <ErrorBoundary>
       <SafeAreaProvider>
-        <AuthProvider>
-          <SyncProvider>
-            <XpFeedbackProvider>
-              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                <RootLayoutNav />
-                <StatusBar style="dark" />
-              </ThemeProvider>
-            </XpFeedbackProvider>
-          </SyncProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <SyncProvider>
+              <XpFeedbackProvider>
+                <RootLayoutContent />
+              </XpFeedbackProvider>
+            </SyncProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </ErrorBoundary>
   );
