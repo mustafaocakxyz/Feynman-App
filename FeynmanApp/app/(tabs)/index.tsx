@@ -6,6 +6,7 @@ import {
   Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -17,6 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Image as ExpoImage } from 'expo-image';
+import * as Haptics from 'expo-haptics';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
 import { getStreakState } from '@/lib/streak-storage';
 import { getXpState } from '@/lib/xp-storage';
@@ -136,13 +138,36 @@ export default function HomeScreen() {
     setActiveIndex(index);
   };
 
-  const handleContinue = (moduleId: string) => {
+  const triggerHaptic = useCallback(async () => {
+    try {
+      if (Platform.OS === 'web') {
+        await Haptics.selectionAsync();
+      } else {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+    } catch (error) {
+      // Silently fail if haptics aren't available
+    }
+  }, []);
+
+  const handleContinue = async (moduleId: string) => {
+    await triggerHaptic();
     if (moduleId === 'ayt') {
       router.push('/ayt-matematik' as never);
     }
     if (moduleId === 'tyt') {
       router.push('/tyt-matematik' as never);
     }
+  };
+
+  const handleStreakPress = async () => {
+    await triggerHaptic();
+    router.push('/(tabs)/streak' as never);
+  };
+
+  const handleXpPress = async () => {
+    await triggerHaptic();
+    router.push('/(tabs)/xp' as never);
   };
 
   return (
@@ -185,7 +210,7 @@ export default function HomeScreen() {
                     { backgroundColor: colors.cardBackgroundSecondary },
                     pressed && styles.metricCardPressed,
                   ]}
-                  onPress={() => router.push('/(tabs)/streak' as never)}>
+                  onPress={handleStreakPress}>
                   <Text style={styles.metricIcon}>🔥</Text>
                   <Text style={[styles.metricValue, { color: colors.text }]}>{streak}</Text>
                 </Pressable>
@@ -195,7 +220,7 @@ export default function HomeScreen() {
                     { backgroundColor: colors.cardBackgroundSecondary },
                     pressed && styles.metricCardPressed,
                   ]}
-                  onPress={() => router.push('/(tabs)/xp' as never)}>
+                  onPress={handleXpPress}>
                   <Text style={styles.metricIcon}>⭐️</Text>
                   <Text style={[styles.metricValue, { color: colors.text }]}>{xp}</Text>
                 </Pressable>

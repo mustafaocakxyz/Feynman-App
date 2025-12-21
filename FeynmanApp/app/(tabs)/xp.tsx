@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable, Animated } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable, Animated, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/theme';
@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/auth-context';
 import { Image } from 'expo-image';
 import { getAvatarSource } from '@/lib/profile-storage';
 import { useTheme } from '@/contexts/theme-context';
+import * as Haptics from 'expo-haptics';
 
 const MAX_XP = 8000;
 const VISIBLE_MAX_XP = 4000; // Maximum XP shown in the visible bar area
@@ -129,7 +130,18 @@ export default function XPScreen() {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 16) }]}>
         <View style={styles.navRow}>
-          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={() => router.push('/(tabs)' as never)}>
+          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={async () => {
+            try {
+              if (Platform.OS === 'web') {
+                await Haptics.selectionAsync();
+              } else {
+                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            } catch (error) {
+              // Silently fail if haptics aren't available
+            }
+            router.push('/(tabs)' as never);
+          }}>
             <Text style={[styles.backButtonText, { color: colors.text }]}>{'<'} Geri</Text>
           </Pressable>
         </View>

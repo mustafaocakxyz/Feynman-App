@@ -1,5 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -52,10 +53,32 @@ export default function AYTMatematikScreen() {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 24), backgroundColor: colors.background }]}>
         <View style={styles.navRow}>
-          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={() => router.back()}>
+          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={async () => {
+            try {
+              if (Platform.OS === 'web') {
+                await Haptics.selectionAsync();
+              } else {
+                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            } catch (error) {
+              // Silently fail if haptics aren't available
+            }
+            router.back();
+          }}>
             <Text style={[styles.backButtonText, { color: colors.text }]}>{'<'} Geri</Text>
           </Pressable>
-          <Pressable style={[styles.homeButton, { borderColor: colors.primary, backgroundColor: colors.cardBackground }]} onPress={() => router.push('/')}>
+          <Pressable style={[styles.homeButton, { borderColor: colors.primary, backgroundColor: colors.cardBackground }]} onPress={async () => {
+            try {
+              if (Platform.OS === 'web') {
+                await Haptics.selectionAsync();
+              } else {
+                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            } catch (error) {
+              // Silently fail if haptics aren't available
+            }
+            router.push('/');
+          }}>
             <Text style={[styles.homeButtonText, { color: colors.primary }]}>Ana Sayfa</Text>
           </Pressable>
         </View>

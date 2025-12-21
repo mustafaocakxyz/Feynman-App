@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/theme';
@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
 import { getStreakState } from '@/lib/streak-storage';
 import { useAuth } from '@/contexts/auth-context';
+import * as Haptics from 'expo-haptics';
 
 const TIME_ZONE = 'Europe/Istanbul';
 const DAY_NAMES = ['Pzt', 'Salı', 'Çar', 'Per', 'Cum', 'Cmt', 'Pzr'];
@@ -117,7 +118,18 @@ export default function StreakScreen() {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 16) }]}>
         <View style={styles.navRow}>
-          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={() => router.push('/(tabs)' as never)}>
+          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={async () => {
+            try {
+              if (Platform.OS === 'web') {
+                await Haptics.selectionAsync();
+              } else {
+                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            } catch (error) {
+              // Silently fail if haptics aren't available
+            }
+            router.push('/(tabs)' as never);
+          }}>
             <Text style={[styles.backButtonText, { color: colors.text }]}>{'<'} Geri</Text>
           </Pressable>
         </View>

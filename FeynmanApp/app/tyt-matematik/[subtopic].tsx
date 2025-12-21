@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, useSegments } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Svg, { Line, Polygon, Rect, Ellipse, Text as SvgText, Defs, Marker, Polyline } from 'react-native-svg';
+import * as Haptics from 'expo-haptics';
 
 import { subtopicTitleBySlug } from './subtopics.data';
 import { markSubtopicCompleted } from '@/lib/completion-storage';
@@ -3593,7 +3594,17 @@ export default function TYTSubtopicScreen() {
     ],
   });
 
-  const handleAdvance = () => {
+  const handleAdvance = async () => {
+    try {
+      // Light haptic feedback for navigation/advance button
+      if (Platform.OS === 'web') {
+        await Haptics.selectionAsync();
+      } else {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+    } catch (error) {
+      // Silently fail if haptics aren't available
+    }
     if (!lesson) return;
     const nextIndex = pageIndex + 1;
     if (nextIndex >= lesson.pages.length) {
@@ -3610,6 +3621,11 @@ export default function TYTSubtopicScreen() {
     const isCorrectNow = choiceId === page.correctChoiceId;
     setIsChoiceCorrect(isCorrectNow);
     if (isCorrectNow && !wasCorrect) {
+      try {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch (error) {
+        // Silently fail if haptics aren't available
+      }
       await addXp(user.id, 10);
       setSessionXp(prev => prev + 10);
       const isQuizPage = page.type === 'quiz';
@@ -3619,19 +3635,34 @@ export default function TYTSubtopicScreen() {
       });
       await playCorrect();
     } else if (!isCorrectNow) {
+      try {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch (error) {
+        // Silently fail if haptics aren't available
+      }
       await playNegative();
     }
   };
 
   const handleCompletionPress = async () => {
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    } catch (error) {
+      // Silently fail if haptics aren't available
+    }
     router.replace(completionTarget as never);
   };
 
-  const handleAdvanceToRewards = () => {
+  const handleAdvanceToRewards = async () => {
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    } catch (error) {
+      // Silently fail if haptics aren't available
+    }
     if (completionData?.hasRewards) {
       setCompletionPageIndex(1);
     } else {
-      handleCompletionPress();
+      await handleCompletionPress();
     }
   };
 
@@ -3726,12 +3757,34 @@ export default function TYTSubtopicScreen() {
           <View style={styles.topRow}>
             <Pressable
               style={[styles.navButton, { backgroundColor: colors.cardBackgroundSecondary }]}
-              onPress={() => router.back()}>
+              onPress={async () => {
+                try {
+                  if (Platform.OS === 'web') {
+                    await Haptics.selectionAsync();
+                  } else {
+                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                } catch (error) {
+                  // Silently fail if haptics aren't available
+                }
+                router.back();
+              }}>
               <Text style={[styles.navButtonText, { color: colors.text }]}>{'‹'} Geri</Text>
             </Pressable>
             <Pressable
               style={[styles.navButton, { backgroundColor: colors.cardBackgroundSecondary }]}
-              onPress={() => router.push('/')}>
+              onPress={async () => {
+                try {
+                  if (Platform.OS === 'web') {
+                    await Haptics.selectionAsync();
+                  } else {
+                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                } catch (error) {
+                  // Silently fail if haptics aren't available
+                }
+                router.push('/');
+              }}>
               <Text style={[styles.navButtonText, { color: colors.text }]}>⌂ Ana Sayfa</Text>
             </Pressable>
           </View>

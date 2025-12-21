@@ -1,8 +1,9 @@
 import { ReactNode, createContext, useContext, useMemo, useRef, useState } from 'react';
-import { Animated, Dimensions, StyleSheet, Text, Pressable } from 'react-native';
+import { Animated, Dimensions, Platform, StyleSheet, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@/contexts/theme-context';
 import { Colors } from '@/constants/theme';
+import * as Haptics from 'expo-haptics';
 
 type XpToast = {
   amount: number;
@@ -63,7 +64,17 @@ export function XpFeedbackProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const handleAdvance = () => {
+  const handleAdvance = async () => {
+    try {
+      // Light haptic feedback for navigation/advance button
+      if (Platform.OS === 'web') {
+        await Haptics.selectionAsync();
+      } else {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+    } catch (error) {
+      // Silently fail if haptics aren't available
+    }
     if (toast?.onAdvance) {
       toast.onAdvance();
     }

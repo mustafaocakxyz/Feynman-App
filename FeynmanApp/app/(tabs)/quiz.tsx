@@ -1,6 +1,7 @@
 import {
   Animated,
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -13,6 +14,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Svg, { Line, Polygon, Rect, Ellipse, Text as SvgText, Defs, Marker, Polyline } from 'react-native-svg';
 import { useFocusEffect } from '@react-navigation/native';
+import * as Haptics from 'expo-haptics';
 
 import { useAuth } from '@/contexts/auth-context';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
@@ -526,6 +528,11 @@ export default function QuizScreen() {
 
     if (isCorrect) {
       // Correct answer: +10 XP
+      try {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch (error) {
+        // Silently fail if haptics aren't available
+      }
       await addXp(user.id, 10);
       setSessionXp(prev => prev + 10);
       showXp(10);
@@ -544,6 +551,11 @@ export default function QuizScreen() {
       }, 1500);
     } else {
       // Wrong answer: Game Over
+      try {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch (error) {
+        // Silently fail if haptics aren't available
+      }
       await playNegative();
       setTimeout(() => {
         setQuizState('gameOver');
@@ -555,6 +567,11 @@ export default function QuizScreen() {
     if (!user?.id) return;
     
     // Award completion bonus: +20 XP
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    } catch (error) {
+      // Silently fail if haptics aren't available
+    }
     await addXp(user.id, 20);
     setSessionXp(prev => prev + 20);
     showXp(20);
