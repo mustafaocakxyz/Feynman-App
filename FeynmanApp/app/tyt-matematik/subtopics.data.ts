@@ -69,6 +69,21 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
       { title: 'Üslü Sayılarda İşlemler', slug: 'uslu-sayilarla-ilgili-kurallar' },
     ],
   ],
+  [
+    'Köklü Sayılar',
+    [
+      { title: 'Köklü Sayılar', slug: 'koklu-sayilar' },
+      { title: 'Köklü Sayılarla İşlemler', slug: 'koklu-sayilarla-islemler' },
+    ],
+  ],
+  [
+    'Çarpanlara Ayırma',
+    [
+      { title: 'Ortak Parantez', slug: 'ortak-parantez' },
+      { title: 'Tam Kare ve İki Kare Farkı', slug: 'tam-kare-ve-iki-kare-farki' },
+      { title: 'Çarpanlara Ayrıma', slug: 'carpanlara-ayirma' },
+    ],
+  ],
 ];
 
 export const topicSubtopics = Object.fromEntries(topicSubtopicsEntries);

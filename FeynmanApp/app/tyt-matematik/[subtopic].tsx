@@ -3378,6 +3378,679 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
+  'koklu-sayilar': {
+    title: 'Köklü Sayılar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'koklu-sayilar-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Karekök, "karesini alma" işleminin tersidir.',
+          },
+          {
+            kind: 'formula',
+            content: '\\sqrt{25} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Bu sembol şu soruyu sorar: "Hangi sayının karesi 25\'e eşittir?"',
+          },
+          {
+            kind: 'text',
+            content: 'Cevap 5\'tir.',
+          },
+          {
+            kind: 'formula',
+            content: '\\sqrt{25} = 5',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'koklu-sayilar-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\sqrt{36} = ?',
+          },
+        ],
+        choices: [
+          { id: 'six', label: '6' },
+          { id: 'twelve', label: '12' },
+        ],
+        correctChoiceId: 'six',
+      },
+      {
+        type: 'teaching',
+        id: 'koklu-sayilar-carpanlara-ayirma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bazı sayılar tam kare değildir (Örneğin 12).',
+          },
+          {
+            kind: 'text',
+            content: 'Bunları kök dışına çıkarmak için çarpanlarına ayırırız.',
+          },
+          {
+            kind: 'formula',
+            content: '\\sqrt{12} = \\sqrt{4 \\cdot 3}',
+          },
+          {
+            kind: 'text',
+            content: '4 sayısı 2\'nin karesi olduğu için 2 olarak dışarı çıkar.',
+          },
+          {
+            kind: 'text',
+            content: 'Ama 3 içeride kalır.',
+          },
+          {
+            kind: 'formula',
+            content: '\\sqrt{12} = 2\\sqrt{3}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'koklu-sayilar-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\sqrt{18} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin en sade hali hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'three-root-two', label: '3\\sqrt{2}', isMath: true },
+          { id: 'six-root-three', label: '6\\sqrt{3}', isMath: true },
+        ],
+        correctChoiceId: 'three-root-two',
+      },
+      {
+        type: 'quiz',
+        id: 'koklu-sayilar-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\sqrt{50} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin en sade hali hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'five-root-two', label: '5\\sqrt{2}', isMath: true },
+          { id: 'two-root-five', label: '2\\sqrt{5}', isMath: true },
+        ],
+        correctChoiceId: 'five-root-two',
+      },
+      {
+        type: 'completion',
+        id: 'koklu-sayilar-complete',
+      },
+    ],
+  },
+  'koklu-sayilarla-islemler': {
+    title: 'Köklü Sayılarla İşlemler',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'koklu-sayilarla-islemler-toplama',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Köklü sayılarda toplama yapmak için kök içlerinin AYNI olması şarttır.',
+          },
+          {
+            kind: 'formula',
+            content: '2\\sqrt{3} + 5\\sqrt{3} = 7\\sqrt{3}',
+          },
+          {
+            kind: 'text',
+            content: 'Kökün içi ise asla toplanmaz!',
+          },
+          {
+            kind: 'formula',
+            content: '\\sqrt{2} + \\sqrt{3}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifade öylece kalır.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'koklu-sayilarla-islemler-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2\\sqrt{2} + 3\\sqrt{2} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu kaçtır?',
+          },
+        ],
+        choices: [
+          { id: 'five-root-four', label: '5\\sqrt{4}', isMath: true },
+          { id: 'five-root-two', label: '5\\sqrt{2}', isMath: true },
+        ],
+        correctChoiceId: 'five-root-two',
+      },
+      {
+        type: 'teaching',
+        id: 'koklu-sayilarla-islemler-carpma-bolme',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çarpma işlemi çok daha rahattır. Kök içlerinin aynı olmasına gerek yoktur.',
+          },
+          {
+            kind: 'formula',
+            content: '\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}',
+          },
+          {
+            kind: 'text',
+            content: 'Bölme işlemi de öyledir.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{\\sqrt{12}}{\\sqrt{4}} = \\sqrt{3}',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'koklu-sayilarla-islemler-ayni-sayi',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Eğer kök içinde aynı sayı iki defa çarpılırsa kök ortadan kaybolur.',
+          },
+          {
+            kind: 'formula',
+            content: '\\sqrt{2} \\times \\sqrt{2} = 2',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'koklu-sayilarla-islemler-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\sqrt{50} \\times \\sqrt{2} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'hundred', label: '100' },
+          { id: 'ten', label: '10' },
+        ],
+        correctChoiceId: 'ten',
+      },
+      {
+        type: 'quiz',
+        id: 'koklu-sayilarla-islemler-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '3\\sqrt{2} \\times \\sqrt{2} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'three-root-two', label: '3\\sqrt{2}', isMath: true },
+          { id: 'six', label: '6' },
+        ],
+        correctChoiceId: 'six',
+      },
+      {
+        type: 'completion',
+        id: 'koklu-sayilarla-islemler-complete',
+      },
+    ],
+  },
+  'ortak-parantez': {
+    title: 'Ortak Parantez',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'ortak-parantez-temel',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çarpanlara ayırmanın en temel kuralı: "Hepsinde ortak olan ne?" sorusunu sormaktır.',
+          },
+          {
+            kind: 'formula',
+            content: '2x + 6',
+          },
+          {
+            kind: 'text',
+            content: 'Her iki terimde de "2" çarpanı gizlidir. (6 = 2×3\'tür).',
+          },
+          {
+            kind: 'text',
+            content: 'Bütün bu ifadeyi 2 parantezine alabiliriz:',
+          },
+          {
+            kind: 'formula',
+            content: '2(x + 3)',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'ortak-parantez-harf',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bazen ortak olan şey bir harftir. Üssü en küçük olan paranteze alınır.',
+          },
+          {
+            kind: 'formula',
+            content: 'x^{3} + x^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Burada her terimde de (x²) vardır.',
+          },
+          {
+            kind: 'formula',
+            content: 'x^{2}(x + 1)',
+          },
+          {
+            kind: 'text',
+            content: 'Kontrol et: İçeri dağıtınca aynısı oluyor mu? Evet!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'ortak-parantez-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '5x - 20 = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin çarpanlarına ayrılmış hali aşağıdakilerden hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'five-x-minus-four', label: '5(x - 4)', isMath: true },
+          { id: 'five-x-minus-twenty', label: '5(x - 20)', isMath: true },
+        ],
+        correctChoiceId: 'five-x-minus-four',
+      },
+      {
+        type: 'quiz',
+        id: 'ortak-parantez-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '5x^{2} - 20x',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin çarpanlarına ayrılmış hali aşağıdakilerden hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'five-x-x-minus-four', label: '5x(x - 4)', isMath: true },
+          { id: 'five-x-minus-four-only', label: '5(x - 4)', isMath: true },
+        ],
+        correctChoiceId: 'five-x-x-minus-four',
+      },
+      {
+        type: 'quiz',
+        id: 'ortak-parantez-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x^{3} + 7x^{2} + 4x',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin çarpanlarına ayrılmış hali aşağıdakilerden hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'x-x-squared-plus-seven-x-plus-four', label: 'x(x^{2} + 7x + 4)', isMath: true },
+          { id: 'four-x-wrong', label: '4x(x + 2x + 1)', isMath: true },
+        ],
+        correctChoiceId: 'x-x-squared-plus-seven-x-plus-four',
+      },
+      {
+        type: 'completion',
+        id: 'ortak-parantez-complete',
+      },
+    ],
+  },
+  'tam-kare-ve-iki-kare-farki': {
+    title: 'Tam Kare ve İki Kare Farkı',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'tam-kare-ve-iki-kare-farki-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'İki sayının kareleri birbirinden çıkarılıyorsa işlem yapmak zor olabilir:',
+          },
+          {
+            kind: 'formula',
+            content: '2026^{2} - 2024^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki sayıların karelerini hesaplamak çok zordur.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tam-kare-ve-iki-kare-farki-formul',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2026^{2} - 2024^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Sonucu bulmak için "İki Kare Farkı" formülünü kullanabiliriz:',
+          },
+          {
+            kind: 'formula',
+            content: 'x^{2} - y^{2} = (x - y) \\cdot (x + y)',
+          },
+          {
+            kind: 'text',
+            content: 'Artık işlem çok daha basit!',
+          },
+          {
+            kind: 'formula',
+            content: '(2026 - 2024) \\cdot (2026 + 2024)',
+          },
+          {
+            kind: 'formula',
+            content: '(2) \\cdot (4050) = 8100',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tam-kare-ve-iki-kare-farki-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2002^{2} - 2001^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'one', label: '1' },
+          { id: 'four-thousand-three', label: '4003' },
+        ],
+        correctChoiceId: 'four-thousand-three',
+      },
+      {
+        type: 'teaching',
+        id: 'tam-kare-ve-iki-kare-farki-tam-kare-toplam',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi de tam kare toplamı formülümüzü öğrenelim:',
+          },
+          {
+            kind: 'formula',
+            content: '(x + y)^{2} = x^{2} + 2xy + y^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Tekerlememiz şöyle:',
+          },
+          {
+            kind: 'text',
+            content: '1. Birincinin karesi',
+          },
+          {
+            kind: 'text',
+            content: '2. Birinci ile ikincinin çarpımının 2 katı (Unutma!)',
+          },
+          {
+            kind: 'text',
+            content: '3. İkincinin karesi',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tam-kare-ve-iki-kare-farki-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '(x + y)^{2} = x^{2} + 4x + 4',
+          },
+          {
+            kind: 'text',
+            content: 'Buna göre y değeri kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'four', label: '4' },
+          { id: 'two', label: '2' },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
+        type: 'teaching',
+        id: 'tam-kare-ve-iki-kare-farki-tam-kare-fark',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Eğer kare parantezin içerisinde (+) yerine (-) varsa formül ufak bir değişime uğrar:',
+          },
+          {
+            kind: 'formula',
+            content: '(x - y)^{2} = x^{2} - 2xy + y^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Kareli terimlerde değişim yok.',
+          },
+          {
+            kind: 'text',
+            content: '"Birinci ile ikincinin çarpımının iki katı" teriminin başına (-) gelir.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tam-kare-ve-iki-kare-farki-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '(x - y)^{2} = x^{2} - 8y + y^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Buna göre x değeri kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'four-x', label: '4' },
+          { id: 'eight-x', label: '8' },
+        ],
+        correctChoiceId: 'four-x',
+      },
+      {
+        type: 'completion',
+        id: 'tam-kare-ve-iki-kare-farki-complete',
+      },
+    ],
+  },
+  'carpanlara-ayirma': {
+    title: 'Çarpanlara Ayırma',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'carpanlara-ayirma-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakine benzer ifadeler şu ana kadar öğrendiklerimize uymaz:',
+          },
+          {
+            kind: 'formula',
+            content: 'x^{2} + 5x + 6',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifadeleri çarpanlarına ayırmak için iki sayıya ihtiyacımız vardır:',
+          },
+          {
+            kind: 'text',
+            content: '1) Bu sayıların çarpımları 6 etmelidir.',
+          },
+          {
+            kind: 'text',
+            content: '2) Bu sayıların toplamları 5 etmelidir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu sayılar 2 ve 3\'tür!',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'carpanlara-ayirma-ornek',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x^{2} + 5x + 6',
+          },
+          {
+            kind: 'text',
+            content: 'Bu denklem için 2 ve 3 sayılarını bulduktan sonra çarpanları şöyle yazarız:',
+          },
+          {
+            kind: 'formula',
+            content: '(x + 2)(x + 3)',
+          },
+          {
+            kind: 'text',
+            content: 'Aşağıdaki örneğe bakalım.',
+          },
+          {
+            kind: 'formula',
+            content: 'x^{2} + 7x + 8',
+          },
+          {
+            kind: 'text',
+            content: 'Çarpımları 8\'e, toplamları ise 7\'ye eşit olan iki sayı 7 ve 1\'dir.',
+          },
+          {
+            kind: 'text',
+            content: 'Öyleyse çarpanlarımız şunlar olmalıdır:',
+          },
+          {
+            kind: 'formula',
+            content: '(x + 7)(x + 1)',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'carpanlara-ayirma-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x^{2} + 6x + 5',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifade çarpanlarına nasıl ayrılır?',
+          },
+        ],
+        hint: 'Çarpımları 5, toplamları 6 olan iki sayı bul!',
+        choices: [
+          { id: 'x-plus-five-x-plus-one', label: '(x+5)(x+1)', isMath: true },
+          { id: 'x-plus-two-x-plus-four', label: '(x+2)(x+4)', isMath: true },
+        ],
+        correctChoiceId: 'x-plus-five-x-plus-one',
+      },
+      {
+        type: 'teaching',
+        id: 'carpanlara-ayirma-negatif',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Negatif sayılar da bu kuralla uyumludur.',
+          },
+          {
+            kind: 'formula',
+            content: 'x^{2} - 3x - 10',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklem için çarpımları -10, toplamları ise -3 olan iki sayı bulmalıyız.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu sayılar (+2) ve (-5)\'tir.',
+          },
+          {
+            kind: 'formula',
+            content: '(x + 2)(x - 5)',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'carpanlara-ayirma-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x^{2} - 4x - 5',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifade çarpanlarına nasıl ayrılır?',
+          },
+        ],
+        hint: 'Çarpımları -5, toplamları -4 olan iki sayı bul!',
+        choices: [
+          { id: 'x-minus-five-x-plus-one', label: '(x-5)(x+1)', isMath: true },
+          { id: 'x-plus-two-x-minus-four', label: '(x+2)(x-4)', isMath: true },
+        ],
+        correctChoiceId: 'x-minus-five-x-plus-one',
+      },
+      {
+        type: 'completion',
+        id: 'carpanlara-ayirma-complete',
+      },
+    ],
+  },
 };
 
 const defaultPlaceholderMessage =
