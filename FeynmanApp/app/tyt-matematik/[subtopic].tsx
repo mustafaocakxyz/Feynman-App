@@ -1306,6 +1306,2077 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
+  'rasyonel-sayilar': {
+    title: 'Rasyonel Sayılar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'rasyonel-sayilar-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Kesirli sayıları öğrenmiştik, "Rasyonel Sayılar" da onlara çok benzer.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu sayıların hepsini "pay" ve "payda" cinsinden yazabiliriz.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{\\text{Pay}}{\\text{Payda}}',
+          },
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hepsi birer "rasyonel sayı"dır:',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{2}{3}, \\quad \\frac{4}{10}, \\quad -\\frac{5}{8}',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'rasyonel-sayilar-tam-sayilar',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Tam sayılar da birer rasyonel sayıdır.',
+          },
+          {
+            kind: 'formula',
+            content: '-2, \\quad -1, \\quad 0, \\quad 1, \\quad 2',
+          },
+          {
+            kind: 'text',
+            content: 'Bu sayıları "pay" ve "payda" cinsinden yazmak istersek hepsinin paydasına gizli bir "1" getirebiliriz.',
+          },
+          {
+            kind: 'formula',
+            content: '-\\frac{2}{1}, \\quad -\\frac{1}{1}, \\quad \\frac{0}{1}, \\quad \\frac{1}{1}, \\quad \\frac{2}{1}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'rasyonel-sayilar-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki ifade doğru mu, yanlış mı?',
+          },
+          {
+            kind: 'text',
+            content: '"Bütün tam sayılar aynı zamanda rasyonel sayıdır."',
+          },
+        ],
+        choices: [
+          { id: 'dogru', label: 'Doğru' },
+          { id: 'yanlis', label: 'Yanlış' },
+        ],
+        correctChoiceId: 'dogru',
+      },
+      {
+        type: 'teaching',
+        id: 'rasyonel-sayilar-ondalik-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Paydasında 10, 100, ... olan rasyonel sayıları ondalık sayı şeklinde gösterebiliriz.',
+          },
+          {
+            kind: 'text',
+            content: 'Bazı örnekler:',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{2}{10} = 0,2',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{25}{100} = 0,25',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{32}{1000} = 0,032',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'rasyonel-sayilar-ondalik-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bazı sayıların paydasında 10 veya 100 bulunmasa da ondalık gösterimleri istenebilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu durumlarda sayımızı "genişletmeliyiz":',
+          },
+          {
+            kind: 'text',
+            content: 'Genişletme işlemi sayının üstünü ve altını aynı değerle çarparak yapılır:',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{2}{5} \\rightarrow \\frac{2}{5} \\cdot \\frac{2}{2} = \\frac{4}{10}',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{4}{10} = 0,4',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'rasyonel-sayilar-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki rasyonel sayının ondalık gösterimi nedir?',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{1}{2}',
+          },
+        ],
+        hint: 'Pay ve paydayı 5 ile çarpmayı dene!',
+        choices: [
+          { id: 'zero-eight', label: '0,8' },
+          { id: 'zero-five', label: '0,5' },
+        ],
+        correctChoiceId: 'zero-five',
+      },
+      {
+        type: 'completion',
+        id: 'rasyonel-sayilar-complete',
+      },
+    ],
+  },
+  'genisletme-sadelestirme': {
+    title: 'Genişletme ve Sadeleştirme',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'genisletme-sadelestirme-genisletme',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir önceki modülde genişletmeyi öğrenmiştik.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayının pay ve paydasını aynı değerle çarparak aynı sayının farklı bir gösterimini elde edebilirsin:',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{2}{5} = \\frac{4}{10}',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{4}{3} = \\frac{12}{9}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'genisletme-sadelestirme-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki genişletmelerden hangisi HATALIDIR?',
+          },
+        ],
+        choices: [
+          { id: 'two-three-four-six', label: '\\frac{2}{3} = \\frac{4}{6}' },
+          { id: 'two-three-five-six', label: '\\frac{2}{3} = \\frac{5}{6}' },
+        ],
+        correctChoiceId: 'two-three-five-six',
+      },
+      {
+        type: 'teaching',
+        id: 'genisletme-sadelestirme-sadelestirme',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Genişletmenin tersi olan "sadeleştirme" çok işimize yarar.',
+          },
+          {
+            kind: 'text',
+            content: 'Sadeleştirme yaparken payı ve paydayı aynı sayıya "böleriz".',
+          },
+          {
+            kind: 'text',
+            content: 'Örnekler:',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{4}{8} = \\frac{2}{4} = \\frac{1}{2}',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{3}{9} = \\frac{1}{3}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'genisletme-sadelestirme-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: '5 / 10 sayısının sadeleştirilmiş hali aşağıdakilerden hangisidir?',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{5}{10} \\rightarrow ?',
+          },
+        ],
+        choices: [
+          { id: 'one-two', label: '\\frac{1}{2}' },
+          { id: 'four-three', label: '\\frac{4}{3}' },
+        ],
+        correctChoiceId: 'one-two',
+      },
+      {
+        type: 'completion',
+        id: 'genisletme-sadelestirme-complete',
+      },
+    ],
+  },
+  'rasyonel-sayilarda-islemler': {
+    title: 'Rasyonel Sayılarda İşlemler',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'rasyonel-sayilarda-islemler-toplama-cikarma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Rasyonel sayılarda toplama veya çıkarma yapabilmek için paydaların eşit olması şarttır.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{1}{2} + \\frac{1}{3}',
+          },
+          {
+            kind: 'text',
+            content: 'Paydalar (2 ve 3) eşit değil. Onları ortak bir sayıda (6) buluşturmalıyız.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{1}{2} = \\frac{3}{6}',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{1}{3} = \\frac{2}{6}',
+          },
+          {
+            kind: 'text',
+            content: 'Artık payları toplayabiliriz:',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{3}{6} + \\frac{2}{6}',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{3 + 2}{6} = \\frac{5}{6}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'rasyonel-sayilarda-islemler-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{1}{2} + \\frac{1}{3}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'one-six', label: '\\frac{1}{6}' },
+          { id: 'five-six', label: '\\frac{5}{6}' },
+        ],
+        correctChoiceId: 'five-six',
+      },
+      {
+        type: 'quiz',
+        id: 'rasyonel-sayilarda-islemler-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{1}{2} + \\frac{1}{4}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'five-four', label: '\\frac{5}{4}' },
+          { id: 'three-four', label: '\\frac{3}{4}' },
+        ],
+        correctChoiceId: 'three-four',
+      },
+      {
+        type: 'quiz',
+        id: 'rasyonel-sayilarda-islemler-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{1}{2} - \\frac{1}{4}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        hint: 'Çıkarma işlemi de tamamen aynı mantıkla çalışır! Paydaları eşitle, payları birbirinden çıkar!',
+        choices: [
+          { id: 'three-four-sub', label: '\\frac{3}{4}' },
+          { id: 'one-four', label: '\\frac{1}{4}' },
+        ],
+        correctChoiceId: 'one-four',
+      },
+      {
+        type: 'teaching',
+        id: 'rasyonel-sayilarda-islemler-carpma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çarpma işlemi en kolayıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Payda eşitlemeyiz, payları ve paydaları ayrı ayrı çarparız. Hepsi bu!',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{2}{3} \\cdot \\frac{4}{3} = \\frac{8}{9}',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{1}{5} \\cdot \\frac{2}{10} = \\frac{2}{50}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'rasyonel-sayilarda-islemler-quiz-4',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{1}{2} \\cdot \\frac{3}{5}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki çarpma işleminin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'three-five', label: '\\frac{3}{5}' },
+          { id: 'three-ten', label: '\\frac{3}{10}' },
+        ],
+        correctChoiceId: 'three-ten',
+      },
+      {
+        type: 'teaching',
+        id: 'rasyonel-sayilarda-islemler-bolme',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bölme işleminin özel bir kuralı vardır.',
+          },
+          {
+            kind: 'text',
+            content: 'Birinci sayıyı aynen yazar, ikinci sayıyı ise ters çevirip çarparız.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{3}{5} \\div \\frac{2}{4}',
+          },
+          {
+            kind: 'text',
+            content: 'İlk sayıyı aynen bırakıyor, ikinci sayıyı ise ters çevirip çarpıyoruz.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{3}{5} \\cdot \\frac{4}{2}',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{12}{10}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'rasyonel-sayilarda-islemler-quiz-5',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{1}{5} \\div \\frac{2}{6}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki bölme işleminin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'two-thirty', label: '\\frac{2}{30}' },
+          { id: 'six-ten', label: '\\frac{6}{10}' },
+        ],
+        correctChoiceId: 'six-ten',
+      },
+      {
+        type: 'completion',
+        id: 'rasyonel-sayilarda-islemler-complete',
+      },
+    ],
+  },
+  'bir-bilinmeyenli-denklemler': {
+    title: 'Bir Bilinmeyenli Denklemler',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'bir-bilinmeyenli-denklemler-intro',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x - 5 = 0',
+          },
+          {
+            kind: 'text',
+            content: 'Bu denklemlerin hepsinde sorman gereken soru şudur:',
+          },
+          {
+            kind: 'text',
+            content: 'x yerine ne koyarsam bu denklem sağlanır?',
+          },
+          {
+            kind: 'formula',
+            content: 'x = 5',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki örnek için gereken x değeri 5\'tir.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bir-bilinmeyenli-denklemler-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x - 3 = 0',
+          },
+          {
+            kind: 'text',
+            content: 'x yerine ne koyarsak yukarıdaki denklem sağlanır?',
+          },
+        ],
+        choices: [
+          { id: 'five', label: '5' },
+          { id: 'three', label: '3' },
+        ],
+        correctChoiceId: 'three',
+      },
+      {
+        type: 'quiz',
+        id: 'bir-bilinmeyenli-denklemler-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2x = 8',
+          },
+          {
+            kind: 'text',
+            content: 'x yerine ne koyarsak yukarıdaki denklem sağlanır?',
+          },
+        ],
+        choices: [
+          { id: 'four', label: '4' },
+          { id: 'two', label: '2' },
+        ],
+        correctChoiceId: 'four',
+      },
+      {
+        type: 'teaching',
+        id: 'bir-bilinmeyenli-denklemler-karsi-tarafa-atma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bu denklemlerin hepsini rahatça çözebilmek için "karşı tarafa atmayı" kullanmalısın.',
+          },
+          {
+            kind: 'formula',
+            content: 'x - 5 = 3',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklemde sol tarafta olan (-5) değeri sağ tarafa (+5) olarak geçebilir.',
+          },
+          {
+            kind: 'formula',
+            content: 'x = 3 + 5',
+          },
+          {
+            kind: 'text',
+            content: '(+) sayılar da karşıya (-) olarak geçebilir.',
+          },
+          {
+            kind: 'formula',
+            content: 'x + 4 = 10',
+          },
+          {
+            kind: 'formula',
+            content: 'x = 10 - 4',
+          },
+          {
+            kind: 'text',
+            content: 'Böylece x = 6 bulabiliriz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'bir-bilinmeyenli-denklemler-carpma-bolme',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çarpma ve bölme işlemleri de tersine dönüşerek karşı tarafa geçebilir.',
+          },
+          {
+            kind: 'formula',
+            content: '2 \\cdot x = 6',
+          },
+          {
+            kind: 'formula',
+            content: 'x = \\frac{6}{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Bunun tam tersini de yapabilirdik:',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{x}{3} = 10',
+          },
+          {
+            kind: 'formula',
+            content: 'x = 10 \\cdot 3',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bir-bilinmeyenli-denklemler-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '3 \\cdot x = 12',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklemde x değeri kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'four-mul', label: '4' },
+          { id: 'six-mul', label: '6' },
+        ],
+        correctChoiceId: 'four-mul',
+      },
+      {
+        type: 'quiz',
+        id: 'bir-bilinmeyenli-denklemler-quiz-4',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{x}{10} = 5',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklemde x değeri kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'five-div', label: '5' },
+          { id: 'fifty', label: '50' },
+        ],
+        correctChoiceId: 'fifty',
+      },
+      {
+        type: 'completion',
+        id: 'bir-bilinmeyenli-denklemler-complete',
+      },
+    ],
+  },
+  'iki-bilinmeyenli-denklemler': {
+    title: 'İki Bilinmeyenli Denklemler',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'iki-bilinmeyenli-denklemler-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bazı sorularda sadece x\'i değil, ikinci bir bilinmeyeni de bulmanız istenebilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Örneğin:',
+          },
+          {
+            kind: 'formula',
+            content: '5x + 3y = 12',
+          },
+          {
+            kind: 'formula',
+            content: '3x - 3y = 4',
+          },
+          {
+            kind: 'formula',
+            content: 'x = ? , \\quad y = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Bu tarz soruları yapabilmek için iki teknik kullanıyoruz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'iki-bilinmeyenli-denklemler-yok-etme-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Öncelikle "Yok Etme Metodu"ndan başlayalım.',
+          },
+          {
+            kind: 'formula',
+            content: '5x + 3y = 12',
+          },
+          {
+            kind: 'formula',
+            content: '3x - 3y = 4',
+          },
+          {
+            kind: 'text',
+            content: 'Bu iki denklemi alt alta toplarsan ne olur?',
+          },
+          {
+            kind: 'formula',
+            content: '5x + 3x = 8x',
+          },
+          {
+            kind: 'formula',
+            content: '3y - 3y = 0',
+          },
+          {
+            kind: 'formula',
+            content: '12 + 4 = 16',
+          },
+          {
+            kind: 'text',
+            content: 'Gördüğün üzere alt alta toplama sonucunda bilinmeyenlerden sadece x kaldı. Şimdi x\'i bulalım.',
+          },
+          {
+            kind: 'formula',
+            content: '8x = 16',
+          },
+          {
+            kind: 'formula',
+            content: 'x = 2',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'iki-bilinmeyenli-denklemler-yok-etme-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bulduğumuz x değerini denklemde yerine yazarak y\'yi bulalım.',
+          },
+          {
+            kind: 'formula',
+            content: '5x + 3y = 12',
+          },
+          {
+            kind: 'formula',
+            content: 'x = 2',
+          },
+          {
+            kind: 'formula',
+            content: '5 \\cdot 2 + 3y = 12',
+          },
+          {
+            kind: 'formula',
+            content: '10 + 3y = 12',
+          },
+          {
+            kind: 'formula',
+            content: '3y = 12 - 10',
+          },
+          {
+            kind: 'formula',
+            content: '3y = 2',
+          },
+          {
+            kind: 'formula',
+            content: 'y = \\frac{2}{3}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'iki-bilinmeyenli-denklemler-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2x + 2y = 10',
+          },
+          {
+            kind: 'formula',
+            content: '3x - 2y = 0',
+          },
+          {
+            kind: 'text',
+            content: 'Denklemleri alt alta toplayarak x ve y değerlerini bul.',
+          },
+        ],
+        choices: [
+          { id: 'x2-y3', label: 'x = 2, y = 3' },
+          { id: 'x5-y4', label: 'x = 5, y = 4' },
+        ],
+        correctChoiceId: 'x2-y3',
+      },
+      {
+        type: 'teaching',
+        id: 'iki-bilinmeyenli-denklemler-carpma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bazen denklemler "yok etmeye" hazır biçimde verilmeyebilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu durumda denklemleri bazı sayılarla çarpmamız ve "yok etmeye" uygun hale getirmemiz gerekir.',
+          },
+          {
+            kind: 'formula',
+            content: '2x + 2y = 10',
+          },
+          {
+            kind: 'formula',
+            content: 'x - y = 3',
+          },
+          {
+            kind: 'text',
+            content: 'Bu halleriyle denklemleri yok etmemiz mümkün değil.',
+          },
+          {
+            kind: 'text',
+            content: 'Ancak alttaki denklemi (2) ile çarparsak yok etmeye uygun hale gelir.',
+          },
+          {
+            kind: 'formula',
+            content: '2x + 2y = 10',
+          },
+          {
+            kind: 'formula',
+            content: '2x - 2y = 6',
+          },
+          {
+            kind: 'text',
+            content: 'Buradan gerisini biliyorsun, sayfayı ilerletip soruyu çözebilirsin!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'iki-bilinmeyenli-denklemler-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2x + 2y = 10',
+          },
+          {
+            kind: 'formula',
+            content: 'x - y = 3',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklemlere göre x ve y değerlerini bul!',
+          },
+        ],
+        hint: 'Aşağıdaki denklemi 2 ile çarp, sonrasında "yok etme metodu" uygula!',
+        choices: [
+          { id: 'x4-y1', label: 'x = 4, y = 1' },
+          { id: 'x2-y2', label: 'x = 2, y = 2' },
+        ],
+        correctChoiceId: 'x4-y1',
+      },
+      {
+        type: 'completion',
+        id: 'iki-bilinmeyenli-denklemler-complete',
+      },
+    ],
+  },
+   'iki-bilinmeyenli-denklemler-devam': {
+    title: 'İki Bilinmeyenli Denklemler (Devam)',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'iki-bilinmeyenli-denklemler-devam-yerine-koyma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'İki bilinmeyenli denklemlerde kullanabileceğimiz bir metot "Yerine Koyma Metodu"dur.',
+          },
+          {
+            kind: 'text',
+            content: 'Örneğe bakalım:',
+          },
+          {
+            kind: 'formula',
+            content: 'y = x - 2',
+          },
+          {
+            kind: 'formula',
+            content: 'x + y = 8',
+          },
+          {
+            kind: 'text',
+            content: 'Bu gibi sorularda y gördüğümüz her yere x cinsinden karşılığını yazabiliriz.',
+          },
+          {
+            kind: 'formula',
+            content: 'x + y = 8',
+          },
+          {
+            kind: 'formula',
+            content: 'x + (x - 2) = 8',
+          },
+          {
+            kind: 'formula',
+            content: '2x - 2 = 8',
+          },
+          {
+            kind: 'formula',
+            content: '2x = 10',
+          },
+          {
+            kind: 'formula',
+            content: 'x = 5',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'iki-bilinmeyenli-denklemler-devam-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'y = 2x',
+          },
+          {
+            kind: 'formula',
+            content: 'x + y = 9',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklemleri sağlayan x ve y değerlerini bul.',
+          },
+        ],
+        choices: [
+          { id: 'x2-y4', label: 'x = 2, y = 4' },
+          { id: 'x3-y6', label: 'x = 3, y = 6' },
+        ],
+        correctChoiceId: 'x3-y6',
+      },
+      {
+        type: 'teaching',
+        id: 'iki-bilinmeyenli-denklemler-devam-zor-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sorular her zaman "yerine koyma metodu"nu kolayca uygulayabileceğin şekilde sorulmayabilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Örneğe bakalım:',
+          },
+          {
+            kind: 'formula',
+            content: '5x = 2y - 3',
+          },
+          {
+            kind: 'formula',
+            content: '2x + 4y = 15',
+          },
+          {
+            kind: 'text',
+            content: 'Bu denklemlerde ne yerine koyabiliyoruz ne de yok edebiliyoruz.',
+          },
+          {
+            kind: 'text',
+            content: 'Böyle sorularda biraz daha uğraşmamız gerekecek.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'iki-bilinmeyenli-denklemler-devam-manipulasyon',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '5x = 2y - 3',
+          },
+          {
+            kind: 'formula',
+            content: '2x + 4y = 18',
+          },
+          {
+            kind: 'text',
+            content: 'Öncelikle ilk denklemde "2y" ifadesini yalnız bırakmak için (-3)\'ü karşıya atalım.',
+          },
+          {
+            kind: 'formula',
+            content: '5x + 3 = 2y',
+          },
+          {
+            kind: 'text',
+            content: 'Sonra da bu denklemi 2 ile çarpalım.',
+          },
+          {
+            kind: 'formula',
+            content: '10x + 6 = 4y',
+          },
+          {
+            kind: 'text',
+            content: 'Artık ikinci denklemde "4y" gördüğümüz yere "10x + 6" yazabiliriz!',
+          },
+          {
+            kind: 'text',
+            content: 'Buradan sonrasını sana bırakıyorum.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'iki-bilinmeyenli-denklemler-devam-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '5x = 2y - 3',
+          },
+          {
+            kind: 'formula',
+            content: '2x + 4y = 18',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklemleri sağlayan x ve y değerlerini bulun.',
+          },
+        ],
+        hint: '4y yerine bulduğumuz sonucu yaz ve x değerini bul!',
+        choices: [
+          { id: 'x1-y4', label: 'x = 1, y = 4' },
+          { id: 'x3-y3', label: 'x = 3, y = 3' },
+        ],
+        correctChoiceId: 'x1-y4',
+      },
+      {
+        type: 'quiz',
+        id: 'iki-bilinmeyenli-denklemler-devam-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2x = 2y + 4',
+          },
+          {
+            kind: 'formula',
+            content: 'x + 4y = 2',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denklemleri sağlayan x ve y değerlerini bul.',
+          },
+        ],
+        hint: 'Yukarıdaki denklemde 4\'ü karşıya at ve denklemi 2 ile çarp!',
+        choices: [
+          { id: 'x2-y0', label: 'x = 2, y = 0' },
+          { id: 'x2-y2', label: 'x = 2, y = 2' },
+        ],
+        correctChoiceId: 'x2-y0',
+      },
+      {
+        type: 'completion',
+        id: 'iki-bilinmeyenli-denklemler-devam-complete',
+      },
+    ],
+  },
+  'esitsizlikler': {
+    title: 'Eşitsizlikler',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'esitsizlikler-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Denklemlerde "x" için tek bir değer bulmuştuk.',
+          },
+          {
+            kind: 'text',
+            content: 'Eşitsizliklerde ise "x" için bir değer aralığı bulmayı hedefliyoruz.',
+          },
+          {
+            kind: 'text',
+            content: 'Aşağıdaki ifadelerin Türkçe karşılıklarını anlaman çok önemli!',
+          },
+          {
+            kind: 'formula',
+            content: 'x < 4',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifade "x 4\'ten küçüktür" anlamına gelir.',
+          },
+          {
+            kind: 'text',
+            content: 'Yani x = 0, 1, 2 veya 3 olabilir ancak 4 veya 5 olamaz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'esitsizlikler-isaretler',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x < 4',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifade "x 4\'ten küçüktür" anlamına gelir.',
+          },
+          {
+            kind: 'formula',
+            content: 'x > 5',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifade "x, 5\'ten büyüktür" anlamına gelir.',
+          },
+          {
+            kind: 'formula',
+            content: 'x \\leq 6',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifade "x 6\'ya eşit veya 6\'dan küçüktür" anlamına gelir.',
+          },
+          {
+            kind: 'formula',
+            content: 'x \\geq 3',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifade "x, 3\'e eşit veya 3\'ten büyüktür" anlamına gelir.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'esitsizlikler-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x > 1',
+          },
+          {
+            kind: 'formula',
+            content: 'x < 3',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki bilgilere göre x aşağıdakilerden hangisi olabilir?',
+          },
+        ],
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'four', label: '4' },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
+        type: 'teaching',
+        id: 'esitsizlikler-islemler',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Denklemlerde yaptığımız her şeyi (karşıya atma, sayı ile çarpma vb.) eşitsizliklerde de yapabiliriz.',
+          },
+          {
+            kind: 'text',
+            content: 'Karşıya atma örneği görelim:',
+          },
+          {
+            kind: 'formula',
+            content: 'x - 3 < 4',
+          },
+          {
+            kind: 'formula',
+            content: 'x < 3 + 4',
+          },
+          {
+            kind: 'formula',
+            content: 'x < 7',
+          },
+          {
+            kind: 'text',
+            content: 'Şimdi de çarpma durumunu görelim.',
+          },
+          {
+            kind: 'formula',
+            content: 'x < 5',
+          },
+          {
+            kind: 'formula',
+            content: '2 \\cdot x < 2 \\cdot 5',
+          },
+          {
+            kind: 'formula',
+            content: '2x < 10',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'esitsizlikler-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2x > 6',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadeye göre aşağıdakilerden hangisi doğrudur?',
+          },
+        ],
+        choices: [
+          { id: 'x-lt-2', label: 'x < 2' },
+          { id: 'x-gt-3', label: 'x > 3' },
+        ],
+        correctChoiceId: 'x-gt-3',
+      },
+      {
+        type: 'quiz',
+        id: 'esitsizlikler-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '3x < 9',
+          },
+          {
+            kind: 'formula',
+            content: 'x > 1',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki bilgilere göre x aşağıdakilerden hangisi olmalıdır?',
+          },
+        ],
+        choices: [
+          { id: 'three', label: '3' },
+          { id: 'two-combined', label: '2' },
+        ],
+        correctChoiceId: 'two-combined',
+      },
+      {
+        type: 'completion',
+        id: 'esitsizlikler-complete',
+      },
+    ],
+  },
+  'esitsizligin-yon-degistirmesi': {
+    title: 'Eşitsizliğin Yön Değiştirmesi',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'esitsizligin-yon-degistirmesi-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Eşitsizlikleri istediğimiz hale getirmeye çalışırken karşı tarafa atma veya eşitsizliği bir sayıyla çarpma / bölme gibi teknikler kullanıyoruz.',
+          },
+          {
+            kind: 'text',
+            content: 'Ancak bunu yaparken dikkatli olmalıyız.',
+          },
+          {
+            kind: 'text',
+            content: 'Çünkü sayıları ters çevirirsen veya (-) sayılar ile çarpım yaparsan eşitsizlik YÖN DEĞİŞTİRİR.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'esitsizligin-yon-degistirmesi-negatif-carpma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki örneğe bakalım:',
+          },
+          {
+            kind: 'formula',
+            content: 'x < -3',
+          },
+          {
+            kind: 'text',
+            content: 'Bu eşitsizliğin her iki tarafını da (-) ile çarparsan aradaki "<" işareti YÖN DEĞİŞTİRİR.',
+          },
+          {
+            kind: 'formula',
+            content: '-x > 3',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'esitsizligin-yon-degistirmesi-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'x < -5',
+          },
+          {
+            kind: 'formula',
+            content: '-2x \\, ? \\, 10',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki eşitsizliklerde "?" yerine ne gelmelidir?',
+          },
+        ],
+        choices: [
+          { id: 'greater-than', label: '>' },
+          { id: 'equals', label: '=' },
+        ],
+        correctChoiceId: 'greater-than',
+      },
+      {
+        type: 'teaching',
+        id: 'esitsizligin-yon-degistirmesi-kesir',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Kesir halindeki sayılarda da benzer bir durum vardır.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{x}{3} > \\frac{5}{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer her iki tarafın da pay ve paydalarının yerini değiştirirsen eşitsizlik YÖN DEĞİŞTİRİR.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{3}{x} < \\frac{2}{5}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'esitsizligin-yon-degistirmesi-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{x}{4} > \\frac{3}{5}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki eşitsizliğin yönü değişmiş hali hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'four-over-x-lt', label: '\\frac{4}{x} < \\frac{5}{3}' },
+          { id: 'x-over-four-lt', label: '\\frac{x}{4} < \\frac{3}{5}' },
+        ],
+        correctChoiceId: 'four-over-x-lt',
+      },
+      {
+        type: 'completion',
+        id: 'esitsizligin-yon-degistirmesi-complete',
+      },
+    ],
+  },
+  'mutlak-deger': {
+    title: 'Mutlak Değer',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'mutlak-deger-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir sayının mutlak değeri o sayının 0\'a olan uzaklığını ifade eder.',
+          },
+          {
+            kind: 'text',
+            content: 'Mutlak değer şöyle gösterilir:',
+          },
+          {
+            kind: 'formula',
+            content: '|x| = 5',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifade "x sayısının mutlak değeri 5\'e eşittir" demektir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu durumda x sayısının 0\'a uzaklığı 5 birimdir. Öyleyse x 5 veya -5 olmalıdır.',
+          },
+          {
+            kind: 'formula',
+            content: '|5| = 5 , \\quad |-5| = 5',
+          },
+          {
+            kind: 'text',
+            content: 'Uzaklığı ifade ettiği için mutlak değer ASLA NEGATİF OLAMAZ.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'mutlak-deger-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '|x| = 7',
+          },
+          {
+            kind: 'text',
+            content: 'x sayısı aşağıdakilerden hangisi olabilir?',
+          },
+        ],
+        choices: [
+          { id: 'five', label: '5' },
+          { id: 'minus-seven', label: '-7' },
+        ],
+        correctChoiceId: 'minus-seven',
+      },
+      {
+        type: 'quiz',
+        id: 'mutlak-deger-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '|x| = 3',
+          },
+          {
+            kind: 'text',
+            content: 'x sayısını mutlak değeri 3\'e eşit olduğuna göre aşağıdaki işlemin sonucu hangisi olabilir?',
+          },
+          {
+            kind: 'formula',
+            content: 'x + 5 = ?',
+          },
+        ],
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'five', label: '5' },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
+        type: 'teaching',
+        id: 'mutlak-deger-ifade',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Mutlak değerin içinde tek bir sayı yerine bir ifade de yer alabilir. Örneğin;',
+          },
+          {
+            kind: 'formula',
+            content: '|x - 3|',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki gibi ifadeler iki şekilde dışarı çıkabilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer x sayısı 3\'ten büyükse içerisi pozitiftir, o yüzden ifade aynen dışarı çıkar:',
+          },
+          {
+            kind: 'formula',
+            content: '|x - 3| = x - 3',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer x sayısı 3\'ten küçükse içerisi negatiftir, o yüzden ifade (-) ile çarpılıp dışarı çıkar',
+          },
+          {
+            kind: 'formula',
+            content: '|x - 3| = -x + 3',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'mutlak-deger-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '|x - 4|',
+          },
+          {
+            kind: 'text',
+            content: 'x sayısı 4\'ten küçük olduğuna göre yukarıdaki ifadenin eşiti hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'minus-x-plus-four', label: '-x + 4' },
+          { id: 'x-minus-four', label: 'x - 4' },
+        ],
+        correctChoiceId: 'minus-x-plus-four',
+      },
+      {
+        type: 'quiz',
+        id: 'mutlak-deger-quiz-4',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '|x - 3| + 2 = 5',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıda verilen denkleme göre x\'in alabileceği değerler hangileridir?',
+          },
+        ],
+        choices: [
+          { id: 'six-and-zero', label: '6 ve 0' },
+          { id: 'three-and-minus-three', label: '3 ve -3' },
+        ],
+        correctChoiceId: 'six-and-zero',
+      },
+      {
+        type: 'completion',
+        id: 'mutlak-deger-complete',
+      },
+    ],
+  },
+  'mutlak-degerli-esitsizlikler': {
+    title: 'Mutlak Değerli Eşitsizlikler',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'mutlak-degerli-esitsizlikler-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Mutlak değerli eşitsizlikler şuna benzer:',
+          },
+          {
+            kind: 'formula',
+            content: '|x| < 7',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifadenin üzerine düşünelim.',
+          },
+          {
+            kind: 'text',
+            content: 'x = 5 olabilir. x = 3 olabilir. x = -3 de olabilir!',
+          },
+          {
+            kind: 'text',
+            content: 'Öyleyse mutlak değerli eşitsizliklerde ifadeyi dışarı çıkarırken pozitif ve negatif sınırları beraber ifade etmeliyiz:',
+          },
+          {
+            kind: 'formula',
+            content: '-7 < x < 7',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'mutlak-degerli-esitsizlikler-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '|x| < 5',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki eşitsizliğin eşiti aşağıdakilerden hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'minus-five-x-five', label: '-5 < x < 5' },
+          { id: 'zero-x-five', label: '0 < x < 5' },
+        ],
+        correctChoiceId: 'minus-five-x-five',
+      },
+      {
+        type: 'teaching',
+        id: 'mutlak-degerli-esitsizlikler-ifade',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'x tek başına verilmezse ne olur?',
+          },
+          {
+            kind: 'formula',
+            content: '|x - 3| < 7',
+          },
+          {
+            kind: 'text',
+            content: '(x - 3) ifadesine dokunmadan aynı şekilde dışarı çıkararak başlayacağız.',
+          },
+          {
+            kind: 'formula',
+            content: '-7 < x - 3 < 7',
+          },
+          {
+            kind: 'text',
+            content: 'Sonrasında her tarafa +3 ekleyeceğiz:',
+          },
+          {
+            kind: 'formula',
+            content: '-4 < x < 11',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'mutlak-degerli-esitsizlikler-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '|x + 2| < 3',
+          },
+          {
+            kind: 'text',
+            content: 'x sayısının değer aralığı aşağıdakilerden hangisinde doğru verilmiştir?',
+          },
+        ],
+        choices: [
+          { id: 'minus-three-x-three', label: '-3 < x < 3' },
+          { id: 'minus-five-x-one', label: '-5 < x < 1' },
+        ],
+        correctChoiceId: 'minus-five-x-one',
+      },
+      {
+        type: 'completion',
+        id: 'mutlak-degerli-esitsizlikler-complete',
+      },
+    ],
+  },
+  'uslu-sayilar': {
+    title: 'Üslü Sayılar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'uslu-sayilar-intro',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2^{3}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin Türkçesi şu şekildedir:',
+          },
+          {
+            kind: 'text',
+            content: '"2\'nin 3. kuvveti"',
+          },
+          {
+            kind: 'text',
+            content: 'Bu ifade "2\'yi yan yana 3 defa koy ve hepsini çarp" demektir.',
+          },
+          {
+            kind: 'formula',
+            content: '2^{3} = 2 \\times 2 \\times 2',
+          },
+          {
+            kind: 'text',
+            content: 'Bu da 8\'e eşittir.',
+          },
+          {
+            kind: 'formula',
+            content: '2^{3} = 8',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'uslu-sayilar-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '3^{2} = ?',
+          },
+        ],
+        hint: '3 sayısını 2 defa yan yana koy ve çarp!',
+        choices: [
+          { id: 'nine', label: '9' },
+          { id: 'six', label: '6' },
+        ],
+        correctChoiceId: 'nine',
+      },
+      {
+        type: 'teaching',
+        id: 'uslu-sayilar-kurallar',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'KURAL #1: Herhangi bir sayının 0. kuvveti 1\'e eşittir.',
+          },
+          {
+            kind: 'formula',
+            content: 'x^{0} = 1',
+          },
+          {
+            kind: 'text',
+            content: 'KURAL #2: 1 sayısının bütün kuvvetleri yine 1\'e eşittir.',
+          },
+          {
+            kind: 'formula',
+            content: '1^{x} = 1',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'uslu-sayilar-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2^{a} = 3^{b}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki denkleme göre a ve b değerleri kaça eşit olmalıdır?',
+          },
+        ],
+        choices: [
+          { id: 'a3-b2', label: 'a = 3, b = 2' },
+          { id: 'a0-b0', label: 'a = 0, b = 0' },
+        ],
+        correctChoiceId: 'a0-b0',
+      },
+      {
+        type: 'completion',
+        id: 'uslu-sayilar-complete',
+      },
+    ],
+  },
+  'negatif-sayilar': {
+    title: 'Negatif Sayılar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'negatif-sayilar-intro',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '(-2)^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadeye göre iki adet (-2) sayısını yan yana koyup çarpmalıyız.',
+          },
+          {
+            kind: 'formula',
+            content: '(-2) \\times (-2) = 4',
+          },
+          {
+            kind: 'text',
+            content: 'Unutma! (-) ile (-) çarpılırsa sonuç (+) olur.',
+          },
+          {
+            kind: 'text',
+            content: 'Ancak 3 tane (-2)\'yi yan yana çarparsak işler değişir:',
+          },
+          {
+            kind: 'formula',
+            content: '(-2)^{3} = (-2) \\times (-2) \\times (-2) = -8',
+          },
+          {
+            kind: 'text',
+            content: 'Bu sefer sonuç negatif çıkar.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'negatif-sayilar-kural',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sonucun (-) mi yoksa (+) mı çıkacağını her seferinde bilebilmek için şu genel kuralı ezberleyelim:',
+          },
+          {
+            kind: 'text',
+            content: '(-) sayıların üssü ÇİFT olursa sonuç POZİTİF olur.',
+          },
+          {
+            kind: 'formula',
+            content: '(-2)^{4} = 16',
+          },
+          {
+            kind: 'text',
+            content: '(-) sayıların üssü TEK olursa sonuç NEGATİF olur.',
+          },
+          {
+            kind: 'formula',
+            content: '(-2)^{3} = -8',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'negatif-sayilar-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '(-2)^{x}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu POZİTİF olduğuna göre x aşağıdakilerden hangisi olabilir?',
+          },
+        ],
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'three', label: '3' },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
+        type: 'teaching',
+        id: 'negatif-sayilar-parantez',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'ÖNEMLİ KURAL: Bütün bu öğrendiklerinin geçerli olması için (-) sayılar parantezle kapatılmış olmalıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer parantez yoksa sonuç kesinlikle negatiftir.',
+          },
+          {
+            kind: 'formula',
+            content: '-2^{2} = -4',
+          },
+          {
+            kind: 'formula',
+            content: '(-2)^{2} = 4',
+          },
+          {
+            kind: 'text',
+            content: 'Gördüğün gibi parantezler sonucu etkiler!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'negatif-sayilar-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki işlemlerden hangisinin sonucu KESİNLİKLE NEGATİFTİR?',
+          },
+        ],
+        choices: [
+          { id: 'parantez-minus-two', label: '(-2)^{x}', isMath: true },
+          { id: 'minus-two-power-x', label: '-2^{x}', isMath: true },
+        ],
+        correctChoiceId: 'minus-two-power-x',
+      },
+      {
+        type: 'teaching',
+        id: 'negatif-sayilar-negatif-us',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Son olarak negatif üsleri öğrenelim:',
+          },
+          {
+            kind: 'text',
+            content: 'Negatif üsler sayının pay ve paydasının yerini değiştirir:',
+          },
+          {
+            kind: 'formula',
+            content: '3^{-1} = \\frac{1}{3}',
+          },
+          {
+            kind: 'formula',
+            content: '2^{-2} = \\frac{1}{2^{2}} = \\frac{1}{4}',
+          },
+          {
+            kind: 'text',
+            content: 'Üssün negatif olması sonucun işaretini ETKİLEMEZ!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'negatif-sayilar-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2^{-3} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu kaçtır?',
+          },
+        ],
+        choices: [
+          { id: 'one-eighth', label: '\\frac{1}{8}' },
+          { id: 'minus-eight', label: '-8' },
+        ],
+        correctChoiceId: 'one-eighth',
+      },
+      {
+        type: 'completion',
+        id: 'negatif-sayilar-complete',
+      },
+    ],
+  },
+  'sadelestirme-ve-parcalama': {
+    title: 'Sadeleştirme ve Parçalama',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'sadelestirme-ve-parcalama-sadelestirme',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Üslü sayıları sadeleştirebilir ve genişletebilirsin.',
+          },
+          {
+            kind: 'formula',
+            content: '4^{2}',
+          },
+          {
+            kind: 'text',
+            content: '4\'ün aynı zamanda 2\'nin karesi olduğunu biliyoruz.',
+          },
+          {
+            kind: 'formula',
+            content: '(2^{2})^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Üssün üssü birbiriyle çarpılır.',
+          },
+          {
+            kind: 'formula',
+            content: '2^{2 \\times 2} = 2^{4}',
+          },
+          {
+            kind: 'text',
+            content: 'Sonuç olarak:',
+          },
+          {
+            kind: 'formula',
+            content: '4^{2} = 2^{4}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'sadelestirme-ve-parcalama-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '9^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin eşiti aşağıdakilerden hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'three-to-two', label: '3^{2}', isMath: true },
+          { id: 'three-to-four', label: '3^{4}', isMath: true },
+        ],
+        correctChoiceId: 'three-to-four',
+      },
+      {
+        type: 'teaching',
+        id: 'sadelestirme-ve-parcalama-parcalama',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi de parçalamayı öğrenelim:',
+          },
+          {
+            kind: 'formula',
+            content: '6^{2}',
+          },
+          {
+            kind: 'text',
+            content: '6 sayısının 2 x 3 olduğunu biliyoruz.',
+          },
+          {
+            kind: 'formula',
+            content: '6 = 2 \\times 3',
+          },
+          {
+            kind: 'text',
+            content: 'O zaman 6\'nın kuvvetini 2 ve 3\'ün üstüne de yazabiliriz!',
+          },
+          {
+            kind: 'formula',
+            content: '6^{2} = 2^{2} \\times 3^{2}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'sadelestirme-ve-parcalama-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '12^{2}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin parçalara ayrılmış hali hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'six-times-two', label: '6 \\times 2', isMath: true },
+          { id: 'six-squared-times-two-squared', label: '6^{2} \\times 2^{2}', isMath: true },
+        ],
+        correctChoiceId: 'six-squared-times-two-squared',
+      },
+      {
+        type: 'quiz',
+        id: 'sadelestirme-ve-parcalama-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '10^{3}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki ifadenin parçalara ayrılmış hali hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'five-squared-times-two-squared', label: '5^{2} \\times 2^{2}', isMath: true },
+          { id: 'five-cubed-times-two-cubed', label: '5^{3} \\times 2^{3}', isMath: true },
+        ],
+        correctChoiceId: 'five-cubed-times-two-cubed',
+      },
+      {
+        type: 'completion',
+        id: 'sadelestirme-ve-parcalama-complete',
+      },
+    ],
+  },
+  'uslu-sayilarla-ilgili-kurallar': {
+    title: 'Üslü Sayılarda İşlemler',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'uslu-sayilarla-ilgili-kurallar-carpma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Üslü sayılar birbiriyle çarpıldığı zaman tabanlar aynı ise üsleri toplayabilirsin:',
+          },
+          {
+            kind: 'formula',
+            content: '2^{2} \\times 2^{3} = 2^{5}',
+          },
+          {
+            kind: 'formula',
+            content: '3^{3} \\times 3^{-1} = 3^{2}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'uslu-sayilarla-ilgili-kurallar-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '2^{4} \\times 2^{1} \\times 2^{-3} = ?',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu kaçtır?',
+          },
+        ],
+        choices: [
+          { id: 'two', label: '2' },
+          { id: 'four', label: '4' },
+        ],
+        correctChoiceId: 'four',
+      },
+      {
+        type: 'teaching',
+        id: 'uslu-sayilarla-ilgili-kurallar-bolme',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Üslü sayılar birbirine bölündüğünde tabanlar aynıysa üsleri birbirinden çıkarabilirsin.',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{2^{3}}{2^{2}} = 2^{3 - 2} = 2',
+          },
+          {
+            kind: 'formula',
+            content: '\\frac{3^{2}}{3^{4}} = 3^{2 - 4} = 3^{-2}',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'uslu-sayilarla-ilgili-kurallar-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: '\\frac{2^{4}}{2^{2}}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu kaçtır?',
+          },
+        ],
+        choices: [
+          { id: 'four-div', label: '4' },
+          { id: 'two-div', label: '2' },
+        ],
+        correctChoiceId: 'four-div',
+      },
+      {
+        type: 'completion',
+        id: 'uslu-sayilarla-ilgili-kurallar-complete',
+      },
+    ],
+  },
 };
 
 const defaultPlaceholderMessage =

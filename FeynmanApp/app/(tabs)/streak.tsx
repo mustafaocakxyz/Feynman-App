@@ -2,6 +2,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/theme';
+import { useTheme } from '@/contexts/theme-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
 import { getStreakState } from '@/lib/streak-storage';
@@ -51,7 +52,7 @@ export default function StreakScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const { theme } = useTheme();
-  const colors = Colors[theme];
+  const colors = Colors[theme as 'light' | 'dark'];
   const [streakCount, setStreakCount] = useState(0);
   const [lastActivityDate, setLastActivityDate] = useState<string | null>(null);
 

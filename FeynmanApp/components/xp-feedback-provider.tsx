@@ -1,6 +1,8 @@
 import { ReactNode, createContext, useContext, useMemo, useRef, useState } from 'react';
 import { Animated, Dimensions, StyleSheet, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '@/contexts/theme-context';
+import { Colors } from '@/constants/theme';
 
 type XpToast = {
   amount: number;
@@ -20,6 +22,8 @@ export function XpFeedbackProvider({ children }: { children: ReactNode }) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const insets = useSafeAreaInsets();
   const anim = useRef(new Animated.Value(0)).current;
+  const { theme } = useTheme();
+  const colors = Colors[theme as 'light' | 'dark'];
 
   const hideToast = (id: number) => {
     Animated.timing(anim, {
@@ -93,16 +97,24 @@ export function XpFeedbackProvider({ children }: { children: ReactNode }) {
           style={[
             styles.toastContainer,
             {
+              backgroundColor: colors.cardBackground,
               paddingBottom: Math.max(insets.bottom, 16),
               paddingTop: 32,
               transform: [{ translateY }],
               opacity,
+              shadowColor: theme === 'dark' ? '#000000' : '#0f172a',
             },
           ]}>
-          <Text style={styles.toastText}>⭐ {toast.amount} XP Kazandınız!</Text>
+          <Text style={[styles.toastText, { color: colors.text }]}>⭐ {toast.amount} XP Kazandınız!</Text>
           {toast.showAdvance && toast.onAdvance && (
             <Pressable
-              style={styles.advanceButton}
+              style={[
+                styles.advanceButton,
+                {
+                  backgroundColor: colors.primary,
+                  shadowColor: theme === 'dark' ? '#000000' : '#1d4ed8',
+                },
+              ]}
               onPress={handleAdvance}>
               <Text style={styles.advanceButtonText}>İlerle</Text>
             </Pressable>
@@ -129,18 +141,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    backgroundColor: '#ffffff',
     paddingHorizontal: 32,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#0f172a',
     shadowOpacity: 0.15,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: -6 },
     elevation: 20,
   },
   toastText: {
-    color: '#1e293b',
     fontSize: 20,
     fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
@@ -153,8 +162,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 18,
     alignItems: 'center',
-    backgroundColor: '#2563eb',
-    shadowColor: '#1d4ed8',
     shadowOpacity: 0.22,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },

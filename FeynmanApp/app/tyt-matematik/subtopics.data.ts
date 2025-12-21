@@ -30,6 +30,45 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
       { title: 'Kalan Bulma Mantığı', slug: 'kalan-bulma-mantigi' },
     ],
   ],
+  [
+    'Rasyonel Sayılar',
+    [
+      { title: 'Rasyonel Sayılar', slug: 'rasyonel-sayilar' },
+      { title: 'Genişletme ve Sadeleştirme', slug: 'genisletme-sadelestirme' },
+      { title: 'Rasyonel Sayılarda İşlemler', slug: 'rasyonel-sayilarda-islemler' },
+    ],
+  ],
+  [
+    '1. Dereceden Denklemler',
+    [
+      { title: 'Bir Bilinmeyenli Denklemler', slug: 'bir-bilinmeyenli-denklemler' },
+      { title: 'İki Bilinmeyenli Denklemler', slug: 'iki-bilinmeyenli-denklemler' },
+      { title: 'İki Bilinmeyenli Denklemler (Devam)', slug: 'iki-bilinmeyenli-denklemler-devam' },
+    ],
+  ],
+  [
+    'Eşitsizlikler',
+    [
+      { title: 'Eşitsizlikler', slug: 'esitsizlikler' },
+      { title: 'Eşitsizliğin Yön Değiştirmesi', slug: 'esitsizligin-yon-degistirmesi' },
+    ],
+  ],
+  [
+    'Mutlak Değer',
+    [
+      { title: 'Mutlak Değer', slug: 'mutlak-deger' },
+      { title: 'Mutlak Değerli Eşitsizlikler', slug: 'mutlak-degerli-esitsizlikler' },
+    ],
+  ],
+  [
+    'Üslü Sayılar',
+    [
+      { title: 'Üslü Sayılar', slug: 'uslu-sayilar' },
+      { title: 'Negatif Sayılar', slug: 'negatif-sayilar' },
+      { title: 'Sadeleştirme ve Parçalama', slug: 'sadelestirme-ve-parcalama' },
+      { title: 'Üslü Sayılarda İşlemler', slug: 'uslu-sayilarla-ilgili-kurallar' },
+    ],
+  ],
 ];
 
 export const topicSubtopics = Object.fromEntries(topicSubtopicsEntries);
