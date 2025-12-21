@@ -66,9 +66,9 @@ export default function HomeScreen() {
   const [userName, setUserName] = useState('');
   const [userAvatarId, setUserAvatarId] = useState<AvatarId | null>(null);
   
-  // Calculate responsive image height (max 280px, but adapts to smaller screens)
+  // Calculate responsive image height (max 252px, but adapts to smaller screens) - reduced by 10%
   const availableHeight = screenHeight - insets.top - insets.bottom - 200; // Reserve space for header, metrics, padding, button
-  const imageHeight = Math.min(280, Math.max(180, availableHeight * 0.35));
+  const imageHeight = Math.min(252, Math.max(162, availableHeight * 0.315));
   useFocusEffect(
     useCallback(() => {
       if (!user?.id) return;
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginBottom: 24,
+    marginBottom: 14,
   },
   topAvatar: {
     width: 64,
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_700Bold',
   },
   quizButton: {
-    marginTop: 24,
+    marginTop: 12,
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 20,
@@ -487,7 +487,7 @@ const styles = StyleSheet.create({
   visual: {
     marginTop: 16,
     width: '100%',
-    maxHeight: 280,
+    maxHeight: 252,
   },
   progressBarTrack: {
     marginTop: 24,
