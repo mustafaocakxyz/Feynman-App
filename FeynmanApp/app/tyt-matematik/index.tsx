@@ -109,7 +109,7 @@ export default function TYTMatematikScreen() {
           <View style={[styles.detailCard, { backgroundColor: colors.cardBackground }]}>
             <Text style={styles.detailIcon}>💡</Text>
             <View>
-              <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Desenler</Text>
+              <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Modüller</Text>
               <Text style={[styles.detailValue, { color: colors.text }]}>{totalSubtopics}</Text>
             </View>
           </View>

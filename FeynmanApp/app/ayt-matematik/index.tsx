@@ -3,7 +3,7 @@ import { Image, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text,
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { topicSubtopicsEntries } from './subtopics.data';
 import { getCompletedSubtopics } from '@/lib/completion-storage';
@@ -19,10 +19,17 @@ export default function AYTMatematikScreen() {
   const [openTopic, setOpenTopic] = useState<string | null>(null);
   const [completedSubtopics, setCompletedSubtopics] = useState<string[]>([]);
 
-  const topics = topicSubtopicsEntries.map(([name, subtopics]) => ({
-    name,
-    subtopics,
-  }));
+  const topics = useMemo(
+    () =>
+      topicSubtopicsEntries.map(([name, subtopics]) => ({
+        name,
+        subtopics,
+      })),
+    [],
+  );
+
+  const totalTopics = topics.length;
+  const totalSubtopics = topics.reduce((acc, topic) => acc + topic.subtopics.length, 0);
 
   const toggleTopic = (topic: string) => {
     setOpenTopic((current) => (current === topic ? null : topic));
@@ -96,14 +103,14 @@ export default function AYTMatematikScreen() {
             <Text style={styles.detailIcon}>📘</Text>
             <View>
               <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Konular</Text>
-              <Text style={[styles.detailValue, { color: colors.text }]}>13</Text>
+              <Text style={[styles.detailValue, { color: colors.text }]}>{totalTopics}</Text>
             </View>
           </View>
           <View style={[styles.detailCard, { backgroundColor: colors.cardBackground }]}>
             <Text style={styles.detailIcon}>💡</Text>
             <View>
-              <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Desenler</Text>
-              <Text style={[styles.detailValue, { color: colors.text }]}>130</Text>
+              <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Modüller</Text>
+              <Text style={[styles.detailValue, { color: colors.text }]}>{totalSubtopics}</Text>
             </View>
           </View>
         </View>

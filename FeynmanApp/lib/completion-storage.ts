@@ -17,7 +17,7 @@ export async function getCompletedSubtopics(userId: string): Promise<string[]> {
     }
     return [];
   } catch (error) {
-    console.warn('Tamamlanan desenler okunamadı', error);
+    console.warn('Tamamlanan modüller okunamadı', error);
     return [];
   }
 }
@@ -53,7 +53,7 @@ export async function markSubtopicCompleted(
     
     return true;
   } catch (error) {
-    console.warn('Tamamlanan deseni kaydetme başarısız', error);
+    console.warn('Tamamlanan modülü kaydetme başarısız', error);
     return false;
   }
 }

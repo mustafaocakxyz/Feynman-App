@@ -5609,7 +5609,7 @@ const lessons: Record<string, LessonDefinition> = {
 const defaultPlaceholderMessage =
   'Bu sayfa yakında. İçerik için hazırlık devam ediyor.';
 
-const defaultCompletionMessage = 'Desen Tamamlandı!';
+const defaultCompletionMessage = 'Modül Tamamlandı!';
 
 function getPageDiagram(page?: LessonPage): DiagramKind | undefined {
   if (!page) return undefined;
@@ -6191,7 +6191,7 @@ export default function TYTSubtopicScreen() {
                     🎉 TEBRİKLER
                   </Text>
                   <Text style={[styles.completionSubtitle, { color: colors.textSecondary }]}>
-                    Desen Tamamlandı!
+                    Modül Tamamlandı!
                   </Text>
                 </Animated.View>
 

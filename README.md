@@ -12,7 +12,7 @@
 
 ### Gün #3 | 10 Kasım | Uygulama versiyon kontrolüne uygun hale getirildi ve GitHub'a yüklendi.
 
-### Gün #4 | 11 Kasım | Uygulama artık kaç konu ve desen bitirildiğini takip ediyor ve bunları gösteriyor.
+### Gün #4 | 11 Kasım | Uygulama artık kaç konu ve modül bitirildiğini takip ediyor ve bunları gösteriyor.
 
 <img width="498" height="747" alt="Screenshot 2025-11-11 at 15 41 24" src="https://github.com/user-attachments/assets/ef083aa3-1d84-471d-98eb-b719686e445b" />
 <img width="489" height="553" alt="Screenshot 2025-11-11 at 15 42 11" src="https://github.com/user-attachments/assets/14fd1eb1-467d-420e-b9e9-e258f231bc7e" />
@@ -24,13 +24,13 @@
 
 ### Gün #5 | 12 Kasım | Uygulama ses efektleriyle zenginleştirildi.
 
-### Gün #6 | 13 Kasım | Uygulama içeriği geliştiriliyor. Yeni desenler ekleniyor.
+### Gün #6 | 13 Kasım | Uygulama içeriği geliştiriliyor. Yeni modüller ekleniyor.
 <img width="479" height="511" alt="Screenshot 2025-11-13 at 23 14 57" src="https://github.com/user-attachments/assets/ac758bdd-d0b0-4fe2-aa9c-010d90722cd5" />
 
 ### Gün #7 | 14 Kasım | Uygulama içeriği geliştiriliyor.
-### Gün #8 | 15 Kasım | +2 desen eklendi.
-### Gün #8 | 16 Kasım | +2 desen eklendi.
-### Gün #9 | 17 Kasım | +1 desen eklendi. Logaritma konusu tamamlandı.
+### Gün #8 | 15 Kasım | +2 modül eklendi.
+### Gün #8 | 16 Kasım | +2 modül eklendi.
+### Gün #9 | 17 Kasım | +1 modül eklendi. Logaritma konusu tamamlandı.
 ### Gün #10 - 11 | 18 - 19 Kasım | Authentication için database düzenleniyor.
 ### Gün #12 | 20 Kasım | Authentication halledildi. Artık kullanıcılar kaydolabilir.
 

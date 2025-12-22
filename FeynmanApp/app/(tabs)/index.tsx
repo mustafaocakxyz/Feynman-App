@@ -256,11 +256,11 @@ export default function HomeScreen() {
               const subtopicEntries =
                 item.id === 'ayt' ? aytSubtopicsEntries : tytSubtopicsEntries;
               const totalSubtopics = item.totalSubtopics;
-              const completedDesenCount = completedSubtopics.filter((slug) =>
+              const completedModulCount = completedSubtopics.filter((slug) =>
                 subtopicEntries.some(([, list]) => list.some((s) => s.slug === slug)),
               ).length;
               const progressRatio =
-                totalSubtopics > 0 ? completedDesenCount / totalSubtopics : 0;
+                totalSubtopics > 0 ? completedModulCount / totalSubtopics : 0;
 
               const completedTopics = subtopicEntries.filter(([, list]) =>
                 list.every((subtopic) => completedSubtopics.includes(subtopic.slug)),
@@ -286,7 +286,7 @@ export default function HomeScreen() {
                     />
                   </View>
                   <Text style={[styles.progressText, { color: colors.textSecondary }]}>
-                    {completedDesenCount} / {totalSubtopics} desen tamamlandı
+                    {completedModulCount} / {totalSubtopics} modül tamamlandı
                   </Text>
                   <Pressable
                     style={({ pressed }) => [
