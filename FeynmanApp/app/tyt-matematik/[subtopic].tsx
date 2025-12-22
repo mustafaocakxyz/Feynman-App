@@ -50,7 +50,15 @@ type TeachingBlock =
       fontSize?: number;
       textAlign?: 'left' | 'center' | 'right';
     }
-  | { kind: 'graph'; config: GraphConfig };
+  | { kind: 'graph'; config: GraphConfig }
+  | {
+      kind: 'image';
+      source: any; // require() result or URI string
+      width?: number;
+      height?: number;
+      resizeMode?: 'contain' | 'cover' | 'stretch' | 'center' | 'repeat';
+      alt?: string;
+    };
 
 type TeachingPage = {
   type: 'teaching';
@@ -4051,6 +4059,1551 @@ const lessons: Record<string, LessonDefinition> = {
       },
     ],
   },
+  'fonksiyon-nedir': {
+    title: 'Fonksiyon nedir?',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content:
+              'Fonksiyonları bir "Makine" gibi düşünebilirsin. Bir taraftan hammadde girer, içeride işlenir, diğer taraftan ürün olarak çıkar.',
+          },
+          { kind: 'diagram', diagram: 'function-machine' },
+          {
+            kind: 'text',
+            content:
+              'Bu makinenin kuralı "Gelen sayıyı 5 ile çarp" şeklindedir. 3 girdi, 5 ile çarpıldı ve 15 olarak çıktı.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-formula',
+        blocks: [
+          {
+            kind: 'text',
+            content:
+              'Az önceki şekli çizmek uzun zaman aldığı için bunu matematiksel olarak şöyle ifade edebiliriz:',
+          },
+          { kind: 'formula', content: 'f(x) = 5x' },
+          {
+            kind: 'text',
+            content: 'Bu ifade şu anlama gelir: "f makinesi, içine giren x sayısını 5 ile çarpar."',
+          },
+          {
+            kind: 'text',
+            content: 'Yani x yerine ne gelirse, makine onu 5 katına çıkarır.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi başka bir fonksiyona bakalım. Kuralımız giren sayının 3 fazlasını almak olsun.',
+          },
+          { kind: 'formula', content: 'f(x) = x + 3' },
+          {
+            kind: 'text',
+            content: 'Fonksiyona 4 sayısını atarsak ne olur? x gördüğümüz yere 4 yazarız.',
+          },
+          { kind: 'formula', content: 'f(4) = 4 + 3 = 7' },
+          {
+            kind: 'text',
+            content: 'Gördün mü? x yerine 4 yazdık, sonuç 7 çıktı.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sıra sende! Aşağıdaki fonksiyon makinesi giren sayıyı 10 ile çarpıyor.',
+          },
+          { kind: 'formula', content: 'f(x) = 10x' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyona 5 sayısı girerse ne olur?',
+          },
+          { kind: 'formula', content: 'f(5) = ?' },
+        ],
+        choices: [
+          { id: 'fifty', label: '50' },
+          { id: 'fifteen', label: '15' },
+        ],
+        correctChoiceId: 'fifty',
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi kuralımız biraz daha detaylı. Önce çarp, sonra çıkar.',
+          },
+          { kind: 'formula', content: 'f(x) = 3x - 1' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyona 3 sayısını koyarsak ne olur?',
+          },
+          { kind: 'formula', content: 'f(3) = ?' },
+        ],
+        choices: [
+          { id: 'eight', label: '8' },
+          { id: 'seven', label: '7' },
+        ],
+        correctChoiceId: 'eight',
+      },
+      {
+        type: 'completion',
+        id: 'fonksiyon-nedir-complete',
+      },
+    ],
+  },
+  'tanim-ve-goruntu-kumesi': {
+    title: 'Tanım ve Görüntü kümesi',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'tanim-goruntu-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonlar iki küme arasında çalışır.',
+          },
+          { kind: 'diagram', diagram: 'domain-range-mapping' },
+          {
+            kind: 'text',
+            content: 'Sol taraftaki A kümesi, fonksiyon makinesine atacağımız sayılardır. Buna "Tanım Kümesi" denir.',
+          },
+          {
+            kind: 'text',
+            content: 'Sağ taraftaki B kümesi ise ulaşabileceğimiz hedeflerdir. Okların gittiği elemanlar "Görüntü Kümesini" oluşturur.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tanim-goruntu-notasyon',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Matematikte bu durumu şöyle gösteririz: A\'dan B\'ye tanımlı f fonksiyonu.',
+          },
+          { kind: 'formula', content: 'f: A \\rightarrow B' },
+          {
+            kind: 'text',
+            content: 'Burada A kümesi (Girdiler) Tanım Kümesi, B kümesi (Olası Çıktılar) Değer Kümesidir.',
+          },
+          {
+            kind: 'text',
+            content: 'Fonksiyon A\'daki elemanları alır, B\'deki elemanlarla eşleştirir.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tanim-goruntu-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki A kümesi bizim tanım kümemiz olsun.',
+          },
+          { kind: 'formula', content: 'A = \\{1, 2\\}' },
+          {
+            kind: 'text',
+            content: 'Fonksiyonumuz da aşağıdaki olsun:',
+          },
+          { kind: 'formula', content: 'f(x) = x + 3' },
+          {
+            kind: 'text',
+            content: 'Şimdi A kümesinin elemanları olan 1 ve 2\'yi fonksiyonumuzun içine koyarak görüntü kümemizi bulalım.',
+          },
+          { kind: 'formula', content: 'f(1) = 1 + 3 = 4' },
+          { kind: 'formula', content: 'f(2) = 2 + 3 = 5' },
+          {
+            kind: 'text',
+            content: 'Çıkan sonuçlar (yani 4 ve 5) bizim görüntü kümemizdir.',
+          },
+          { kind: 'formula', content: 'B = \\{4, 5\\}' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tanim-goruntu-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Tanım kümemiz A = {2, 3} olsun. Fonksiyonumuz ise aşağıdaki fonksiyon olsun.',
+          },
+          { kind: 'formula', content: 'f(x) = x^2' },
+          {
+            kind: 'text',
+            content: 'Görüntü kümesi (sonuçlar) ne olur?',
+          },
+        ],
+        choices: [
+          { id: 'four-nine', label: '\\{4, 9\\}', isMath: true },
+          { id: 'two-three', label: '\\{2, 3\\}', isMath: true },
+        ],
+        correctChoiceId: 'four-nine',
+      },
+      {
+        type: 'completion',
+        id: 'tanim-ve-goruntu-kumesi-complete',
+      },
+    ],
+  },
+  'deger-bulma': {
+    title: 'f(x) Yazmadığında Değer Bulma',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'deger-bulma-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Kurallarını bildiğimiz fonksiyonların içine sayılar koyup değerlerini bulabiliyoruz. Örneğin aşağıdaki fonksiyona bakalım.',
+          },
+          { kind: 'formula', content: 'f(x) = x + 4' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonun 5 için değerini bulmak istersem x yerine 5 yazmam yeterlidir.',
+          },
+          { kind: 'formula', content: 'f(5) = 5 + 4 = 9' },
+          {
+            kind: 'text',
+            content: 'Peki ya soru bana f(x) yerine f(x + 3) gibi bir şey sorarsa?',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'deger-bulma-karmasik',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bazen fonksiyon makinesinin girişi sadece "x" olmaz, yanında başka sayılar da olabilir.',
+          },
+          { kind: 'formula', content: 'f(x+2) = 3x' },
+          {
+            kind: 'text',
+            content: 'Soru bizden f(5)\'i isterse ne yapacağız? x yerine direkt 5 yazamayız! Çünkü içeride "x" değil "x+2" var.',
+          },
+          {
+            kind: 'text',
+            content: '✓ Amacımız parantezin içini 5 yapmak.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'deger-bulma-x-bulma',
+        blocks: [
+          { kind: 'formula', content: 'f(x+2) = 3x' },
+          {
+            kind: 'text',
+            content: 'İçerisinin 5 olmasını istiyoruz. O zaman basit bir denklem kurarak x\'i bulalım.',
+          },
+          { kind: 'formula', content: 'x + 2 = 5' },
+          {
+            kind: 'text',
+            content: 'Bu denkleme göre x = 3 olmalıdır.',
+          },
+          {
+            kind: 'text',
+            content: 'Yani makineye 3 atarsak, içerisi (3+2) olur ve f(5)\'i elde ederiz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'deger-bulma-sonuc',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şimdi bulduğumuz x=3 değerini fonksiyonun kuralında (karşı tarafta) yerine yazalım.',
+          },
+          { kind: 'formula', content: 'f(x+2) = 3x' },
+          { kind: 'formula', content: 'f(3+2) = 3 \\cdot 3' },
+          { kind: 'formula', content: 'f(5) = 9' },
+          {
+            kind: 'text',
+            content: 'Sol taraf f(5) oldu. Sağ tarafı hesaplayalım: 3 * 3 = 9.',
+          },
+          {
+            kind: 'text',
+            content: 'Tebrikler! f(5) = 9 sonucuna ulaştık. 🎉',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'deger-bulma-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyona bak.',
+          },
+          { kind: 'formula', content: 'f(x-3) = 2x + 5' },
+          {
+            kind: 'text',
+            content: 'f(4)\'ü bulmak için x yerine hangi sayıyı yazmalısın?',
+          },
+          { kind: 'formula', content: 'x - 3 = 4 \\quad \\Rightarrow \\quad x = ?' },
+        ],
+        choices: [
+          { id: 'seven', label: '7' },
+          { id: 'four', label: '4' },
+        ],
+        correctChoiceId: 'seven',
+      },
+      {
+        type: 'quiz',
+        id: 'deger-bulma-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Harika, x yerine 7 yazmalıyız!',
+          },
+          {
+            kind: 'text',
+            content: 'Şimdi sonucu da bulalım. Aşağıdaki fonksiyonda x yerine 7 yazdığında sağ taraf (yani sonuç) ne çıkacaktır?',
+          },
+          { kind: 'formula', content: 'f(x-3) = 2x + 5' },
+        ],
+        choices: [
+          { id: 'nineteen', label: '19' },
+          { id: 'eight', label: '8' },
+        ],
+        correctChoiceId: 'nineteen',
+      },
+      {
+        type: 'quiz',
+        id: 'deger-bulma-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir tane daha yapalım. Aşağıdaki fonksiyona bak:',
+          },
+          { kind: 'formula', content: 'f(2x) = x + 7' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonda f(4) kaça eşittir?',
+          },
+        ],
+        hint: 'x yerine ne yazarsan fonksiyonun içi 4 olur? Sağ tarafta o değeri kullan, 4\'ü değil!',
+        choices: [
+          { id: 'nine', label: '9' },
+          { id: 'eleven', label: '11' },
+        ],
+        correctChoiceId: 'nine',
+      },
+      {
+        type: 'completion',
+        id: 'deger-bulma-complete',
+      },
+    ],
+  },
+  'fonksiyon-cesitleri': {
+    title: 'Fonksiyon Çeşitleri',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonların çeşitleri vardır.',
+          },
+          {
+            kind: 'text',
+            content: 'Birebir, örten, sabit, birim, doğrusal, tek ve çift gibi pek çok farklı özellikte fonksiyonlar vardır.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu modülde bu fonksiyon çeşitlerini ve özelliklerini öğreneceğiz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-sabit',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'En kolay fonksiyon çeşidiyle başlayalım: Sabit Fonksiyon.',
+          },
+          {
+            kind: 'text',
+            content: 'Sabit fonksiyonların içine ne koyarsan koy sonuç aynıdır.',
+          },
+          { kind: 'formula', content: 'f(x) = 3' },
+          {
+            kind: 'text',
+            content: 'x yerine ne koyarsan koy cevap 3 çıkacaktır.',
+          },
+          {
+            kind: 'text',
+            content: 'Çünkü sağ tarafta (sonuç kısmında) x\'e bağlı hiçbir terim yoktur.',
+          },
+          { kind: 'formula', content: 'f(0) = 3' },
+          { kind: 'formula', content: 'f(5) = 3' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cesitleri-quiz-1',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = 10' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki fonksiyonda x yerine 1 yazıldığında sonuç ne olur?',
+          },
+          { kind: 'formula', content: 'f(1) = ?' },
+        ],
+        choices: [
+          { id: 'ten', label: '10' },
+          { id: 'seven', label: '7' },
+        ],
+        correctChoiceId: 'ten',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-birim',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sırada "Birim Fonksiyon" var.',
+          },
+          {
+            kind: 'text',
+            content: 'Birim fonksiyon, içine ne atarsan dışarı aynısını çıkarır. Değiştirmez, dönüştürmez.',
+          },
+          {
+            kind: 'text',
+            content: 'Genellikle sorularda "f(x) birim fonksiyondur" der.',
+          },
+          { kind: 'formula', content: 'f(x) = x' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cesitleri-birim-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Mantık çok basit: Parantezin içinde ne görüyorsan, eşittirin karşısında da aynısını görmelisin.',
+          },
+          { kind: 'formula', content: 'f(5) = 5' },
+          { kind: 'formula', content: 'f(x+2) = x+2' },
+          {
+            kind: 'text',
+            content: 'Gördün mü? İçeride ne varsa dışarıda da o var. Hiçbir katsayı veya ekleme çıkarma yapılamaz.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cesitleri-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'f fonksiyonu birim fonksiyondur. Buna göre aşağıdaki işlemin sonucu kaçtır?',
+          },
+          { kind: 'formula', content: 'f(2024) = ?' },
+        ],
+        choices: [
+          { id: 'twenty-twenty-four', label: '2024' },
+          { id: 'one', label: '1' },
+        ],
+        correctChoiceId: 'twenty-twenty-four',
+      },
+      {
+        type: 'completion',
+        id: 'fonksiyon-cesitleri-complete',
+      },
+    ],
+  },
+  'dogrusal-fonksiyon': {
+    title: 'Doğrusal Fonksiyon',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'dogrusal-fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Doğrusal fonksiyonlar, çizgi şeklinde olan fonksiyonlardır.',
+          },
+          {
+            kind: 'text',
+            content: 'Formatı her zaman şöyledir:',
+          },
+          { kind: 'formula', content: 'f(x) = ax + b' },
+          {
+            kind: 'text',
+            content: 'Burada "a" eğimi, "b" ise sıfır noktasını (y eksenini kestiği yeri) gösterir.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'dogrusal-fonksiyon-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Örnek bir doğrusal fonksiyon:',
+          },
+          { kind: 'formula', content: 'f(x) = 2x + 5' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonun değerlerini bulalım:',
+          },
+          { kind: 'formula', content: 'f(0) = 5' },
+          { kind: 'formula', content: 'f(1) = 2(1) + 5 = 7' },
+          { kind: 'formula', content: 'f(2) = 2(2) + 5 = 9' },
+          {
+            kind: 'text',
+            content: 'x değiştikçe sonuç da doğrusal (düzenli) olarak artar.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'dogrusal-fonksiyon-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'f(x) doğrusal bir fonksiyon olduğuna göre aşağıdakilerden hangisi f(x) olabilir?',
+          },
+        ],
+        choices: [
+          { id: 'three-x-plus-four', label: '3x + 4', isMath: true },
+          { id: 'x-squared-plus-x-plus-six', label: 'x^2 + x + 6', isMath: true },
+        ],
+        correctChoiceId: 'three-x-plus-four',
+      },
+      {
+        type: 'quiz',
+        id: 'dogrusal-fonksiyon-quiz-2',
+        blocks: [
+          { kind: 'formula', content: 'f(1) = 6 , f(2) = 10' },
+          {
+            kind: 'text',
+            content: 'f(x) doğrusal bir fonksiyon olduğuna göre f(3) değeri kaça eşittir?',
+          },
+        ],
+        hint: 'f(x) fonksiyonunda x arttıkça sonuç da düzenli aralıklarla artar!',
+        choices: [
+          { id: 'fourteen', label: '14' },
+          { id: 'twelve', label: '12' },
+        ],
+        correctChoiceId: 'fourteen',
+      },
+      {
+        type: 'quiz',
+        id: 'dogrusal-fonksiyon-quiz-3',
+        blocks: [
+          { kind: 'formula', content: 'f(0) = 2 , f(1) = 4' },
+          {
+            kind: 'text',
+            content: 'f(x) doğrusal bir fonksiyon olduğuna göre f(x) aşağıdakilerden hangisidir?',
+          },
+        ],
+        choices: [
+          { id: 'two-x-plus-two', label: 'f(x) = 2x + 2', isMath: true },
+          { id: 'three-x-plus-two', label: 'f(x) = 3x + 2', isMath: true },
+        ],
+        correctChoiceId: 'two-x-plus-two',
+      },
+      {
+        type: 'completion',
+        id: 'dogrusal-fonksiyon-complete',
+      },
+    ],
+  },
+  'parcali-fonksiyon': {
+    title: 'Parçalı Fonksiyon',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'parcali-fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Parçalı fonksiyonlarda x\'in değerine göre farklı kurallar uygulanır.',
+          },
+          {
+            kind: 'formula',
+            content: 'f(x) = \\begin{cases} 2x & x < 0 \\\\ x+5 & x \\ge 0 \\end{cases}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki fonksiyon sana şunu söylüyor:',
+          },
+          {
+            kind: 'text',
+            content: '"Eğer x, 0\'dan küçükse 2 ile çarp."',
+          },
+          { kind: 'formula', content: 'f(-2) = 2 \\cdot (-2) = -4' },
+          {
+            kind: 'text',
+            content: '"Eğer x, 0\'a eşit veya 0\'dan büyükse 5 ile topla."',
+          },
+          { kind: 'formula', content: 'f(2) = 2 + 5 = 7' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'parcali-fonksiyon-quiz-1',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'f(x) = \\begin{cases} 3x & x < 0 \\\\ x+4 & x \\ge 0 \\end{cases}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki bilgilere göre f(4) kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'twelve', label: '12' },
+          { id: 'eight', label: '8' },
+        ],
+        correctChoiceId: 'eight',
+      },
+      {
+        type: 'quiz',
+        id: 'parcali-fonksiyon-quiz-2',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'f(x) = \\begin{cases} 5 & x < 0 \\\\ 3 & x \\ge 0 \\end{cases}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki bilgilere göre f(4) kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'five', label: '5' },
+          { id: 'three', label: '3' },
+        ],
+        correctChoiceId: 'three',
+      },
+      {
+        type: 'quiz',
+        id: 'parcali-fonksiyon-quiz-3',
+        blocks: [
+          {
+            kind: 'formula',
+            content: 'f(x) = \\begin{cases} 2x & x < 0 \\\\ x-1 & x \\ge 0 \\end{cases}',
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki bilgilere göre f(-2) kaça eşittir?',
+          },
+        ],
+        choices: [
+          { id: 'minus-three', label: '-3' },
+          { id: 'minus-four', label: '-4' },
+        ],
+        correctChoiceId: 'minus-four',
+      },
+      {
+        type: 'completion',
+        id: 'parcali-fonksiyon-complete',
+      },
+    ],
+  },
+  'fonksiyon-cesitleri-3': {
+    title: 'Çift Fonksiyonlar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'fonksiyon-tek-cift-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonların bazıları çift bazıları tektir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonları tanımanın üç yolu vardır.',
+          },
+          {
+            kind: 'text',
+            content: 'İlk olarak çift fonksiyonlardan başlayalım.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-yol-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonları tanımanın birinci yolu içeriye negatif sayı koymaktır.',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer bir fonksiyona x ve -x koyduğunda sonuç değişmiyorsa o fonksiyon çifttir.',
+          },
+          { kind: 'formula', content: 'f(x) = f(-x)' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f fonksiyonu ne gibi bir fonksiyon olabilir?',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-1',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = f(-x)' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f fonksiyonu ne gibi bir fonksiyon olabilir?',
+          },
+        ],
+        hint: 'Şıklardaki fonksiyonların yerine 2 ve -2 koy, sonuçların değişip değişmediğine bak!',
+        choices: [
+          { id: 'x-squared', label: 'x^2', isMath: true },
+          { id: 'x-plus-one', label: 'x + 1', isMath: true },
+        ],
+        correctChoiceId: 'x-squared',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-yol-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Az önceki soruda çift fonksiyonları tanımanın bir diğer yolunu öğrendin.',
+          },
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonlarda x\'li terimlerin kuvvetleri daima çifttir (0, 2, 4...)',
+          },
+          { kind: 'formula', content: 'f(x) = 5x^4 + x^2' },
+          { kind: 'formula', content: 'f(x) = 2x^8 + 3x^2' },
+          {
+            kind: 'text',
+            content: 'Üslü sayıları öğrenirken negatif sayıların üsleri çift olduğunda sonucun pozitif olduğunu öğrenmiştin.',
+          },
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonlar da bu yüzden 2 ve -2 için aynı sonucu verir çünkü fonksiyondaki terimlerin kuvvetleri çifttir.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi çift fonksiyon DEĞİLDİR?',
+          },
+        ],
+        choices: [
+          { id: 'x-squared-only', label: 'x^2', isMath: true },
+          { id: 'x-cubed-plus-3x', label: 'x^3 + 3x', isMath: true },
+        ],
+        correctChoiceId: 'x-cubed-plus-3x',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-sabit-terim',
+        blocks: [
+          {
+            kind: 'text',
+            content: '⚠️ Çift fonksiyonlarda sabit terimler de bulunabilir.',
+          },
+          {
+            kind: 'text',
+            content: 'Yani fonksiyonda 5 veya -3 gibi tek başına sayılar görürsen bu çiftliği bozmaz.',
+          },
+          {
+            kind: 'text',
+            content: 'Çünkü bu sayıların yanında gizli bir x^0 vardır ve bu da 1\'e eşittir!',
+          },
+          { kind: 'formula', content: 'f(x) = x^2 + 5' },
+          { kind: 'formula', content: 'f(x) = x^2 + 5 \\cdot x^0' },
+          {
+            kind: 'text',
+            content: 'Bir şeyin 0. kuvveti 1\'e eşit olduğundan bu terimi yazmayabiliriz.',
+          },
+          { kind: 'formula', content: 'f(x) = x^2 + 5' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi f(2) ve f(-2) için aynı sonucu verir?',
+          },
+        ],
+        hint: 'Soru "Hangisi çift fonksiyondur?" diye de sorulabilirdi, değil mi?',
+        choices: [
+          { id: 'x-cubed-plus-2x', label: 'x^3 + 2x', isMath: true },
+          { id: 'x-squared-plus-5', label: 'x^2 + 5', isMath: true },
+        ],
+        correctChoiceId: 'x-squared-plus-5',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-yol-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonları tanımanın 3. yolu ise grafiklerine bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(x) = x^2 + 1' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^2 + 1', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki fonksiyon "y eksenine göre simetriktir". Yani y-ekseninin sağında ve solunda aynı görüntü vardır.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyon-cift-quiz-4',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki grafiklerden hangisi bir çift fonksiyona aittir?',
+          },
+        ],
+        choices: [
+          {
+            id: 'x-cubed-graph',
+            label: 'x^3 grafiği',
+            graph: {
+              functions: [{ formula: 'x^3', color: '#dc2626' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            id: 'x-squared-plus-one-graph',
+            label: 'x^2 + 1 grafiği (y eksenine simetrik)',
+            graph: {
+              functions: [{ formula: 'x^2 + 1', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+        correctChoiceId: 'x-squared-plus-one-graph',
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyon-cift-ozet',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Modülün sonuna geldik!',
+          },
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonları tanımanın 3 yolunu tekrarlayıp bitirelim:',
+          },
+          {
+            kind: 'text',
+            content: '1. yol: Çift fonksiyonlar x ve -x için aynı sonucu verir.',
+          },
+          { kind: 'formula', content: 'f(x) = f(-x)' },
+          {
+            kind: 'text',
+            content: '2. yol: Çift fonksiyonlar içlerinde sadece çift üslü terimler barındırır.',
+          },
+          { kind: 'formula', content: 'f(x) = x^4 + 2x^2 + 4' },
+          {
+            kind: 'text',
+            content: '3. yol: Çift fonksiyonların grafikleri y-eksenine göre simetriktir.',
+          },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^2 + 1', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 5],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'fonksiyon-cesitleri-3-complete',
+      },
+    ],
+  },
+  'tek-fonksiyonlar': {
+    title: 'Tek Fonksiyonlar',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Sıra tek fonksiyonlarda.',
+          },
+          {
+            kind: 'text',
+            content: 'Eğer bir fonksiyonun içine -x koyduğunuzda cevap da - ile çarpılıyorsa bu fonksiyon tektir.',
+          },
+          { kind: 'formula', content: 'f(-x) = -f(x)' },
+          {
+            kind: 'text',
+            content: 'Şimdi de bir tek fonksiyon örneği görelim.',
+          },
+          { kind: 'formula', content: 'f(x) = x^3' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonun içine sırasıyla 2 ve -2 koyalım, sonuçlar ne olur?',
+          },
+          { kind: 'formula', content: 'f(2) = 2^3 = 8' },
+          { kind: 'formula', content: 'f(-2) = (-2)^3 = -8' },
+          {
+            kind: 'text',
+            content: 'İçeriyi (-) ile çarparsak sonuç da (-) ile çarpılıyor!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-fonksiyon-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi tek fonksiyondur?',
+          },
+        ],
+        hint: 'Fonksiyonlardan hangisi 2 ve -2 için FARKLI sonuçlar verir?',
+        choices: [
+          { id: 'x-squared', label: 'x^2', isMath: true },
+          { id: 'x-cubed-plus-x', label: 'x^3 + x', isMath: true },
+        ],
+        correctChoiceId: 'x-cubed-plus-x',
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-usler',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Çift fonksiyonlara benzer şekilde tek fonksiyonları da terimlerine ve üslerine bakarak tanıyabilirsin.',
+          },
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonların bütün terimlerinin üsleri tek olmalıdır (1, 3, 5...)',
+          },
+          { kind: 'formula', content: 'f(x) = x^5 + 3x^3 + x' },
+          {
+            kind: 'text',
+            content: '⚠️ x\'i tek başına gördüğünde üzerinde 1 olduğunu unutma!',
+          },
+          { kind: 'formula', content: 'x = x^1' },
+          {
+            kind: 'text',
+            content: 'Yani tek fonksiyonlarda tek başına x görebiliriz.',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-fonksiyon-quiz-2',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdaki fonksiyonlardan hangisi TEK fonksiyondur?',
+          },
+        ],
+        choices: [
+          { id: 'x-squared-plus-5', label: 'f(x) = x^2 + 5', isMath: true },
+          { id: 'x-cubed-plus-3x', label: 'f(x) = x^3 + 3x', isMath: true },
+        ],
+        correctChoiceId: 'x-cubed-plus-3x',
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-ozet-2-yol',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonları tanımanın iki yolunu öğrendik.',
+          },
+          {
+            kind: 'text',
+            content: '1. yol içeriye (-x) koyup cevabın değişip değişmediğine bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(-x) = -f(x)' },
+          {
+            kind: 'text',
+            content: '2. yol ise terimlerin üslerinin tek olup olmadığına bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(x) = x^5 + 3x^3 + 5x' },
+          {
+            kind: 'text',
+            content: 'Bir sonraki modülde de grafik yolunu öğreneceğiz.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-grafik-yol',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonlar ORİJİNE GÖRE SİMETRİKtir.',
+          },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            kind: 'text',
+            content: 'Orijin (0, 0) noktası demektir. Fonksiyonumuz bu noktaya göre simetriktir.',
+          },
+          {
+            kind: 'text',
+            content: 'Bunu çaprazlamasına bir simetri gibi düşünebilirsin.',
+          },
+          {
+            kind: 'text',
+            content: 'Birkaç örnek görerek pekiştirelim.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-ornek-1',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x', color: '#2563eb' }],
+              xDomain: [-4, 4],
+              yDomain: [-4, 4],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            kind: 'text',
+            content: 'Parmağını orijin (0, 0) noktasına koyarak simetriyi görebilirsin.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-ornek-2',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x^3' },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'tek-fonksiyon-quiz-3',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Aşağıdakilerden hangisi TEK fonksiyon grafiği olabilir?',
+          },
+        ],
+        choices: [
+          {
+            id: 'x-squared-plus-2-graph',
+            label: 'x^2 + 2 grafiği',
+            graph: {
+              functions: [{ formula: 'x^2 + 2', color: '#dc2626' }],
+              xDomain: [-2, 2],
+              yDomain: [0, 6],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+          {
+            id: 'x-cubed-graph',
+            label: 'x^3 grafiği',
+            graph: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+        correctChoiceId: 'x-cubed-graph',
+      },
+      {
+        type: 'teaching',
+        id: 'tek-fonksiyon-final-ozet',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Modülün sonuna geldik!',
+          },
+          {
+            kind: 'text',
+            content: 'Tek fonksiyonları tanımanın yollarını tekrar edip bitirelim:',
+          },
+          {
+            kind: 'text',
+            content: '1. yol, içeriye (-) koyup sonucun da (-) ile çarpılıp çarpılmadığına bakmaktır.',
+          },
+          { kind: 'formula', content: 'f(-x) = -f(x)' },
+          {
+            kind: 'text',
+            content: '2. yol terimlere ve üslerine bakmaktır. Hepsi tek ise fonksiyonumuz da tektir.',
+          },
+          { kind: 'formula', content: 'f(x) = x^5 + 3x^3 + 5x' },
+          {
+            kind: 'text',
+            content: '3. yol ise fonksiyonun grafiğinin ORİJİNE GÖRE simetrik olmasıdır.',
+          },
+          {
+            kind: 'graph',
+            config: {
+              functions: [{ formula: 'x^3', color: '#2563eb' }],
+              xDomain: [-2, 2],
+              yDomain: [-8, 8],
+              showGrid: true,
+              showAxes: true,
+            },
+          },
+        ],
+      },
+      {
+        type: 'completion',
+        id: 'tek-fonksiyonlar-complete',
+      },
+    ],
+  },
+  'fonksiyonlarda-dort-islem': {
+    title: 'Fonksiyonlarda Dört İşlem',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'fonksiyonlarda-dort-islem-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonlarda toplama veya çıkarma işlemi görürsen fonksiyonları ayırıp işlem yapabilirsin.',
+          },
+          { kind: 'formula', content: '(f + g)(x) = f(x) + g(x)' },
+          {
+            kind: 'text',
+            content: 'İki fonksiyonu ayrı ayrı hesaplayıp sonuçlarını toplaman yeterlidir.',
+          },
+          {
+            kind: 'text',
+            content: 'Diğer dört işlem de aynı şekilde:',
+          },
+          { kind: 'formula', content: '(f - g)(x) = f(x) - g(x)' },
+          { kind: 'formula', content: '(f \\cdot g)(x) = f(x) \\cdot g(x)' },
+          { kind: 'formula', content: '(f \\div g)(x) = \\frac{f(x)}{g(x)}' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'fonksiyonlarda-dort-islem-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir örnek yapalım:',
+          },
+          { kind: 'formula', content: 'f(x) = x + 3, g(x) = 3x' },
+          {
+            kind: 'text',
+            content: 'Bu iki fonksiyon toplansın:',
+          },
+          { kind: 'formula', content: '(f + g)(x) = x + 3 + 3x = 4x + 3' },
+          {
+            kind: 'text',
+            content: 'Şimdi de değer bulalım:',
+          },
+          { kind: 'formula', content: '(f + g)(2) = 4(2) + 3 = 11' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyonlarda-dort-islem-quiz-1',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x , g(x) = 4' },
+          { kind: 'formula', content: '(f \\cdot g)(x) = ?' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'four-x', label: '4x', isMath: true },
+          { id: 'x-plus-four', label: 'x + 4', isMath: true },
+        ],
+        correctChoiceId: 'four-x',
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyonlarda-dort-islem-quiz-2',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = 2x , g(x) = x + 4' },
+          { kind: 'formula', content: '(f - g)(x) = ?' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'x-minus-four', label: 'x - 4', isMath: true },
+          { id: 'three-x-plus-four', label: '3x + 4', isMath: true },
+        ],
+        correctChoiceId: 'x-minus-four',
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyonlarda-dort-islem-quiz-3',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x + 1 , g(x) = 4x' },
+          { kind: 'formula', content: '(f \\div g)(x) = ?' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'x-plus-one-over-four-x', label: '\\frac{x + 1}{4x}', isMath: true },
+          { id: 'x-plus-four-wrong', label: 'x + 4', isMath: true },
+        ],
+        correctChoiceId: 'x-plus-one-over-four-x',
+      },
+      {
+        type: 'quiz',
+        id: 'fonksiyonlarda-dort-islem-quiz-4',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x + 2 , g(x) = 4' },
+          { kind: 'formula', content: '(f \\cdot g)(3) = ?' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki işlemin sonucu nedir?',
+          },
+        ],
+        choices: [
+          { id: 'twenty', label: '20' },
+          { id: 'twelve', label: '12' },
+        ],
+        correctChoiceId: 'twenty',
+      },
+      {
+        type: 'completion',
+        id: 'fonksiyonlarda-dort-islem-complete',
+      },
+    ],
+  },
+  'bileske-fonksiyon': {
+    title: 'Bileşke Fonksiyon',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'bileske-fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bileşke fonksiyon "Matruşka bebekleri" gibidir. Fonksiyonlar iç içe geçer.',
+          },
+          { kind: 'formula', content: '(f \\circ g)(x) = f(g(x))' },
+          {
+            kind: 'text',
+            content: 'Burada kural şudur: Her zaman SAĞDAKİ fonksiyondan (içtekinden) başlanır.',
+          },
+          {
+            kind: 'text',
+            content: 'Sayfayı ilerlet, bir örnek çözelim.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'bileske-fonksiyon-ornek',
+        blocks: [
+          { kind: 'formula', content: '(f \\circ g)(2)' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki fonksiyonun değerini bulalım.',
+          },
+          { kind: 'formula', content: 'f(g(2))' },
+          {
+            kind: 'text',
+            content: '1. Adım: Önce içerideki g(2)\'yi bul. Diyelim ki sonuç 5 çıktı.',
+          },
+          { kind: 'formula', content: 'f(g(2)) = f(5)' },
+          {
+            kind: 'text',
+            content: '2. Adım: f(5)\'i bul. Diyelim ki o da 10 olsun.',
+          },
+          { kind: 'formula', content: 'f(g(2)) = f(5) = 10' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'bileske-fonksiyon-quiz-1',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'g(3) = 4 ve f(4) = 10 ise;',
+          },
+          { kind: 'formula', content: '(f \\circ g)(3) = ?' },
+        ],
+        choices: [
+          { id: 'ten', label: '10' },
+          { id: 'four', label: '4' },
+        ],
+        correctChoiceId: 'ten',
+      },
+      {
+        type: 'quiz',
+        id: 'bileske-fonksiyon-quiz-2',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x + 2 , g(x) = 2x' },
+          { kind: 'formula', content: '(f \\circ g)(x) = ?' },
+        ],
+        choices: [
+          { id: 'two-x-plus-two', label: '2x + 2', isMath: true },
+          { id: 'two-x', label: '2x', isMath: true },
+        ],
+        correctChoiceId: 'two-x-plus-two',
+      },
+      {
+        type: 'quiz',
+        id: 'bileske-fonksiyon-quiz-3',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x + 2 , g(x) = 2x' },
+          { kind: 'formula', content: '(f \\circ g)(3) = ?' },
+        ],
+        choices: [
+          { id: 'eight', label: '8' },
+          { id: 'five', label: '5' },
+        ],
+        correctChoiceId: 'eight',
+      },
+      {
+        type: 'completion',
+        id: 'bileske-fonksiyon-complete',
+      },
+    ],
+  },
+  'ters-fonksiyon': {
+    title: 'Ters Fonksiyon',
+    pages: [
+      {
+        type: 'teaching',
+        id: 'ters-fonksiyon-intro',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Şu ana kadar hep aşağıdaki gibi fonksiyonlar gördük:',
+          },
+          { kind: 'formula', content: 'f(x) = y' },
+          {
+            kind: 'text',
+            content: 'Burada y, fonksiyonumuzun kuralını temsil eder.',
+          },
+          { kind: 'formula', content: 'y = 2x + 5' },
+          {
+            kind: 'text',
+            content: 'y harfi y eksenini, x harfi de x eksenini temsil eder.',
+          },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'ters-fonksiyon-kavram',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Fonksiyonlarda x yerine bir değer yazar ve y değerine ulaşırız.',
+          },
+          { kind: 'formula', content: 'y = 2x + 5' },
+          { kind: 'formula', content: 'y = 2(3) + 5 = 11' },
+          {
+            kind: 'text',
+            content: 'Ters fonksiyonlarda ise y\'nin değerini kullanarak x\'i bulmaya çalışırız.',
+          },
+          { kind: 'formula', content: 'f(x) = y \\quad \\Leftrightarrow \\quad f^{-1}(y) = x' },
+        ],
+      },
+      {
+        type: 'teaching',
+        id: 'ters-fonksiyon-ornek',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Örnek bir f(x) fonksiyonu düşünelim.',
+          },
+          { kind: 'formula', content: 'f(x) = 2x' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonda x yerine 2 koyarsak sonuç 4 olur.',
+          },
+          { kind: 'formula', content: 'f(2) = 4' },
+          {
+            kind: 'text',
+            content: 'Bu fonksiyonunun tersine 4 koyarsak da sonucu 2 buluruz.',
+          },
+          { kind: 'formula', content: 'f^{-1}(4) = 2' },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'ters-fonksiyon-quiz-1',
+        blocks: [
+          { kind: 'formula', content: 'f(2) = 7' },
+          { kind: 'formula', content: 'f^{-1}(7) = ?' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f(x) fonksiyonunun tersine 7 verirsek sonuç ne gelir?',
+          },
+        ],
+        choices: [
+          { id: 'seven', label: '7' },
+          { id: 'two', label: '2' },
+        ],
+        correctChoiceId: 'two',
+      },
+      {
+        type: 'quiz',
+        id: 'ters-fonksiyon-quiz-2',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x + 5' },
+          { kind: 'formula', content: 'f^{-1}(7) = ?' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f(x) fonksiyonunun tersine 7 verirsek sonuç ne gelir?',
+          },
+        ],
+        hint: 'f(x)\'e hangi değeri vererek 7 elde ederiz?',
+        choices: [
+          { id: 'seven-wrong', label: '7' },
+          { id: 'two-correct', label: '2' },
+        ],
+        correctChoiceId: 'two-correct',
+      },
+      {
+        type: 'teaching',
+        id: 'ters-fonksiyon-bulma',
+        blocks: [
+          {
+            kind: 'text',
+            content: 'Bir fonksiyonun kuralını biliyorsak tersini bulabiliriz.',
+          },
+          { kind: 'formula', content: 'f(x) = x + 3' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki fonksiyonda f(x) yerine y yazalım.',
+          },
+          { kind: 'formula', content: 'y = x + 3' },
+          {
+            kind: 'text',
+            content: 'Şimdi x\'i yalnız bırakalım.',
+          },
+          { kind: 'formula', content: 'y - 3 = x' },
+          {
+            kind: 'text',
+            content: 'Şimdi x yerine f^{-1}(x) ve y yerine x yazalım.',
+          },
+          { kind: 'formula', content: 'x - 3 = f^{-1}(x)' },
+          {
+            kind: 'text',
+            content: 'İşte bu kadar, ters fonksiyonu bulduk!',
+          },
+        ],
+      },
+      {
+        type: 'quiz',
+        id: 'ters-fonksiyon-quiz-3',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = x - 4' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f(x) fonksiyonunun tersini bulunuz.',
+          },
+        ],
+        hint: 'f(x) yerine y yaz, x\'i yalnız bırak, sonra y yerine x ve x yerine f^{-1}(x) yaz!',
+        choices: [
+          { id: 'x-plus-four', label: 'x + 4', isMath: true },
+          { id: 'four-minus-x', label: '4 - x', isMath: true },
+        ],
+        correctChoiceId: 'x-plus-four',
+      },
+      {
+        type: 'quiz',
+        id: 'ters-fonksiyon-quiz-4',
+        blocks: [
+          { kind: 'formula', content: 'f(x) = 4x' },
+          {
+            kind: 'text',
+            content: 'Yukarıdaki f(x) fonksiyonunun tersini bulunuz.',
+          },
+        ],
+        hint: 'f(x) yerine y yaz, x\'i yalnız bırak, sonra y yerine x ve x yerine f^{-1}(x) yaz!',
+        choices: [
+          { id: 'x-over-four', label: '\\frac{x}{4}', isMath: true },
+          { id: 'four-minus-x-wrong', label: '4 - x', isMath: true },
+        ],
+        correctChoiceId: 'x-over-four',
+      },
+      {
+        type: 'completion',
+        id: 'ters-fonksiyon-complete',
+      },
+    ],
+  },
 };
 
 const defaultPlaceholderMessage =
@@ -4124,6 +5677,21 @@ function renderTeachingBlock(block: TeachingBlock, index: number, colors: typeof
           <FunctionGraph config={block.config} />
         </View>
       );
+    case 'image': {
+      const imageStyle: any = { ...styles.blockImage };
+      if (block.width !== undefined) imageStyle.width = block.width;
+      if (block.height !== undefined) imageStyle.height = block.height;
+      return (
+        <View key={`image-${index}`} style={[styles.imageCard, { backgroundColor: colors.cardBackground }]}>
+          <Image
+            source={block.source}
+            style={imageStyle}
+            resizeMode={block.resizeMode || 'contain'}
+            accessibilityLabel={block.alt}
+          />
+        </View>
+      );
+    }
     default:
       return null;
   }
@@ -4778,6 +6346,19 @@ const styles = StyleSheet.create({
     height: 220,
     borderRadius: 20,
     overflow: 'hidden',
+  },
+  imageCard: {
+    width: '100%',
+    borderRadius: 20,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+  },
+  blockImage: {
+    width: '100%',
+    maxWidth: '100%',
+    aspectRatio: 1,
   },
   formulaCard: {
     paddingVertical: 18,

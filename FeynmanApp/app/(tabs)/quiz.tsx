@@ -47,7 +47,15 @@ type TeachingBlock =
       fontSize?: number;
       textAlign?: 'left' | 'center' | 'right';
     }
-  | { kind: 'graph'; config: GraphConfig };
+  | { kind: 'graph'; config: GraphConfig }
+  | {
+      kind: 'image';
+      source: any; // require() result or URI string
+      width?: number;
+      height?: number;
+      resizeMode?: 'contain' | 'cover' | 'stretch' | 'center' | 'repeat';
+      alt?: string;
+    };
 
 type QuizChoice = { id: string; label: string };
 type MathQuizChoice = { id: string; label: string; isMath: true };
@@ -447,6 +455,21 @@ function renderTeachingBlock(block: TeachingBlock, index: number, colors: typeof
           <FunctionGraph config={block.config} />
         </View>
       );
+    case 'image': {
+      const imageStyle: any = { ...styles.blockImage };
+      if (block.width !== undefined) imageStyle.width = block.width;
+      if (block.height !== undefined) imageStyle.height = block.height;
+      return (
+        <View key={`image-${index}`} style={[styles.imageCard, { backgroundColor: colors.cardBackground }]}>
+          <Image
+            source={block.source}
+            style={imageStyle}
+            resizeMode={block.resizeMode || 'contain'}
+            accessibilityLabel={block.alt}
+          />
+        </View>
+      );
+    }
     default:
       return null;
   }
@@ -948,6 +971,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     minHeight: 200,
+  },
+  imageCard: {
+    width: '100%',
+    borderRadius: 12,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+  },
+  blockImage: {
+    width: '100%',
+    maxWidth: '100%',
+    aspectRatio: 1,
   },
   hintCard: {
     borderRadius: 12,

@@ -84,6 +84,23 @@ export const topicSubtopicsEntries: Array<[string, Subtopic[]]> = [
       { title: 'Çarpanlara Ayrıma', slug: 'carpanlara-ayirma' },
     ],
   ],
+  [
+    'Fonksiyonlar',
+    [
+      { title: 'Fonksiyon nedir?', slug: 'fonksiyon-nedir' },
+      { title: 'Tanım ve Görüntü kümesi', slug: 'tanim-ve-goruntu-kumesi' },
+      { title: 'f(x) Yazmadığında Değer Bulma', slug: 'deger-bulma' },
+      { title: 'Fonksiyon Çeşitleri (Sabit ve Birim)', slug: 'fonksiyon-cesitleri' },
+      { title: 'Doğrusal Fonksiyon', slug: 'dogrusal-fonksiyon' },
+      { title: 'Parçalı Fonksiyon', slug: 'parcali-fonksiyon' },
+      { title: 'Çift Fonksiyonlar', slug: 'fonksiyon-cesitleri-3' },
+      { title: 'Tek Fonksiyonlar', slug: 'tek-fonksiyonlar' },
+      { title: 'Fonksiyon Grafikleri', slug: 'fonksiyon-grafikleri' },
+      { title: 'Fonksiyonlarda Dört İşlem', slug: 'fonksiyonlarda-dort-islem' },
+      { title: 'Bileşke Fonksiyon', slug: 'bileske-fonksiyon' },
+      { title: 'Ters Fonksiyon', slug: 'ters-fonksiyon' },
+    ],
+  ],
 ];
 
 export const topicSubtopics = Object.fromEntries(topicSubtopicsEntries);
