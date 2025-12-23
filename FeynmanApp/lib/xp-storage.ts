@@ -73,7 +73,7 @@ export async function addXp(userId: string, amount: number): Promise<XpState> {
 }
 
 /**
- * Set XP total directly (used for sync operations)
+ * Set XP total directly (used for sync operations)(x)
  * This bypasses the add logic and sets the total as-is
  */
 export async function setXpTotal(userId: string, total: number): Promise<void> {
