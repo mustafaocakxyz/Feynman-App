@@ -637,7 +637,7 @@ export default function QuizScreen() {
             </Text>
             
             <Image
-              source={require('@/assets/images/quiz.png')}
+              source={require('@/assets/images/3d_quiz.png')}
               style={styles.quizImage}
               resizeMode="contain"
             />

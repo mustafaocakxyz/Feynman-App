@@ -14,6 +14,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -170,6 +171,8 @@ export default function HomeScreen() {
     router.push('/(tabs)/xp' as never);
   };
 
+  const progressGradient: [string, string, string] = ['#264bbf', '#3b82f6', '#60a5fa'];
+
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView
@@ -211,7 +214,11 @@ export default function HomeScreen() {
                     pressed && styles.metricCardPressed,
                   ]}
                   onPress={handleStreakPress}>
-                  <Text style={styles.metricIcon}>🔥</Text>
+                  <Image
+                    source={require('@/assets/images/3d_fire.png')}
+                    style={styles.metricImageIcon}
+                    resizeMode="contain"
+                  />
                   <Text style={[styles.metricValue, { color: colors.text }]}>{streak}</Text>
                 </Pressable>
                 <Pressable
@@ -221,7 +228,11 @@ export default function HomeScreen() {
                     pressed && styles.metricCardPressed,
                   ]}
                   onPress={handleXpPress}>
-                  <Text style={styles.metricIcon}>⭐️</Text>
+                  <Image
+                    source={require('@/assets/images/3d_star.png')}
+                    style={styles.metricImageIcon}
+                    resizeMode="contain"
+                  />
                   <Text style={[styles.metricValue, { color: colors.text }]}>{xp}</Text>
                 </Pressable>
               </>
@@ -236,7 +247,11 @@ export default function HomeScreen() {
                     pressed && styles.quizButtonPressed,
                   ]}
                   onPress={() => router.push('/(tabs)/quiz' as never)}>
-                  <Text style={styles.quizButtonEmoji}>❓</Text>
+                  <Image
+                    source={require('@/assets/images/3d_quiz.png')}
+                    style={styles.quizButtonIcon}
+                    resizeMode="contain"
+                  />
                   <Text style={styles.quizButtonText}>Kendini test et!</Text>
                   <Text style={styles.quizButtonArrow}>›</Text>
                 </Pressable>
@@ -268,20 +283,20 @@ export default function HomeScreen() {
               return (
                 <View style={[styles.moduleCard, { width: screenWidth - 48, backgroundColor: colors.cardBackground }]}>
                   <Text style={[styles.moduleName, { color: colors.text }]}>{item.name}</Text>
-                  <Text style={[styles.episodeLabel, { color: colors.textSecondary }]}>Tamamlanan Konu</Text>
-                  <Text style={[styles.episodeValue, { color: colors.text }]}>
-                    {completedTopics} / {item.totalTopics}
-                  </Text>
-        <Image
+                  {/* Temporarily hide completed topic label/count */}
+                  <Image
                     source={item.visual}
                     style={[styles.visual, { height: imageHeight }]}
                     resizeMode="contain"
-        />
+                  />
                   <View style={[styles.progressBarTrack, { backgroundColor: colors.progressBarBackground }]}>
-                    <View
+                    <LinearGradient
+                      colors={progressGradient}
+                      start={{ x: 0, y: 0.5 }}
+                      end={{ x: 1, y: 0.5 }}
                       style={[
-                        styles.progressBarFill,
-                        { width: `${progressRatio * 100}%`, backgroundColor: colors.primary },
+                        styles.progressBarFillGradient,
+                        { width: `${progressRatio * 100}%` },
                       ]}
                     />
                   </View>
@@ -296,12 +311,7 @@ export default function HomeScreen() {
                     ]}
                     onPress={() => handleContinue(item.id)}
                     disabled={false}>
-                    <Text
-                      style={[
-                        styles.ctaText,
-                      ]}>
-                      Devam Et
-                    </Text>
+                    <Text style={styles.ctaText}>Devam Et</Text>
                   </Pressable>
                 </View>
               );
@@ -343,6 +353,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    marginTop: 12,
     marginBottom: 14,
   },
   topAvatar: {
@@ -403,6 +414,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontFamily: 'Montserrat_700Bold',
   },
+  metricImageIcon: {
+    width: 28,
+    height: 28,
+  },
   metricLabel: {
     fontSize: 13,
     textTransform: 'uppercase',
@@ -433,8 +448,9 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     transform: [{ scale: 0.98 }],
   },
-  quizButtonEmoji: {
-    fontSize: 24,
+  quizButtonIcon: {
+    width: 32,
+    height: 32,
   },
   quizButtonText: {
     flex: 1,
@@ -463,11 +479,50 @@ const styles = StyleSheet.create({
     padding: 24,
     marginRight: 24,
     alignSelf: 'center',
+    position: 'relative',
     shadowColor: '#0f172a',
     shadowOpacity: 0.18,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: 12 },
     elevation: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+  },
+  moduleEdgeTop: {
+    position: 'absolute',
+    top: 0,
+    left: 7,
+    right: 7,
+    height: 8,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+  },
+  moduleEdgeBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 7,
+    right: 7,
+    height: 8,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+  moduleEdgeLeft: {
+    position: 'absolute',
+    top: 6,
+    bottom: 6,
+    left: 0,
+    width: 8,
+    borderTopLeftRadius: 24,
+    borderBottomLeftRadius: 24,
+  },
+  moduleEdgeRight: {
+    position: 'absolute',
+    top: 6,
+    bottom: 6,
+    right: 0,
+    width: 8,
+    borderTopRightRadius: 24,
+    borderBottomRightRadius: 24,
   },
   moduleName: {
     fontSize: 20,
@@ -491,12 +546,13 @@ const styles = StyleSheet.create({
   },
   progressBarTrack: {
     marginTop: 24,
-    height: 10,
-    borderRadius: 8,
+    height: 18,
+    borderRadius: 10,
     overflow: 'hidden',
   },
-  progressBarFill: {
+  progressBarFillGradient: {
     height: '100%',
+    borderRadius: 10,
   },
   progressText: {
     marginTop: 8,
