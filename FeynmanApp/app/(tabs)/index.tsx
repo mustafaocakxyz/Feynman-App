@@ -240,21 +240,27 @@ export default function HomeScreen() {
           })()}
         </Animated.View>
 
-                <Pressable
-                  style={({ pressed }) => [
-                    styles.quizButton,
-                    { backgroundColor: colors.primary },
-                    pressed && styles.quizButtonPressed,
-                  ]}
-                  onPress={() => router.push('/(tabs)/quiz' as never)}>
-                  <Image
-                    source={require('@/assets/images/3d_quiz.png')}
-                    style={styles.quizButtonIcon}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.quizButtonText}>Kendini test et!</Text>
-                  <Text style={styles.quizButtonArrow}>›</Text>
-                </Pressable>
+                <LinearGradient
+                  colors={['#00ffff', '#6b21a8']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.quizButtonGradientBorder}>
+                  <Pressable
+                    style={({ pressed }) => [
+                      styles.quizButton,
+                      { backgroundColor: '#1f1f1f' },
+                      pressed && styles.quizButtonPressed,
+                    ]}
+                    onPress={() => router.push('/(tabs)/quiz' as never)}>
+                    <Image
+                      source={require('@/assets/images/3d_quiz.png')}
+                      style={styles.quizButtonIcon}
+                      resizeMode="contain"
+                    />
+                    <Text style={styles.quizButtonText}>Kendini test et!</Text>
+                    <Text style={styles.quizButtonArrow}>›</Text>
+                  </Pressable>
+                </LinearGradient>
 
         <Animated.View style={[makeAnimatedStyle(modulesAnim), styles.flatListContainer]}>
           <FlatList
@@ -303,16 +309,19 @@ export default function HomeScreen() {
                   <Text style={[styles.progressText, { color: colors.textSecondary }]}>
                     {completedModulCount} / {totalSubtopics} modül tamamlandı
                   </Text>
-                  <Pressable
-                    style={({ pressed }) => [
-                      styles.ctaButton,
-                      { backgroundColor: colors.primary },
-                      pressed && styles.ctaButtonPressed,
-                    ]}
-                    onPress={() => handleContinue(item.id)}
-                    disabled={false}>
-                    <Text style={styles.ctaText}>Devam Et</Text>
-                  </Pressable>
+                  <View style={styles.ctaButtonContainer}>
+                    <View style={styles.ctaButtonShadow} />
+                    <Pressable
+                      style={({ pressed }) => [
+                        styles.ctaButton,
+                        { backgroundColor: colors.primary },
+                        pressed && styles.ctaButtonPressed,
+                      ]}
+                      onPress={() => handleContinue(item.id)}
+                      disabled={false}>
+                      <Text style={styles.ctaText}>Devam Et</Text>
+                    </Pressable>
+                  </View>
                 </View>
               );
             }}
@@ -430,9 +439,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Montserrat_700Bold',
   },
-  quizButton: {
+  quizButtonGradientBorder: {
     marginTop: 12,
     borderRadius: 16,
+    padding: 1.5,
+  },
+  quizButton: {
+    borderRadius: 14.5,
     paddingVertical: 16,
     paddingHorizontal: 20,
     flexDirection: 'row',
@@ -559,16 +572,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Montserrat_700Bold',
   },
-  ctaButton: {
+  ctaButtonContainer: {
     marginTop: 24,
+    position: 'relative',
+  },
+  ctaButtonShadow: {
+    position: 'absolute',
+    top: 6,
+    left: 0,
+    right: 0,
+    height: 52,
+    backgroundColor: '#1d4ed8',
+    opacity: 0.7,
+    borderRadius: 16,
+    zIndex: 0,
+  },
+  ctaButton: {
     borderRadius: 16,
     paddingVertical: 14,
     alignItems: 'center',
-    shadowColor: '#1d4ed8',
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 8,
+    position: 'relative',
+    zIndex: 1,
   },
   ctaButtonDisabled: {
     backgroundColor: '#93c5fd',

@@ -74,7 +74,7 @@ export default function RegisterScreen() {
                 setError(null);
               }}
               placeholder="İsminiz"
-              placeholderTextColor="#9ca3af"
+              placeholderTextColor="#64748b"
               autoCapitalize="words"
               autoCorrect={false}
               editable={!loading}
@@ -91,7 +91,7 @@ export default function RegisterScreen() {
                 setError(null);
               }}
               placeholder="ornek@email.com"
-              placeholderTextColor="#9ca3af"
+              placeholderTextColor="#64748b"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -109,7 +109,7 @@ export default function RegisterScreen() {
                 setError(null);
               }}
               placeholder="En az 6 karakter"
-              placeholderTextColor="#9ca3af"
+              placeholderTextColor="#64748b"
               secureTextEntry
               autoCapitalize="none"
               autoCorrect={false}
@@ -149,7 +149,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#0f172a',
   },
   content: {
     flex: 1,
@@ -159,26 +159,26 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#f9fafb',
     marginBottom: 8,
     fontFamily: 'Montserrat_700Bold',
   },
   subtitle: {
     fontSize: 16,
-    color: '#6b7280',
+    color: '#94a3b8',
     marginBottom: 32,
     fontFamily: 'Montserrat_700Bold',
   },
   errorContainer: {
-    backgroundColor: '#fee',
+    backgroundColor: '#7f1d1d',
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#fcc',
+    borderColor: '#991b1b',
   },
   errorText: {
-    color: '#c33',
+    color: '#fca5a5',
     fontSize: 14,
     fontFamily: 'Montserrat_700Bold',
   },
@@ -191,28 +191,28 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#111827',
+    color: '#f9fafb',
     fontFamily: 'Montserrat_700Bold',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: '#475569',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#111827',
-    backgroundColor: '#ffffff',
+    color: '#f9fafb',
+    backgroundColor: '#1e293b',
     fontFamily: 'Montserrat_700Bold',
   },
   button: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#3b82f6',
     paddingVertical: 14,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
-    shadowColor: '#1d4ed8',
+    shadowColor: '#2563eb',
     shadowOpacity: 0.25,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 8 },
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
   buttonDisabled: {
-    backgroundColor: '#93c5fd',
+    backgroundColor: '#1e40af',
     shadowOpacity: 0.1,
   },
   buttonText: {
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#2563eb',
+    color: '#60a5fa',
     fontSize: 14,
     fontFamily: 'Montserrat_700Bold',
   },

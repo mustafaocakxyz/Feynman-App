@@ -1,10 +1,33 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Image, View } from 'react-native';
+import { Image, View, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+
+type TabIconProps = {
+  source: any;
+  focused: boolean;
+};
+
+function TabIcon({ source, focused }: TabIconProps) {
+  return (
+    <View style={styles.iconContainer}>
+      <Image
+        source={source}
+        style={[
+          styles.icon,
+          {
+            transform: [{ scale: focused ? 1.12 : 1.0 }],
+            opacity: focused ? 1.0 : 0.65,
+          },
+        ]}
+        resizeMode="contain"
+      />
+    </View>
+  );
+}
 
 export default function TabLayout() {
 
@@ -55,12 +78,8 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Ana Sayfa',
-          tabBarIcon: () => (
-            <Image
-              source={require('@/assets/images/3d_home.png')}
-              style={{ width: 34, height: 34 }}
-              resizeMode="contain"
-            />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon source={require('@/assets/images/3d_home.png')} focused={focused} />
           ),
         }}
       />
@@ -68,12 +87,8 @@ export default function TabLayout() {
         name="quiz"
         options={{
           title: 'Quiz',
-          tabBarIcon: () => (
-            <Image
-              source={require('@/assets/images/3d_quiz.png')}
-              style={{ width: 34, height: 34 }}
-              resizeMode="contain"
-            />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon source={require('@/assets/images/3d_quiz.png')} focused={focused} />
           ),
         }}
       />
@@ -81,12 +96,8 @@ export default function TabLayout() {
         name="profil"
         options={{
           title: 'Profil',
-          tabBarIcon: () => (
-            <Image
-              source={require('@/assets/images/3d_person.png')}
-              style={{ width: 34, height: 34 }}
-              resizeMode="contain"
-            />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon source={require('@/assets/images/3d_person.png')} focused={focused} />
           ),
         }}
       />
@@ -105,3 +116,17 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  icon: {
+    width: 34,
+    height: 34,
+  },
+});

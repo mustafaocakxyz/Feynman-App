@@ -36,7 +36,7 @@ const AVATAR_LABELS: Record<AvatarId, string> = {
 
 export default function ProfileScreen() {
   const { user, signOut, loading } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const [profileName, setProfileName] = useState('');
   const [avatarId, setAvatarId] = useState<AvatarId | null>(null);
   const [unlockedAvatars, setUnlockedAvatars] = useState<AvatarId[]>([]);
@@ -138,8 +138,8 @@ export default function ProfileScreen() {
               </View>
             </View>
 
-            {/* Section 2: Dark Mode Toggle */}
-            <View style={[styles.settingsCard, { backgroundColor: colors.cardBackground }]}>
+            {/* Section 2: Dark Mode Toggle - Temporarily hidden */}
+            {/* <View style={[styles.settingsCard, { backgroundColor: colors.cardBackground }]}>
               <View style={styles.settingRow}>
                 <View style={styles.settingTextContainer}>
                   <Text style={[styles.settingTitle, { color: colors.text }]}>Karanlık Mod</Text>
@@ -155,7 +155,7 @@ export default function ProfileScreen() {
                   ios_backgroundColor={colors.border}
                 />
               </View>
-            </View>
+            </View> */}
 
             {/* Section 3: All Avatars Grid */}
             <View style={styles.avatarsSection}>

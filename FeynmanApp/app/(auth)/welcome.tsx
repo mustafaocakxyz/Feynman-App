@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, SafeAreaView, Image, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function WelcomeScreen() {
@@ -6,12 +6,16 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Feyn App'e Hoş Geldin!</Text>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
+      >
+        <Text style={styles.title}>Hoş geldin!</Text>
         <Text style={styles.subtitle}>Öğrenmeye başlamak için giriş yap veya kayıt ol</Text>
 
         <Image
-          source={require('@/assets/images/greet.png')}
+          source={require('@/assets/images/tytmath_logo.png')}
           style={styles.image}
           resizeMode="contain"
         />
@@ -39,7 +43,7 @@ export default function WelcomeScreen() {
             <Text style={styles.secondaryButtonText}>Kayıt Ol</Text>
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -47,34 +51,34 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6F4FE',
+    backgroundColor: '#0f172a',
   },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
+  scrollContent: {
     alignItems: 'center',
     paddingHorizontal: 32,
-    backgroundColor: '#E6F4FE',
+    paddingTop: 60,
+    paddingBottom: 40,
   },
   title: {
-    fontSize: 32,
+    fontSize: 40,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#f9fafb',
     textAlign: 'center',
     marginBottom: 16,
     fontFamily: 'Montserrat_700Bold',
+    letterSpacing: 0.5,
   },
   subtitle: {
     fontSize: 16,
-    color: '#6b7280',
+    color: '#94a3b8',
     textAlign: 'center',
     marginBottom: 32,
     fontFamily: 'Montserrat_700Bold',
   },
   image: {
     width: '100%',
-    maxWidth: 450,
-    height: 450,
+    maxWidth: 350,
+    height: 350,
     marginBottom: 32,
   },
   buttonContainer: {
@@ -88,8 +92,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   primaryButton: {
-    backgroundColor: '#2563eb',
-    shadowColor: '#1d4ed8',
+    backgroundColor: '#3b82f6',
+    shadowColor: '#2563eb',
     shadowOpacity: 0.25,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 8 },
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
   secondaryButton: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#2563eb',
+    borderColor: '#3b82f6',
   },
   buttonPressed: {
     transform: [{ scale: 0.98 }],
@@ -110,7 +114,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_700Bold',
   },
   secondaryButtonText: {
-    color: '#2563eb',
+    color: '#3b82f6',
     fontSize: 16,
     fontWeight: '600',
     fontFamily: 'Montserrat_700Bold',

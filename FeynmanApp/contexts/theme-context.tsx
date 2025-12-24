@@ -17,17 +17,19 @@ const THEME_STORAGE_KEY = '@feynman_theme_mode';
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const systemColorScheme = useRNColorScheme();
-  const [themeMode, setThemeModeState] = useState<ThemeMode>('system');
+  const [themeMode, setThemeModeState] = useState<ThemeMode>('dark');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load saved theme preference
+  // Load saved theme preference - Temporarily defaulting to dark
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        const saved = await AsyncStorage.getItem(THEME_STORAGE_KEY);
-        if (saved === 'light' || saved === 'dark' || saved === 'system') {
-          setThemeModeState(saved);
-        }
+        // Temporarily forcing dark theme - ignore saved preferences
+        setThemeModeState('dark');
+        // const saved = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+        // if (saved === 'light' || saved === 'dark' || saved === 'system') {
+        //   setThemeModeState(saved);
+        // }
       } catch (error) {
         console.error('Error loading theme:', error);
       } finally {
@@ -38,8 +40,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Calculate actual theme based on mode
-  const theme: 'light' | 'dark' =
-    themeMode === 'system' ? (systemColorScheme ?? 'light') : themeMode;
+  // Temporarily forced to dark theme
+  const theme: 'light' | 'dark' = 'dark';
 
   const setThemeMode = async (mode: ThemeMode) => {
     try {
