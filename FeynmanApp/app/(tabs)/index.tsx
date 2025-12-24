@@ -133,10 +133,14 @@ export default function HomeScreen() {
     ],
   });
 
+  const cardWidth = screenWidth - 48;
+  const cardSpacing = 24;
+  const snapInterval = cardWidth + cardSpacing;
+
   const handleMomentumEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.round(offsetX / screenWidth);
-    setActiveIndex(index);
+    const index = Math.round(offsetX / snapInterval);
+    setActiveIndex(Math.min(index, modules.length - 1));
   };
 
   const triggerHaptic = useCallback(async () => {
@@ -172,6 +176,15 @@ export default function HomeScreen() {
   };
 
   const progressGradient: [string, string, string] = ['#264bbf', '#3b82f6', '#60a5fa'];
+
+  const getItemLayout = useCallback(
+    (_data: any, index: number) => ({
+      length: cardWidth,
+      offset: index * snapInterval,
+      index,
+    }),
+    [cardWidth, snapInterval],
+  );
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
@@ -267,7 +280,11 @@ export default function HomeScreen() {
             data={modules}
             keyExtractor={(item) => item.id}
             horizontal
-            pagingEnabled
+            pagingEnabled={false}
+            snapToInterval={snapInterval}
+            snapToAlignment="start"
+            decelerationRate="fast"
+            getItemLayout={getItemLayout}
             showsHorizontalScrollIndicator={false}
             onMomentumScrollEnd={handleMomentumEnd}
             scrollEnabled={true}
@@ -287,7 +304,7 @@ export default function HomeScreen() {
                 list.every((subtopic) => completedSubtopics.includes(subtopic.slug)),
               ).length;
               return (
-                <View style={[styles.moduleCard, { width: screenWidth - 48, backgroundColor: colors.cardBackground }]}>
+                <View style={[styles.moduleCard, { width: cardWidth, backgroundColor: colors.cardBackground }]}>
                   <Text style={[styles.moduleName, { color: colors.text }]}>{item.name}</Text>
                   {/* Temporarily hide completed topic label/count */}
                   <Image
@@ -490,7 +507,7 @@ const styles = StyleSheet.create({
   moduleCard: {
     borderRadius: 24,
     padding: 24,
-    marginRight: 24,
+    marginRight: 0,
     alignSelf: 'center',
     position: 'relative',
     shadowColor: '#0f172a',
@@ -581,7 +598,10 @@ const styles = StyleSheet.create({
     top: 6,
     left: 0,
     right: 0,
-    height: 52,
+    height: Platform.select({
+      web: 48,
+      default: 52,
+    }),
     backgroundColor: '#1d4ed8',
     opacity: 0.7,
     borderRadius: 16,

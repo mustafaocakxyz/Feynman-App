@@ -100,7 +100,13 @@ export default function ProfileScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView 
         style={styles.scrollView}
-        contentContainerStyle={[styles.content, { paddingTop: Math.max(insets.top, 16) }]}
+        contentContainerStyle={[
+          styles.content, 
+          { 
+            paddingTop: Math.max(insets.top, 16),
+            paddingBottom: Math.max(insets.bottom, 32) + 100,
+          }
+        ]}
         showsVerticalScrollIndicator={false}
       >
         <Text style={[styles.title, { color: colors.text }]}>Profil</Text>

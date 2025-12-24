@@ -1,5 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { Image, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
@@ -59,22 +60,9 @@ export default function TYTMatematikScreen() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: Math.max(insets.top, 24), backgroundColor: colors.background }]}>
-        <View style={styles.navRow}>
-          <Pressable style={[styles.backButton, { backgroundColor: colors.cardBackgroundSecondary }]} onPress={async () => {
-            try {
-              if (Platform.OS === 'web') {
-                await Haptics.selectionAsync();
-              } else {
-                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              }
-            } catch (error) {
-              // Silently fail if haptics aren't available
-            }
-            router.back();
-          }}>
-            <Text style={[styles.backButtonText, { color: colors.text }]}>{'<'} Geri</Text>
-          </Pressable>
-          <Pressable style={[styles.homeButton, { borderColor: colors.primary, backgroundColor: colors.cardBackground }]} onPress={async () => {
+        <Pressable 
+          style={[styles.backArrowButton, { backgroundColor: colors.cardBackgroundSecondary }]} 
+          onPress={async () => {
             try {
               if (Platform.OS === 'web') {
                 await Haptics.selectionAsync();
@@ -86,33 +74,28 @@ export default function TYTMatematikScreen() {
             }
             router.push('/');
           }}>
-            <Text style={[styles.homeButtonText, { color: colors.primary }]}>Ana Sayfa</Text>
-          </Pressable>
-        </View>
+          <Text style={[styles.backArrowText, { color: colors.text }]}>←</Text>
+        </Pressable>
 
-        <Text style={[styles.headline, { color: colors.text }]}>TYT Matematik</Text>
-
-        <Image
-          source={require('@/assets/images/tytmath_logo.png')}
-          style={[styles.visual, { backgroundColor: colors.cardBackground }]}
-          resizeMode="contain"
-        />
-
-        <View style={styles.detailRow}>
-          <View style={[styles.detailCard, { backgroundColor: colors.cardBackground }]}>
-            <Text style={styles.detailIcon}>📘</Text>
-            <View>
-              <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Konular</Text>
-              <Text style={[styles.detailValue, { color: colors.text }]}>{totalTopics}</Text>
+        <View style={[styles.headerContainer, { backgroundColor: colors.cardBackground }]}>
+          <View style={styles.headerLeft}>
+            <View style={styles.headlineContainer}>
+              <Text style={[styles.headlinePrefix, { color: colors.text }]}>TYT</Text>
+              <Text style={[styles.headlineSuffix, { color: colors.text }]}>Matematik</Text>
+            </View>
+            <View style={styles.infoColumn}>
+              <View style={styles.infoItem}>
+                <Text style={styles.infoIcon}>📘</Text>
+                <Text style={[styles.infoText, { color: colors.text }]}>{totalTopics}</Text>
+                <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Konu</Text>
+              </View>
             </View>
           </View>
-          <View style={[styles.detailCard, { backgroundColor: colors.cardBackground }]}>
-            <Text style={styles.detailIcon}>💡</Text>
-            <View>
-              <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Modüller</Text>
-              <Text style={[styles.detailValue, { color: colors.text }]}>{totalSubtopics}</Text>
-            </View>
-          </View>
+          <Image
+            source={require('@/assets/images/tytmath_logo.png')}
+            style={styles.visual}
+            resizeMode="contain"
+          />
         </View>
 
         <View style={styles.topicList}>
@@ -122,8 +105,8 @@ export default function TYTMatematikScreen() {
             const completedCount = topic.subtopics.filter((subtopic) =>
               completedSubtopics.includes(subtopic.slug),
             ).length;
-            const topicTitle =
-              topicTotal > 0 ? `${topic.name} (${completedCount} / ${topicTotal} tamamlandı)` : topic.name;
+            const progressRatio = topicTotal > 0 ? completedCount / topicTotal : 0;
+            const progressGradient: [string, string, string] = ['#264bbf', '#3b82f6', '#60a5fa'];
             return (
               <View key={topic.name} style={[styles.topicCard, { backgroundColor: colors.cardBackground }, isOpen && styles.topicCardOpen]}>
                 <Pressable
@@ -132,7 +115,25 @@ export default function TYTMatematikScreen() {
                     pressed && { backgroundColor: colors.cardBackgroundSecondary },
                   ]}
                   onPress={() => toggleTopic(topic.name)}>
-                  <Text style={[styles.topicTitle, { color: colors.text }]}>{topicTitle}</Text>
+                  <View style={styles.topicHeaderContent}>
+                    <Text style={[styles.topicTitle, { color: colors.text }]}>{topic.name}</Text>
+                    <View style={[styles.topicProgressBarTrack, { backgroundColor: colors.progressBarBackground }]}>
+                      <LinearGradient
+                        colors={progressGradient}
+                        start={{ x: 0, y: 0.5 }}
+                        end={{ x: 1, y: 0.5 }}
+                        style={[
+                          styles.topicProgressBarFill,
+                          { width: `${progressRatio * 100}%` },
+                        ]}
+                      />
+                    </View>
+                    {topicTotal > 0 && (
+                      <Text style={[styles.topicCompletionText, { color: colors.textSecondary }]}>
+                        {completedCount} / {topicTotal} tamamlandı
+                      </Text>
+                    )}
+                  </View>
                   <Text style={[styles.topicChevron, { color: colors.textMuted }, isOpen && { color: colors.primary }]}>⌄</Text>
                 </Pressable>
                 {isOpen && (
@@ -181,81 +182,80 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
     gap: 24,
   },
-  navRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  backButton: {
+  backArrowButton: {
     alignSelf: 'flex-start',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     shadowColor: '#0f172a',
     shadowOpacity: 0.12,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
     elevation: 5,
   },
-  backButtonText: {
-    fontSize: 16,
+  backArrowText: {
+    fontSize: 24,
     fontFamily: 'Montserrat_700Bold',
+    fontWeight: 'bold',
   },
-  homeButton: {
-    alignSelf: 'flex-start',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 2,
-  },
-  homeButtonText: {
-    fontSize: 16,
-    fontFamily: 'Montserrat_700Bold',
-  },
-  visual: {
-    width: '100%',
-    height: 220,
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: 24,
     borderRadius: 24,
+    gap: 20,
     shadowColor: '#0f172a',
-    shadowOpacity: 0.15,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 10,
-  },
-  headline: {
-    fontSize: 32,
-    fontFamily: 'Montserrat_700Bold',
-    textAlign: 'center',
-  },
-  detailRow: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  detailCard: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 20,
-    paddingHorizontal: 18,
-    borderRadius: 20,
-    shadowColor: '#0f172a',
-    shadowOpacity: 0.14,
+    shadowOpacity: 0.12,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
     elevation: 8,
   },
-  detailIcon: {
-    fontSize: 30,
+  headerLeft: {
+    flex: 1,
+    gap: 12,
+    minWidth: 0,
+    flexShrink: 1,
   },
-  detailLabel: {
-    fontSize: 14,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    fontFamily: 'Montserrat_700Bold',
+  visual: {
+    width: 110,
+    height: 110,
+    flexShrink: 0,
   },
-  detailValue: {
-    marginTop: 4,
+  headlineContainer: {
+    gap: 0,
+  },
+  headlinePrefix: {
     fontSize: 26,
+    fontFamily: 'Montserrat_700Bold',
+    textAlign: 'left',
+    lineHeight: 32,
+  },
+  headlineSuffix: {
+    fontSize: 26,
+    fontFamily: 'Montserrat_700Bold',
+    textAlign: 'left',
+    lineHeight: 32,
+  },
+  infoColumn: {
+    gap: 8,
+  },
+  infoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  infoIcon: {
+    fontSize: 20,
+  },
+  infoText: {
+    fontSize: 18,
+    fontFamily: 'Montserrat_700Bold',
+    fontWeight: 'bold',
+  },
+  infoLabel: {
+    fontSize: 16,
     fontFamily: 'Montserrat_700Bold',
   },
   topicList: {
@@ -274,13 +274,34 @@ const styles = StyleSheet.create({
   },
   topicHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     paddingVertical: 20,
     paddingHorizontal: 20,
+    gap: 12,
+  },
+  topicHeaderContent: {
+    flex: 1,
+    gap: 8,
   },
   topicTitle: {
     fontSize: 18,
+    fontFamily: 'Montserrat_700Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  topicProgressBarTrack: {
+    height: 12,
+    width: '95%',
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  topicProgressBarFill: {
+    height: '100%',
+    borderRadius: 12,
+  },
+  topicCompletionText: {
+    fontSize: 14,
     fontFamily: 'Montserrat_700Bold',
   },
   topicChevron: {

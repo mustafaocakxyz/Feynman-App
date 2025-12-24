@@ -5997,7 +5997,7 @@ export default function TYTSubtopicScreen() {
         {!isCompletionPage && (
           <View style={styles.topRow}>
             <Pressable
-              style={[styles.navButton, { backgroundColor: colors.cardBackgroundSecondary }]}
+              style={[styles.closeButton, { backgroundColor: colors.cardBackgroundSecondary }]}
               onPress={async () => {
                 try {
                   if (Platform.OS === 'web') {
@@ -6010,34 +6010,14 @@ export default function TYTSubtopicScreen() {
                 }
                 router.back();
               }}>
-              <Text style={[styles.navButtonText, { color: colors.text }]}>{'‹'} Geri</Text>
+              <Text style={[styles.closeButtonText, { color: colors.text }]}>✕</Text>
             </Pressable>
-            <Pressable
-              style={[styles.navButton, { backgroundColor: colors.cardBackgroundSecondary }]}
-              onPress={async () => {
-                try {
-                  if (Platform.OS === 'web') {
-                    await Haptics.selectionAsync();
-                  } else {
-                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  }
-                } catch (error) {
-                  // Silently fail if haptics aren't available
-                }
-                router.push('/');
-              }}>
-              <Text style={[styles.navButtonText, { color: colors.text }]}>⌂ Ana Sayfa</Text>
-            </Pressable>
-          </View>
-        )}
-
-        {!isCompletionPage && (
-          <>
-            <Text style={[styles.headline, { color: colors.text }]}>{effectiveTitle}</Text>
             {lesson && lesson.pages.length > 0 && (
-              <ProgressDots totalPages={lesson.pages.length} currentPageIndex={pageIndex} />
+              <View style={styles.progressDotsContainer}>
+                <ProgressDots totalPages={lesson.pages.length} currentPageIndex={pageIndex} />
+              </View>
             )}
-          </>
+          </View>
         )}
 
         {lesson && currentPage?.type === 'teaching' && (
@@ -6315,8 +6295,30 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    marginBottom: 16,
+  },
+  closeButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    position: 'absolute',
+    left: 0,
+    ...createShadowStyle('#0f172a', 0.12, 8, { width: 0, height: 4 }, 5),
+  },
+  progressDotsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeButtonText: {
+    fontSize: 20,
+    fontFamily: 'Montserrat_700Bold',
+    fontWeight: 'bold',
   },
   navButton: {
     flexDirection: 'row',
